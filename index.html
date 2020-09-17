@@ -23,6 +23,10 @@
     }
     .header{
         padding: 20px;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
     }
     .row{
         display: flex;
@@ -42,8 +46,8 @@
 </style>
 <body>
     <div class='f'>
-        <div class="header">
-        <h1 style="text-align:center;flex: 3;">Devesh Datwani</h1>
+        <div class="header" style="flex:1">
+        <h1>Devesh Datwani</h1>
         </div>
         <div class="content" style="background-color: lightblue; flex: 10;">
             <div class="row">
@@ -63,8 +67,8 @@
                 </div>
             </div>
         </div>
-        <div style="text-align: center; height: 3rem; flex: 1;">
-            <p style="font-size: 10px; line-height: 3rem;">datwanidevesh@gmail.com</p>
+        <div style="flex: 0.6; display: flex; justify-content: center; align-items: center; text-align: center;">
+		<p  style="font-size: 0.5rem;">datwanidevesh@gmail.com</p>
         </div>
     </div>
 </body>
