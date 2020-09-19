@@ -1,0 +1,75 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Noto Sans HK', sans-serif;
+}
+header{
+    width: 100%;
+    display: flex;
+    background-image: url('images/header.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 40% 40%;
+    height: 200px;
+    justify-content: left;
+    align-items: center;
+    color: white;
+}
+main{
+    background-position:  center;
+    background-size: cover;
+
+}
+.heading{
+    font-family: 'Noto Sans HK', sans-serif; 
+    text-align: center;
+    color: gray;
+    margin: 3% 0 3% 0;
+}
+.wrapper{
+    width: 100%;
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.project{
+    height: 12rem;
+    width: 40rem;
+    margin-top: 100px;
+    display: flex;
+}
+footer{
+    text-align: "center";
+    height: 100px;
+    line-height: 100px;
+    background-image: url(images/header.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 40% 40%;
+    text-align: center;
+    color: white;
+}
+.img{
+    flex: 1;
+   border: solid;
+   border-width: 1px;
+   border-color: gray;
+}
+.info{
+    flex: 1.6;
+    background-color: white;
+    opacity: 0.5;
+    margin-left: 4%;
+    font-size: 120%;
+}
+img{
+    height: 100%;
+    width: 100%;
+}
+article{
+    width: 100%;
+    text-align: center;
+    padding: 0 20% 0 20%;
+}

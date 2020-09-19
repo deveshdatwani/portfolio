@@ -4,72 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Devesh Datwani</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
 </head>
-<style>
-    *{
-        font-family: sans-serif;
-        padding: 0;
-        margin: 0;
-    }
-    .f{
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-    html,body{
-        height: 100%;
-        padding: 0;
-        margin: 0;
-    }
-    .header{
-        padding: 20px;
-	display: flex;
-	justify-content: center;
-	text-align: center;
-	align-items: center;
-    }
-    .row{
-        display: flex;
-    }
-    .row div{
-        margin: 50px;
-        height: 10rem;
-        border: solid;
-        border-radius: 1rem;
-        border-width: 1.5px;
-        width: 20rem;
-    }
-    a{
-        text-decoration: none;
-        color: black;
-    }
-</style>
 <body>
-    <div class='f'>
-        <div class="header" style="flex:1">
-        <h1>Devesh Datwani</h1>
-        </div>
-        <div class="content" style="background-color: lightblue; flex: 10;">
-            <div class="row">
-                <a href=""><div>
-                    <p style="line-height: 10rem; text-align: center;">1</p>
-                </div></a>
-                <div>
-                    <p style="line-height: 10rem; text-align: center;">2</p>
-                </div>
-                <div>
-                    <p style="line-height: 10rem; text-align: center;">3</p>
-                </div>
-            </div>
-            <div class="row">
-                <div>
-                    <p style="line-height: 10rem; text-align: center;">4</p>
+    <header>
+        <h1 style="font-family: 'Dancing Script', cursive; margin-left: 2rem; font-size: 3rem;">Devesh Datwani</h1>
+    </header>
+    <main>
+        <h2 class="heading">About Me<span></h2>
+            <br><br><br><br><br><br>
+            <br><br><br><br><br><br>
+            <br><br><br><br><br><br>
+            <br><br><br><br><br><br>
+        <h2 class="heading">My Projects</h2>
+        <div class="wrapper">
+            <div class="project">
+                <div class="img"><img src="images/twitter.jpg" alt=""></div>
+                <div class="info">
+                    <h3>Trends On The Map</h3>
+                    <p>A project aimed at collecting trending topics from twitter and displaying it on the world map.</p>
+                    <a href=""><p>Read more.</p></a>
                 </div>
             </div>
+            <div class="project">
+                <div class="img"><img src="images/scrapper.png" alt=""></div>
+                <div class="info">
+                    <h3>Plasma Actuators</h3>
+                    <p>Analysing the effect of plasma actuators for air flow induction inside hollow pipes.</p>
+                    <a href=""><p>Read more.</p></a>
+                </div>
+            </div>
+            <div class="project">
+                <div class="img"><img src="images/im.jpg" alt=""></div>
+                <div class="info">
+                    <h3>Yawn Detection</h3>
+                    <p>A tool to detect fatigue by recognizing whether a person is yawning.</p>
+                    <a href=""><p>Read more.</p></a>
+                </div>
+            </div>
+            <div class="project">
+                <div class="img"><img src="images/download.jpg" alt=""></div>
+                <div class="info">
+                    <h3>Toxic Comments Classifier</h3>
+                </div>
+            </div>
+            <div class="project">
+                <div class="img"><img src="images/download.jpg" alt=""></div>
+                <div class="info">
+                    <h3>Web Scrapper</h3>
+                    <p>Building python scripts to automate web tasks or scrape information from websites.</p>
+                    <a href=""><p>Read more.</p></a>
+                </div>
+            </div>
         </div>
-        <div style="flex: 0.6; display: flex; justify-content: center; align-items: center; text-align: center;">
-		<p  style="font-size: 0.5rem;">datwanidevesh@gmail.com</p>
-        </div>
-    </div>
+        <br><br><br><br><br><br><br><br><br><br>
+    <footer>
+        Devesh Datwani
+    </footer>
+    </main>
 </body>
 </html>
