@@ -51,6 +51,8 @@
             <br>
             <p> In Twitter, a word, prhase or a hashtag mentioned by a large number of users in a short period of time is said to be "trending topic" or simply "trending" at that point of time. Twitter provides with a funtionality to retrieve the trending topics based on locations through its API.</p>
             <br>
+            <p> Trendsonthemap aims to visualize trends on a map so they can be easily accessed and the user can catch up with world trends without hastles.
+            <br>
             <div style="text-align: center;">
                 <img src="images/twitter-trends.PNG" alt="" style="height: 20rem; width: auto;">
             </div>
@@ -114,7 +116,7 @@
                 <img src="images/snippet2.PNG" alt="" style="height: auto; width: 100%;">
             </div>
             <br>
-            <p>find_trends.py fetches city based trends from Twitter through its API and stores it in the database. Since Twitter allows only 70 requests a minute. An iterator has been set up in the database to fetch city based trends in a batch of 15 every 5 minutes. This is done using the apschedular tool.</p>
+            <p>find_trends.py fetches city based trends from Twitter through its API and stores it in the database. Since Twitter allows only 70 requests a minute. An iterator has been set up in the database to fetch city based trends in a batch of 20 every 5 minutes. The apschedular schedules function 'find_trends()' for this purpose.</p>
             <br>
         </div>
     <br><br><br>
