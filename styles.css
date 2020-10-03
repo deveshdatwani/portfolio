@@ -47,10 +47,14 @@ footer{
    flex-wrap: wrap;
    justify-content: space-evenly;
 }
+.info{
+    margin-top: 10px;
+    text-align: center;
+}
 .info p{
     font-family: 'Noto Sans HK', sans-serif;
     font-size: 0.8rem;
-    text-align: left;
+    text-align: justify;
 }
 img{
     height: 12rem;
