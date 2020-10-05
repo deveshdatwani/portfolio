@@ -10,26 +10,19 @@ a{
 header{
     width: 100%;
     display: flex;
-    background-image: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,0.9), url('images/header.jpg'));
+    background-color: #0C4D69;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 20% 50%;
     height: 90px;
     justify-content: left;
     align-items: center;
-    color: white;
     box-shadow: 3px 3px 5px 5px #CCC;
+    color: white;
 }
 footer{
-    text-align: "center";
-    height: 100px;
-    line-height: 100px;
-    background-image: url(images/header.jpg);
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: 40% 40%;
-    text-align: center;
-    color: white;
+    height: 80px;
+    background-color: #0C4D69;
 }
 .heading{
     font-family: 'Noto Sans HK', sans-serif; 
@@ -38,7 +31,7 @@ footer{
     margin: 3% 0 3% 0;
 }
 .wrapper{
-    width: 50%;
+    width: 35%;
     height: min-content;
     margin: auto;
 }
@@ -48,23 +41,26 @@ footer{
    justify-content: space-evenly;
 }
 .info{
-    margin-top: 10px;
+    margin-top: 20px;
     text-align: center;
+}
+.info h4{
+    margin-bottom: 10px;
 }
 .info p{
     font-family: 'Noto Sans HK', sans-serif;
     font-size: 0.8rem;
     text-align: justify;
 }
-img{
-    height: 12rem;
-    width: 17rem;
-}
 .project{
-    width: 20rem;
-    height: auto;
-    margin-bottom: 5rem;
+    width: 16rem;
+    height: 20rem;
     text-align: center;
+    padding: 1rem;
+    border: solid;
+    border-width: 1px;
+    border-radius: 10px;
+    margin-bottom: 1rem;
 }
 article{
     width: 50%;
@@ -78,18 +74,21 @@ article{
 }
 .about-me{
     display: flex;
-    width: 90%;
-    height: max-content;
+    width: 60%;
+    height: 22rem;
     margin: auto;
     flex-direction: row;
     font-family: 'Noto Sans HK', sans-serif;
 }
+.about-me div{
+    margin-left: 20px;
+}
 .img img{
     width: 100%;
-    border: solid;
-    border-width: 0.1px;
+    height: 10rem;
 }
-@media (max-width: 800px){
+@media(max-width: 800px){
     .wrapper{
-        width: 80%;
+        width: 60%;
+    }
 }

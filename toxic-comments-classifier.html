@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devesh Datwani Trends On The Map</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+</head>
+<style>
+    h4{
+        color: gray;
+        text-align: center;
+    }
+    .wrapper{
+        font-family: 'Noto Sans HK', cursive;
+        text-align: justify;
+        margin-top: 0;
+    }
+    h2{
+        font-family: 'Noto Sans HK', cursive;
+    }
+</style>
+<body>
+    <header>
+        <h1 style="font-family: 'Noto Sans HK', cursive; margin-left: 2rem; font-size: 1.5rem;">Devesh Datwani</h1>
+    </header>
+    <h2 style="text-align: center; margin-top: 2rem;">Toxic Comments Classifier</h2>
+        <br><br><br><br>
+        <div class="wrapper">
+            <h3>Problem Statement</h3>
+            <hr>
+            <br>
+            <p>Build a unique model to extract text from images and classify them on the basis of excessive content (Ex: toxic, abusive, hatred, racist, sexist)</p>
+            <br>
+            <h3>Project Overview</h3>
+            <hr>
+            <br>
+            <ul style="margin-left: 30px;">
+                <li>Using CV2 and Pytesseract to extract Textual information from screenshots</li>
+                <li>Using Toxic Comment Classifier Data as a training dataset</li>
+                <li>Selecting the severe_toxic table as the dependent variable and comment_text as the independent variable</li>
+                <li>Data Preparation - Handling the slang text and useless characters</li>
+                <li>Processing the data using NLTK</li>
+                <li>Creating a model using Sklearn
+                </li>
+                <li>Pickle the model</li>
+                <li>Creating a Flask API Endpoint to classify comments using the pretrained model</li>
+            </ul>
+            <br>
+            <h3>Code and Resources Used</h3>
+            <hr>
+            <br>
+            <ul style="margin-left: 30px;">
+                <li>Python</li>
+                <li>Packages: cv2, tesseract, pandas, numpy matplotlib, flask, pickle</li>
+            </ul>
+            <br>
+            <h3>Technologies Used</h3>
+            <hr>
+            <br>
+            <div style="width: 100%;"><img src="images/toxic-tech.png" alt="" style="width: 30%; height: auto;"></div>
+            <div style="width: 100%;"><img src="images/toxic-tech2.png" alt="" style="width: 30%; height: auto;"></div>
+            <div style="width: 100%;"><img src="images/ocr.png" alt="" style="width: 30%; height: auto;"></div>
+            <br>
+            <h3>Deployment Walkthrough</h3>
+            <hr>
+            <br>
+            <div style="text-align: center; width: 100%;"><img src="images/demo_video.gif" alt="" style="width: 100%; height: auto;"></div>
+            <br>
+            <h3>EDA</h3>
+            <hr>
+            <br>
+            <p>The data is highly skewed as there are far less severe_toxic classes as compared to the entire dataset. Thus downsampling has to be performed, causing loss of valuable information. Secondly, the data is too large to process on my local machine, hence I have picked a subset of data.</p>
+            <br>
+            <h3>Model Performace</h3>
+            <hr>
+            <br>
+            <p>The Random Forest model far outperformed the other approaches on the test and validation sets.</p>
+            <br>
+            <ul>
+                <li>Multinominal Naive Bayes : Accuracy Score = 0.936</li>
+                <li>Random Forest Classifier: Accuracy Score = 0.924</li>
+                <li>Logistic Regression: Accuracy Score = 0.92
+                </li>
+                <li>Gradient Boosting Classifier: Accuracy Score = 0.912</li>
+            </ul>
+            <br>
+            <div style="width: 100%; text-align: center;"><img src="images/performance.jfif" alt="" style="width: 100%; height: auto;"></div>
+            <br>
+            <h3>Production</h3>
+            <hr>
+            <br>
+            <p>In this step, I built a flask API endpoint that was hosted on a local webserver. The comments were then passed to a CountVectorizer to tokenize the text and parsed thought the model to evaluate the result.</p>
+            <br>
+            <h3>Team</h3>
+            <hr>
+            <br>
+            <div><img src="images/devesh.jfif" alt=""></div>
+            <div><img src="images/mihir.jfif" alt=""></div>
+            <br>
+        </div>
+    <br><br><br>
+</body>
+<footer>
+</footer>
+</html>
