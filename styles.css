@@ -34,6 +34,7 @@ footer{
     width: 35%;
     height: min-content;
     margin: auto;
+    font-family: 'Noto Sans HK', sans-serif;
 }
 .row{
    display: flex;
@@ -45,6 +46,7 @@ footer{
     text-align: center;
 }
 .info h4{
+    font-family: 'Noto Sans HK', sans-serif;
     margin-bottom: 10px;
 }
 .info p{
@@ -81,7 +83,7 @@ article{
     font-family: 'Noto Sans HK', sans-serif;
 }
 .about-me div{
-    margin-left: 20px;
+    margin: 20px
 }
 .img img{
     width: 100%;
@@ -90,5 +92,15 @@ article{
 @media(max-width: 800px){
     .wrapper{
         width: 60%;
+    }
+}
+hr{
+    background-color: lightgray;
+    height: 2px;
+    border: none;
+}
+@media(max-width: 800px){
+    .about-me{
+        flex-direction: column;
     }
 }
