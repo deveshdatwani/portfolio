@@ -1,0 +1,69 @@
+
+@import url("../css/fonts.css");
+
+html, body{
+    margin: 0%;
+    padding: 0%;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+}
+
+.name{
+    font-family: Livvic;
+    font-size: 2.6rem;
+    padding: 2rem 2rem;
+}
+
+.navbar{
+    width: max-content;
+    margin: auto;
+}
+
+.nav-items{
+   list-style-type: none;
+    display: flex;
+    padding: 0;
+    font-family: Abel;
+}
+
+.nav-items li{
+    padding: 1rem 1rem 1rem 1rem;
+}
+
+.nav-items li:hover{
+    text-decoration: underline;
+}
+
+.my-photo{
+    width: 80%;
+    margin: auto;
+}
+
+.my-photo img{
+    max-width: 100%;
+    max-height: 100%;
+    margin: auto;
+    object-fit: cover;
+}
+
+.about-me{
+    width: 80%;
+    margin: auto;
+    min-height: 100vh;
+}
+
+.title{
+    font-family: Abel;
+    text-align: center;
+    margin: 1rem 1rem;
+    font-size: 1.2rem;
+}
+
+.projects{
+    min-height: 100vh;
+}
