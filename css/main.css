@@ -53,8 +53,9 @@ a{
 
 .about-me{
     width: 80%;
-    margin: auto;
+    margin: 15vh auto 10rem auto;
     min-height: 100vh;
+    font-family: Abel;
 }
 
 .title{
@@ -65,5 +66,46 @@ a{
 }
 
 .projects{
+    width: 80%;
+    margin: 15vh auto 10rem auto;
     min-height: 100vh;
+    font-family: Abel;
+}
+
+.footer{
+    text-align: center;
+    font-family: Abel;
+    min-height: 10vh;
+}
+
+.my-contact{
+    width: 80%;
+    margin: 15vh auto 10rem auto;
+    min-height: 100vh;
+    font-family: Abel;
+}
+
+.social-media{
+    text-align: center;
+    width: max-content;
+    margin: auto;
+}
+
+.contact-list{
+    list-style-type: none;
+    display: table; 
+    padding: 0;
+}
+
+.contact-list li{
+    display: table-cell;
+    padding: 1rem 1rem 1rem 1rem;
+    font-size: 1.5rem;
+}
+
+.brand-logo{
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    height: 2.6rem
 }
