@@ -108,6 +108,11 @@ a:hover{
     font-size: 1.5rem;
 }
 
+.project-container{
+    padding: 0;
+    margin: 0;
+}
+
 .row{
     display: flex;
     flex-wrap: wrap;
@@ -134,7 +139,7 @@ a:hover{
     border-color: black;
     border-width: 1px;
     margin: auto;
-    box-shadow: 5px 10px 5px 10px #888888;
+    box-shadow: 4px 4px 4px 4px #888888;
 }
 
 .project-img{
@@ -153,4 +158,10 @@ a:hover{
     width: 100%;
     object-fit: cover;
 }
+
+@media only screen and (max-width: 600px) {
+    .column {
+      flex: 100%;
+    }
+  }
 
