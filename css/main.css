@@ -129,7 +129,7 @@ a:hover{
     display: flex;
 }
 
-.project-bullet{
+a .project-bullet{
     height: 80%;
     width: 90%;
     display: flex;
@@ -140,6 +140,7 @@ a:hover{
     border-width: 1px;
     margin: auto;
     box-shadow: 4px 4px 4px 4px #888888;
+    margin-top: 2rem;
 }
 
 .project-img{
@@ -148,7 +149,9 @@ a:hover{
 
 .project-name{
     flex: 2;
-    text-align: ;
+    text-align: center;
+    margin-top: 2rem;
+    font-family: Abel;
 }
 
 .column img{
