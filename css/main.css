@@ -135,8 +135,6 @@ a .project-bullet{
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
-    border: solid;
-    border-color: black;
     border-width: 1px;
     margin: auto;
     box-shadow: 4px 4px 4px 4px #888888;
