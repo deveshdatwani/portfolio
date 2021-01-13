@@ -162,6 +162,7 @@ a .project-bullet{
 .project-img{
     flex: 5;
     overflow: hidden;
+    height: ;
 }
 
 .project-img img{
