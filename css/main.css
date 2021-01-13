@@ -185,10 +185,10 @@ a .project-bullet{
     margin: 0;
     height: 100%;
     width: 100%;
-    object-fit: ;
+    object-fit: fill;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 800px) {
     .column {
       flex: 100%;
     }
