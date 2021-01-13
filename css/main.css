@@ -171,6 +171,15 @@ a .project-bullet{
     font-family: Abel;
 }
 
+.project-description{
+    width: 90%;    
+    text-align: center;
+    margin: auto;
+    margin-top: 10px;
+    font-size: 0.8rem;
+    font-family: Abel;
+}
+
 .column img{
     padding: 0;
     margin: 0;
