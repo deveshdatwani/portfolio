@@ -74,6 +74,10 @@ a:hover{
     font-family: Abel;
 }
 
+.about-me .information .skill-list{
+    list-style-type: circle;
+}
+
 .projects{
     width: 80%;
     margin: 15vh auto 10rem auto;
