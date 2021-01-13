@@ -164,6 +164,14 @@ a .project-bullet{
     overflow: hidden;
 }
 
+.project-img img{
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: fill;
+}
+
 .project-name{
     flex: 2;
     text-align: center;
@@ -178,14 +186,6 @@ a .project-bullet{
     margin-top: 10px;
     font-size: 0.8rem;
     font-family: Abel;
-}
-
-.column img{
-    padding: 0;
-    margin: 0;
-    height: 100%;
-    width: 100%;
-    object-fit: fill;
 }
 
 @media only screen and (max-width: 600px) {
