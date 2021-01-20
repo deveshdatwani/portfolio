@@ -46,13 +46,14 @@ a:hover{
 
 .my-photo{
     width: 80%;
+    height: 100%;
     margin: auto;
+    text-align: center;
+    overflow: hidden;
 }
 
 .my-photo img{
-    max-width: 100%;
-    max-height: 100%;
-    margin: auto;
+    width: 100%;
     object-fit: cover;
 }
 
