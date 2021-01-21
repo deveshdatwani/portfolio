@@ -54,7 +54,8 @@ a:hover{
 
 .my-photo img{
     width: 100%;
-    object-fit: cover;
+    max-height: 100vh;
+    object-fit:contain;
 }
 
 .about-me{
