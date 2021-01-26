@@ -211,5 +211,14 @@ a .project-bullet{
     .column {
       flex: 100%;
     }
+
+    html, body{
+        margin: 0%;
+        padding: 0%;
+        box-sizing: border-box;
+        scroll-behavior: smooth;
+        scroll-padding-top: 10rem;
+    }
+    
   }
 
