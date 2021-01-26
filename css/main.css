@@ -6,9 +6,6 @@ html, body{
     padding: 0%;
     box-sizing: border-box;
     scroll-behavior: smooth;
-    scroll-padding-top: 10rem;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
 }
 
 a{
@@ -56,6 +53,7 @@ nav{
 }
 
 .my-photo{
+    margin-bottom: 50rem;
     width: 80%;
     height: 100%;
     margin: auto;
@@ -72,7 +70,7 @@ nav{
 
 .about-me{
     width: 80%;
-    margin: 0 auto 10rem auto;
+    margin: 0 auto 5rem auto;
     min-height: 100vh;
     font-family: Abel;
     padding-top: 15vh;
@@ -96,7 +94,7 @@ nav{
 
 .projects{
     width: 80%;
-    margin: 0 auto 10rem auto;
+    margin: 0 auto 5rem auto;
     min-height: 100vh;
     font-family: Abel;
     padding-top: 15vh;
@@ -110,7 +108,7 @@ nav{
 
 .my-contact{
     width: 80%;
-    margin: 0 auto 10rem auto;
+    margin: 0 auto 5rem auto;
     min-height: 100vh;
     font-family: Abel;
     padding-top: 15vh;
