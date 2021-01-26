@@ -220,7 +220,6 @@ a .project-bullet{
         padding: 0%;
         box-sizing: border-box;
         scroll-behavior: smooth;
-        scroll-padding-top: 10rem;
     }
     
   }
