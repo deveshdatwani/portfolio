@@ -61,7 +61,6 @@ nav{
     margin: auto;
     text-align: center;
     overflow: hidden;
-    border: solid;
 }
 
 .my-photo img{
@@ -76,7 +75,7 @@ nav{
     margin: 0 auto 10rem auto;
     min-height: 100vh;
     font-family: Abel;
-    padding-top: 10vh;
+    padding-top: 15vh;
 }
 
 .about-me .title{
@@ -97,9 +96,10 @@ nav{
 
 .projects{
     width: 80%;
-    margin: 15vh auto 10rem auto;
+    margin: 0 auto 10rem auto;
     min-height: 100vh;
     font-family: Abel;
+    padding-top: 15vh;
 }
 
 .footer{
@@ -110,9 +110,10 @@ nav{
 
 .my-contact{
     width: 80%;
-    margin: 15vh auto 10rem auto;
+    margin: 0 auto 10rem auto;
     min-height: 100vh;
     font-family: Abel;
+    padding-top: 15vh;
 }
 
 .my-contact .title{
