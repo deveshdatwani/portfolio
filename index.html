@@ -20,39 +20,38 @@
     <!-- Custom Style -->
     <link rel="stylesheet" href="css/main.css">
 
+    <!-- javascript -->
+    <link rel="javascript" href="js/main.js">
+
 
 </head>
 
 <body>
 
     <!-- name -->
-    <div class="name">
-        <a href="">
+    <div class="name" id="header">
+        <a href="/">
             Devesh Datwani
         </a>
     </div>
 
     <!-- navigation -->
-    <div class="navbar">
-        <div>
-            <ul class="nav-items">
-                <a href="#about-me">
-                    <li>About me</li>
-                </a>
-                <a href="#projects">
-                    <li>My projects</li>
-                </a>
-                <a href="#my-contact">
-                    <li>Contact me</li>
-                </a>
-            </ul>
-        </div>
-    </div>
+    <nav>     
+        <ul class="nav-items">
+            <a href="#about-me">
+                <li>About me</li>
+            </a>
+            <a href="#projects">
+                <li>My projects</li>
+            </a>
+            <a href="#my-contact">
+                <li>Contact me</li>
+            </a>
+        </ul>
+    </nav>
 
     <!-- random cover -->
-    <div>
-
-    </div>
+ 
 
     <!-- my photo -->
     <div class="">
@@ -277,6 +276,19 @@
 
     <!-- javascript -->
     <script src="js/main.js"></script>
+
+    <script>
+        // When the user scrolls down 50px from the top of the document, resize the header's font size
+        window.onscroll = function() {scrollFunction()};
+        
+        function scrollFunction() {
+          if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+            document.getElementById("header").style.fontSize = "1.2rem";
+          } else {
+            document.getElementById("header").style.fontSize = "2.6rem";
+          }
+        }
+    </script>
 
 </body>
 
