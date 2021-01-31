@@ -22,19 +22,19 @@ a:hover{
     font-family: Livvic;
     font-size: 1.8rem;
     padding: 2rem 2rem;
-    position: fixed;
     top: 0;
     transition: 0.2s;
-    width: 100%;
-    box-shadow: 2px 2px 25px 2px #888888;
+    width: 90%;
+    margin: auto;
     clear: both;
     background-color: white;
 }
 
 nav{
     margin: auto;
-    margin-top: 10rem;
+    margin-top: 5rem;
     width: max-content;
+    width: 80%;
 }
 
 .nav-items{
@@ -42,6 +42,7 @@ nav{
     display: flex;
     padding: 0;
     font-family: Abel;
+    justify-content: center;
 }
 
 .nav-items li{
@@ -54,8 +55,8 @@ nav{
 
 .my-photo{
     margin-bottom: 50rem;
-    width: 80%;
-    height: 100%;
+    width: 60%;
+    height: auto;
     margin: auto;
     text-align: center;
     overflow: hidden;
@@ -69,7 +70,7 @@ nav{
 
 
 .about-me{
-    width: 80%;
+    width: 60%;
     margin: 0 auto 5rem auto;
     min-height: 100vh;
     font-family: Abel;
@@ -93,7 +94,7 @@ nav{
 }
 
 .projects{
-    width: 80%;
+    width: 60%;
     margin: 0 auto 5rem auto;
     min-height: 100vh;
     font-family: Abel;
@@ -107,11 +108,12 @@ nav{
 }
 
 .my-contact{
-    width: 80%;
+    width: 60%;
     margin: 0 auto 5rem auto;
     min-height: 100vh;
     font-family: Abel;
     padding-top: 15vh;
+    text-align: center;
 }
 
 .my-contact .title{
@@ -221,5 +223,14 @@ a .project-bullet{
         scroll-behavior: smooth;
     }
     
+    .my-photo{
+        width: 80%;
+    }
+    .my-contact{
+        width: 80%;
+    }
+    .about-me{
+        width: 80%;
+    }
   }
 
