@@ -118,7 +118,7 @@ a {
     display: flex;
     flex: 1;
     background: #faf3eb;
-    margin: 2rem;
+    margin: 1rem;
     flex-direction: column;
     height: 20rem;
     padding: 3rem;
@@ -194,10 +194,16 @@ a {
     width: 40%;
     margin: auto;
     overflow: scroll;
+    -ms-overflow-style: none; 
     height: 20rem;
     margin-bottom: 5rem;
     padding: 1rem;
+    border-radius: 1rem;
 }
+
+.updates-content::-webkit-scrollbar {
+    display: none;
+  }
 
 .news {
     display: flex;
@@ -213,6 +219,7 @@ a {
 .news-img {
     flex: 5;
     height: 5rem;
+    width: 5rem;
     object-fit: contain;    
 }
 
@@ -228,11 +235,6 @@ a {
     align-items: center;
     padding: 1rem;
     font-size: 1.2rem;
-}
-
-.contact-me {
-    background: #faf3eb;
-    min-height: 20rem;
 }
 
 .about-me-description {
@@ -262,4 +264,91 @@ a {
 .devesh-rc img {
     height: inherit;
     width: inherit;
+}
+
+.contact-me {
+    background: #faf3eb;
+    min-height: 20rem;
+    display: flex;
+    flex-wrap: wrap ;
+}
+
+.contact-me-container {
+    width: 60%;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    border: solid 1px lightgray;
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
+.contact {
+    flex: 5;
+    border-right: solid 1px lightgray;
+}
+
+.stay-connected {
+    flex: 5;
+}
+
+.stay-connected a{
+    display: inline-block;
+    flex-direction: row;
+}
+
+
+@media screen and (max-width:400px) {
+    
+    .profile {
+        width: 20rem;
+        width: 20rem;
+    }
+
+    .about-me-short {
+        width: 80%;
+        margin: auto;
+    }
+
+    .name {
+        font-size: 2rem;
+    }
+
+    .updates-content {
+        width: 90%;
+        justify-content: center;
+    }
+
+    .send-email form button {
+        width: 40%;
+    }
+    
+    .send-email {
+        margin-top: 1rem;
+    }
+}
+
+@media screen and (max-width:800px) {
+    
+    .profile {
+        width: 20rem;
+        width: 20rem;
+    }
+
+    .about-me-short {
+        width: 80%;
+        margin: auto;
+    }
+
+    .name {
+        font-size: 2rem;
+    }
+
+    .updates-content {
+        width: 90%;
+        justify-content: center;
+    }
+
 }
