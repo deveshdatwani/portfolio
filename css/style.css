@@ -268,7 +268,7 @@ a {
 
 .contact-me {
     background: #faf3eb;
-    min-height: 20rem;
+    min-height: 16rem;
     display: flex;
     flex-wrap: wrap ;
 }
