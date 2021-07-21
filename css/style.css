@@ -1,0 +1,254 @@
+*, body, html {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+    display: flex;
+    align-items: center;
+}
+
+.header {
+    display: flex;
+    font-weight: 100;
+    font-size: 3rem;
+    padding: 2rem;
+    background: #faf3eb;
+    flex-wrap: wrap;
+}
+
+.name {
+    flex: 5;
+    display: flex;
+    align-items: center;
+}
+
+.social-media {
+    flex: 5;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.social-media i {
+    margin: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.profile {
+    height: 30rem;
+    width: 30rem;
+    object-fit: cover;
+    margin: 5rem auto 5rem auto;
+}
+
+.profile img { 
+    height: inherit;
+    width: inherit;
+    object-fit: cover;
+    border-radius: 50% 50%;
+}
+
+.about-me {
+    margin: 0 auto 10rem auto;
+}
+
+.about-me-title {
+    text-align: center;
+    font-size: 1.5rem;
+    margin: 5rem auto 1rem auto;
+}
+
+.about-me-short {
+    text-align: center;
+}
+
+.learn-more {
+    font-size: 1rem;
+    text-align: center;
+    margin: 2rem auto 0 auto;
+    width: max-content;
+    padding: 0.5rem;
+    border: solid 1px;
+}
+
+.learn-more a{
+    text-decoration: none;
+    color: black;
+}
+
+.learn-more:hover {
+    background: #faf3eb;
+}
+
+.skills {
+    display: flex;
+    flex-wrap: wrap;
+    width: 80%;
+    margin: auto;
+    font-size: 1.5rem;
+}
+
+.skill-set {
+    display: flex;
+    flex: 1;
+    background: #faf3eb;
+    margin: 1rem;
+    flex-direction: column;
+    height: 20rem;
+    padding: 3rem;
+    border-radius: 1rem;
+}
+
+.my-skillset {
+    flex: 5;
+    text-align: center;
+}
+
+.my-skillset-list {
+    flex: 15;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.learning {
+    display: flex;
+    flex: 1;
+    background: #faf3eb;
+    margin: 2rem;
+    flex-direction: column;
+    height: 20rem;
+    padding: 3rem;
+    text-align: center;
+    border-radius: 1rem;
+}
+
+.learning-title {
+    flex: 10;
+}
+
+.learning-list {
+    flex: 15;
+    font-size: 1rem;
+}
+
+.projects {
+    margin: 5rem auto 0 auto;
+}
+
+.projects-title {
+    text-align: center;
+    font-size: 1.5rem;
+    margin: 8rem auto 8rem auto;
+}
+
+.project-container {
+    width: 80%;
+    margin: auto;
+}
+
+.projects-cards {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 1rem;
+    text-align: center;
+    justify-content: center;
+}
+
+.projects-cards-card {
+    height: 30rem;
+    width: 25rem;
+    margin: 1rem;
+    border-radius: 1rem;
+}
+
+.card-photo {
+    flex: 10;
+    width: inherit;
+}
+
+.card-photo img {
+    height: 20rem;
+    width: 20rem;
+    border-radius: 50% 50%;
+}
+
+.card-content {
+    flex: 5;
+    font-size: 1.2rem;
+    margin: 1rem;
+}
+
+.updates-title {
+    font-size: 1.5rem;
+    text-align: center;
+    margin: 8rem auto 4rem auto;
+}
+
+.news {
+    display: flex;
+    height: 5rem;
+    margin: 1rem auto 1rem auto;
+    border: solid 1px grey;
+    width: 30%;
+}
+
+.news:hover {
+    background: #faf3eb;
+}
+
+.news-img {
+    flex: 5;
+    height: 5rem;
+    object-fit: contain;    
+}
+
+.news-img img {
+    height: inherit;
+    width: inherit;
+    object-fit: cover;
+}
+
+.news-title {
+    flex: 25;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+}
+
+.contact-me {
+    background: #faf3eb;
+    min-height: 20rem;
+}
+
+.about-me-description {
+    width: 50%;
+    margin: auto;
+}
+
+.academics {
+    width: max-content;
+    margin: auto;
+    text-align: justify;
+    margin-bottom: 5rem;
+}
+
+.academics p {
+    padding: 0.1rem;
+}
+
+.devesh-rc {
+    text-align: center;
+    width: 80%;
+    height: auto;
+    margin: auto;
+    margin-top: 2rem;
+}
+
+.devesh-rc img {
+    height: inherit;
+    width: inherit;
+}
