@@ -240,6 +240,7 @@ a {
 .about-me-description {
     width: 50%;
     margin: auto;
+    text-align: justify;
 }
 
 .academics {
@@ -255,7 +256,7 @@ a {
 
 .devesh-rc {
     text-align: center;
-    width: 80%;
+    width: 60%;
     height: auto;
     margin: auto;
     margin-top: 2rem;
@@ -328,9 +329,19 @@ a {
     .send-email {
         margin-top: 1rem;
     }
+
+    .about-me-description {
+
+        width: 80%;
+    }
+
+    .academics {
+        width: 80%;
+    }
+
 }
 
-@media screen and (max-width:800px) {
+@media screen and (max-width:900px) {
     
     .profile {
         width: 20rem;
@@ -349,6 +360,14 @@ a {
     .updates-content {
         width: 90%;
         justify-content: center;
+    }
+
+    .about-me-description {
+        width: 90%;
+    }
+
+    .academics {
+        width: 90%;
     }
 
 }
