@@ -12,11 +12,12 @@ a {
 }
 
 .header {
+    color: white;
     display: flex;
     font-weight: 100;
     font-size: 3rem;
     padding: 2rem;
-    background: #faf3eb;
+    background: #36454f;
     flex-wrap: wrap;
 }
 
@@ -27,6 +28,7 @@ a {
 }
 
 .social-media {
+    color: white;
     flex: 5;
     display: flex;
     align-items: center;
@@ -34,6 +36,7 @@ a {
 }
 
 .social-media i {
+    color: white;
     margin: 0.5rem;
     font-size: 1.5rem;
 }
@@ -81,7 +84,13 @@ a {
 }
 
 .learn-more:hover {
-    background: #faf3eb;
+    background: #36454f;
+    color: white;
+}
+
+.learn-more p:hover {
+    color: white;
+    background: #36454f;
 }
 
 .skills {
@@ -93,9 +102,11 @@ a {
 }
 
 .skill-set {
+    background: #36454f;
+    border: solid 2px lightgray;
+    color: lightgray;
     display: flex;
     flex: 1;
-    background: #faf3eb;
     margin: 1rem;
     flex-direction: column;
     height: 20rem;
@@ -115,9 +126,11 @@ a {
 }
 
 .learning {
+    border: solid 2px lightgray;
+    color: lightgray;
     display: flex;
     flex: 1;
-    background: #faf3eb;
+    background: #36454f;
     margin: 1rem;
     flex-direction: column;
     height: 20rem;
@@ -213,7 +226,9 @@ a {
 }
 
 .news:hover {
-    background: #faf3eb;
+    background: #36454f;
+    color: white;
+    border-radius: 1rem;
 }
 
 .news-img {
@@ -268,7 +283,8 @@ a {
 }
 
 .contact-me {
-    background: #faf3eb;
+    background: #36454f;
+    color: lightgray;
     min-height: 16rem;
     display: flex;
     flex-wrap: wrap ;
@@ -339,6 +355,12 @@ a {
         width: 80%;
     }
 
+    .profile {
+        height: 20rem;
+        width: 20rem;
+
+    }
+
 }
 
 @media screen and (max-width:900px) {
@@ -368,6 +390,12 @@ a {
 
     .academics {
         width: 90%;
+    }
+
+    .profile {
+        height: 20rem;
+        width: 20rem;
+
     }
 
 }
