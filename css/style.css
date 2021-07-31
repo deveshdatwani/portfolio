@@ -109,7 +109,7 @@ a {
     flex: 1;
     margin: 1rem;
     flex-direction: column;
-    height: 20rem;
+    min-height: 20rem;
     padding: 3rem;
     border-radius: 1rem;
 }
@@ -117,12 +117,27 @@ a {
 .my-skillset {
     flex: 5;
     text-align: center;
+    font-size: 2rem;
 }
 
 .my-skillset-list {
+    padding: 1rem;
     flex: 15;
     text-align: center;
     font-size: 1rem;
+    display: flex;
+    flex-direction: row;
+}
+
+.skill-type {
+    flex: 1;
+    text-align: right;
+    margin-right: 1rem;
+}
+
+.skill-languages {
+    flex: 1;
+    text-align: left;
 }
 
 .learning {
@@ -133,7 +148,7 @@ a {
     background: #36454f;
     margin: 1rem;
     flex-direction: column;
-    height: 20rem;
+    min-height: 20rem;
     padding: 3rem;
     text-align: center;
     border-radius: 1rem;
@@ -141,6 +156,7 @@ a {
 
 .learning-title {
     flex: 5;
+    font-size: 2rem;
 }
 
 .learning-list {
@@ -285,7 +301,7 @@ a {
 .contact-me {
     background: #36454f;
     color: lightgray;
-    min-height: 16rem;
+    min-height: 8rem;
     display: flex;
     flex-wrap: wrap ;
 }
@@ -357,6 +373,10 @@ a {
         border-radius: 1rem;
     }
 
+    .learning-title {
+        margin-bottom: 1rem;
+    }
+
 }
 
 @media screen and (max-width:900px) {
@@ -398,6 +418,10 @@ a {
         background: #36454f;
         color: white;
         border-radius: 1rem;
+    }
+
+    .learning-title {
+        margin-bottom: 1rem;
     }
 
 }
