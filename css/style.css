@@ -291,7 +291,7 @@ a {
 }
 
 .contact-me-container {
-    width: 60%;
+    width: 30%;
     margin: auto;
     display: flex;
     align-items: center;
@@ -304,18 +304,8 @@ a {
 
 .contact {
     flex: 5;
-    border-right: solid 1px lightgray;
+    text-align: center;
 }
-
-.stay-connected {
-    flex: 5;
-}
-
-.stay-connected a{
-    display: inline-block;
-    flex-direction: row;
-}
-
 
 @media screen and (max-width:400px) {
     
