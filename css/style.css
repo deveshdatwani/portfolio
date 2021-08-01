@@ -69,13 +69,20 @@ a {
     text-align: center;
 }
 
-.learn-more {
-    font-size: 1rem;
-    text-align: center;
-    margin: 2rem auto 0 auto;
+.learn-more-download-cv {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     width: max-content;
+    margin: auto;
+}
+
+.learn-more-download-cv div {
     padding: 0.5rem;
-    border: solid 1px;
+    border: solid 1px black;
+    margin-top: 2rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
 }
 
 .learn-more a{
