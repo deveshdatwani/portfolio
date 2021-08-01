@@ -61,7 +61,7 @@ a {
 
 .about-me-title {
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 2rem;
     margin: 5rem auto 1rem auto;
 }
 
@@ -83,6 +83,13 @@ a {
     margin-top: 2rem;
     margin-left: 0.5rem;
     margin-right: 0.5rem;
+}
+
+.learn-more {
+    margin: 1rem auto 1rem auto;
+    width: max-content;
+    padding: 0.5rem;
+    border: solid 1px;
 }
 
 .learn-more a{
@@ -177,7 +184,7 @@ a {
 
 .projects-title {
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 2rem;
     margin: 8rem auto 8rem auto;
 }
 
@@ -221,7 +228,7 @@ a {
 
 
 .updates-title {
-    font-size: 1.5rem;
+    font-size: 2rem;
     text-align: center;
     margin: 8rem auto 4rem auto;
 }
