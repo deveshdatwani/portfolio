@@ -200,6 +200,7 @@ a {
 }
 
 .card-photo img {
+    object-fit: cover;
     height: 20rem;
     width: 20rem;
     border-radius: 50% 50%;
