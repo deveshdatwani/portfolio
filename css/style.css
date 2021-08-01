@@ -48,7 +48,7 @@ a {
     margin: 5rem auto 5rem auto;
 }
 
-.profile img { 
+.profile img {
     height: inherit;
     width: inherit;
     object-fit: cover;
