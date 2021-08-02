@@ -393,6 +393,9 @@ a {
         margin-bottom: 1rem;
     }
 
+    .skill-set {
+        padding: 1rem;
+    }
 }
 
 @media screen and (max-width:900px) {
