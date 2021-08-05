@@ -339,6 +339,19 @@ a {
     text-align: center;
 }
 
+.aerial-vehicles-images {
+    width: 50%;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.aerial-vehicles-images img{
+    width: inherit;
+    object-fit: cover;
+}
+
 @media screen and (max-width:400px) {
     
     .profile {
@@ -442,5 +455,8 @@ a {
     .learning-title {
         margin-bottom: 1rem;
     }
+
+    .aerial-vehicles-images {
+        width: 90%;
 
 }
