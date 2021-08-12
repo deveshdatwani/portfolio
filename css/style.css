@@ -1,462 +1,171 @@
-*, body, html {
+*, body, html, a {
     box-sizing: border-box;
     padding: 0;
     margin: 0;
-}
-
-a {
     text-decoration: none;
-    color: black;
-    display: flex;
-    align-items: center;
+    font-family: 'Open Sans', sans-serif;
+    scroll-behavior: smooth;
 }
 
-.header {
-    color: white;
-    display: flex;
-    font-weight: 100;
-    font-size: 3rem;
-    padding: 2rem;
-    background: #36454f;
-    flex-wrap: wrap;
+.container {
+    width: 50%;
+    margin: auto;
+    padding: 1rem;
 }
 
-.name {
-    flex: 5;
-    display: flex;
-    align-items: center;
-}
-
-.social-media {
-    color: white;
-    flex: 5;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-}
-
-.social-media i {
-    color: white;
-    margin: 0.5rem;
+.topic {
+    text-align: left;
+    margin: 5rem 0 1rem 0;
     font-size: 1.5rem;
 }
 
-.profile {
-    height: 30rem;
-    width: 30rem;
-    object-fit: cover;
-    margin: 5rem auto 5rem auto;
+a { 
+    color: #0071d8;
 }
 
-.profile img {
-    height: inherit;
-    width: inherit;
-    object-fit: cover;
-    border-radius: 50% 50%;
+.my-name {
+    text-align: center;
+    margin-top: 5rem;
+    font-size: larger;    
+}
+
+.navigation {
+    text-align: center;
+}
+
+.navigation div {
+    display: inline-block;
+    margin-top: 1rem;
 }
 
 .about-me {
-    margin: 0 auto 10rem auto;
-}
-
-.about-me-title {
-    text-align: center;
-    font-size: 2rem;
-    margin: 5rem auto 1rem auto;
-}
-
-.about-me-short {
-    text-align: center;
-}
-
-.learn-more-download-cv {
     display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
-    width: max-content;
     margin: auto;
 }
 
-.learn-more-download-cv div {
-    padding: 0.5rem;
-    border: solid 1px black;
-    margin-top: 2rem;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
-}
-
-.learn-more {
-    margin: 1rem auto 1rem auto;
-    width: max-content;
-    padding: 0.5rem;
-    border: solid 1px;
-    font-size: 1rem;
-}
-
-.learn-more a{
-    text-decoration: none;
-    color: black;
-}
-
-.learn-more:hover {
-    background: #36454f;
-    color: white;
-}
-
-.learn-more p:hover {
-    color: white;
-    background: #36454f;
-}
-
-.skills {
-    display: flex;
-    flex-wrap: wrap;
-    width: 80%;
-    margin: auto;
-    font-size: 1.5rem;
-}
-
-.skill-set {
-    background: #36454f;
-    border: solid 2px lightgray;
-    color: lightgray;
-    display: flex;
+.about-me-description { 
     flex: 1;
-    margin: 1rem;
-    flex-direction: column;
-    min-height: 20rem;
-    padding: 3rem;
-    border-radius: 1rem;
-}
-
-.my-skillset {
-    flex: 5;
-    text-align: center;
-    font-size: 2rem;
-}
-
-.my-skillset-list {
-    padding: 1rem;
-    flex: 15;
-    text-align: center;
-    font-size: 1rem;
     display: flex;
-    flex-direction: row;
+    text-align: justify;
 }
 
-.skill-type {
+.profile-image {
     flex: 1;
-    text-align: right;
-    margin-right: 1rem;
-}
-
-.skill-languages {
-    flex: 1;
-    text-align: left;
-}
-
-.learning {
-    border: solid 2px lightgray;
-    color: lightgray;
-    display: flex;
-    flex: 1;
-    background: #36454f;
-    margin: 1rem;
-    flex-direction: column;
-    min-height: 20rem;
-    padding: 3rem;
     text-align: center;
-    border-radius: 1rem;
+    height: 18rem;
+    width: 18rem;
 }
 
-.learning-title {
-    flex: 5;
-    font-size: 2rem;
-}
-
-.learning-list {
-    flex: 15;
-    font-size: 1rem;
-}
-
-.projects {
-    margin: 5rem auto 0 auto;
-}
-
-.projects-title {
-    text-align: center;
-    font-size: 2rem;
-    margin: 8rem auto 8rem auto;
-}
-
-.project-container {
-    width: 80%;
-    margin: auto;
-}
-
-.projects-cards {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 1rem;
-    text-align: center;
-    justify-content: center;
-}
-
-.projects-cards-card {
-    height: 30rem;
-    width: 25rem;
-    margin: 1rem;
-    border-radius: 1rem;
-}
-
-.card-photo {
-    flex: 10;
+.profile-image img {
+    padding-left: 1rem;
     width: inherit;
-}
-
-.card-photo img {
-    object-fit: cover;
-    height: 20rem;
-    width: 20rem;
-    border-radius: 50% 50%;
-}
-
-.card-content {
-    flex: 5;
-    font-size: 1.2rem;
-    margin: 1rem;
-}
-
-
-.updates-title {
-    font-size: 2rem;
-    text-align: center;
-    margin: 8rem auto 4rem auto;
-}
-
-.updates-content {
-    border: solid 1px lightgray;
-    width: 40%;
-    margin: auto;
-    overflow: scroll;
-    -ms-overflow-style: none; 
-    height: 20rem;
-    margin-bottom: 5rem;
-    padding: 1rem;
-    border-radius: 1rem;
-}
-
-.updates-content::-webkit-scrollbar {
-    display: none;
-  }
-
-.news {
-    display: flex;
-    height: 5rem;
-    margin: 1rem auto 1rem auto;
-    width: 100%;
-}
-
-.news:hover {
-    background: #36454f;
-    color: white;
-    border-radius: 1rem;
-}
-
-.news-img {
-    flex: 5;
-    height: 5rem;
-    width: 5rem;
-    object-fit: contain;    
-}
-
-.news-img img {
     height: inherit;
-    width: inherit;
     object-fit: cover;
+    border-radius: 1.5rem; 
 }
 
-.news-title {
-    flex: 25;
+.profile-about-me {
+    flex: 5;
     display: flex;
-    align-items: center;
-    padding: 1rem;
-    font-size: 1.2rem;
-}
-
-.about-me-description {
-    width: 50%;
-    margin: auto;
+    flex-direction: column;
     text-align: justify;
+    align-content: center;
 }
 
-.academics {
-    width: max-content;
-    margin: auto;
-    text-align: justify;
-    margin-bottom: 5rem;
-}
-
-.academics p {
-    padding: 0.1rem;
-}
-
-.devesh-rc {
+.social-media-links {
+    flex: 1; 
     text-align: center;
-    width: 60%;
-    height: auto;
-    margin: auto;
-    margin-top: 2rem;
 }
 
-.devesh-rc img {
+.social-media-links a{
+    margin-top: 1rem;
+    display: inline-block;
+}
+
+.technology-stack {
+    margin: 2rem 0 2rem 0;
+}
+
+li {
+    margin-left: 1rem;
+    font-size: 0.9rem;
+    list-style: circle;
+}
+
+.project {
+    display: flex;
+    margin: 1rem 0 0 0;
+    flex-wrap: wrap;
+}
+
+.project-image {
+    flex: 1;
     height: inherit;
     width: inherit;
 }
 
-.contact-me {
-    background: #36454f;
-    color: lightgray;
-    min-height: 8rem;
-    display: flex;
-    flex-wrap: wrap ;
-}
-
-.contact-me-container {
-    width: 30%;
-    margin: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    border: solid 1px lightgray;
-    border-radius: 1rem;
-    padding: 1rem;
-}
-
-.contact {
-    flex: 5;
-    text-align: center;
-}
-
-.aerial-vehicles-images {
-    width: 50%;
-    margin: auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.aerial-vehicles-images img{
-    width: inherit;
+.project-image img {
+    height: 8rem;
+    width: 8rem;
     object-fit: cover;
+}
+
+.project-description {
+    flex: 5;
+    margin-left: 1rem;
+}
+
+.project-description #key {
+    font-size: 0.9rem;
+    color: darkgrey;
+}
+
+.project-description #year {
+    font-size: 0.9rem;
+}
+
+.update {
+    display: flex;
+}
+
+.update-year {
+    flex: 2;
+}
+
+.update-description { 
+    flex: 6;
+}
+
+footer {
+    font-size: 0.7rem;
+    text-align: center;
 }
 
 @media screen and (max-width:400px) {
     
-    .profile {
-        width: 20rem;
-        width: 20rem;
+    .about-me {
+        margin-top: 2rem;
     }
 
-    .about-me-short {
-        width: 80%;
-        margin: auto;
-    }
-
-    .name {
-        font-size: 2rem;
-    }
-
-    .updates-content {
-        width: 90%;
-        justify-content: center;
-    }
-
-    .send-email form button {
-        width: 40%;
-    }
-    
-    .send-email {
-        margin-top: 1rem;
-    }
-
-    .about-me-description {
-
+    .container {
         width: 80%;
     }
 
-    .academics {
-        width: 80%;
-    }
-
-    .profile {
-        height: 20rem;
-        width: 20rem;
-
-    }
-
-    .news:hover {
-        background: #36454f;
-        color: white;
-        border-radius: 1rem;
-    }
-
-    .learning-title {
-        margin-bottom: 1rem;
-    }
-
-    .skill-set {
-        padding: 1rem;
-    }
 }
 
 @media screen and (max-width:900px) {
     
-    .profile {
-        width: 20rem;
-        width: 20rem;
-    }
-
-    .about-me-short {
+    .container {
         width: 80%;
-        margin: auto;
     }
 
-    .name {
-        font-size: 2rem;
+}
+
+@media screen and (max-width:1200px) {
+    
+    .container {
+        width: 80%;
     }
 
-    .updates-content {
-        width: 90%;
-        justify-content: center;
-    }
-
-    .about-me-description {
-        width: 90%;
-    }
-
-    .academics {
-        width: 90%;
-    }
-
-    .profile {
-        height: 20rem;
-        width: 20rem;
-
-    }
-
-    .news:hover {
-        background: #36454f;
-        color: white;
-        border-radius: 1rem;
-    }
-
-    .learning-title {
-        margin-bottom: 1rem;
-    }
-
-    .aerial-vehicles-images {
-        width: 90%;
-    }
 }

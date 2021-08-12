@@ -5,201 +5,177 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap" rel="stylesheet">
     <title>Devesh Datwani</title>
 </head>
 <body>
-    <div class="header">
-        <div class="name">
-            <p>Devesh Datwani</p>
-        </div>
-        <div class="social-media">
-            <a href = "mailto: datwanidevesh@gmail.com"><i class="fa fa-envelope"></i></a>
-            <a href="https://www.linkedin.com/in/devesh-datwani-810249129/"><i class="fa fa-linkedin"></i></a>
-            <a href="https://github.com/deveshdatwani"><i class="fa fa-github"></i></a>
-            <a href="https://twitter.com/datwanidevesh"><i class="fa fa-twitter"></i></a>
-        </div>
-    </div>
-    <div class="profile">
-        <img src="assets/cover2.jpg" alt="">
-    </div>
-    <div class="about-me">
-        <div class="about-me-title">
-            <p>About me</p>
-        </div>
-        <div class="about-me-short">
-            <p>I'm a Masters of Science in Robotics Engineering student interested in automating vehicles and other mundane tasks of life.</p>
-        </div>
-        <div class="learn-more-download-cv">
-            <div class="learn-more">
-                <a href="aboutme.html">
-                    <p>Learn more</p>
-                </a>
+    <div class="container">
+        <header>
+            <div class="my-name">
+                <h1>Devesh Datwani</h1>
             </div>
-            <div class="learn-more">
-                <a href="assets/devesh datwnani cv.pdf" download>
-                    <p>Download CV</p>
-                </a>
+            <div class="navigation">
+                <a href="#about-me"><div class="div">About<span style="color: black;">&nbsp; / &nbsp;</span></div></a>
+                <a href="#projects"><div class="div">Projects<span style="color: black;">&nbsp; / &nbsp;</span></div></a>
+                <a href="#updates"><div class="div">Updates<span style="color: black;">&nbsp; / &nbsp;</span></div></a>
+                <a href="mailto: datwanidevesh@gmail.com"><div class="div">Contact</div></a>
             </div>
+        </header>
+        <div class="topic">
+            <h5>About</h5>
         </div>
-    </div>
-    <div class="skills">
-        <div class="skill-set">
-            <div class="my-skillset">
-                <p>My Technology Stack</p>
-            </div>
-            <div class="my-skillset-list">
-                <div class="skill-type">
-                    <p>Languages</p>
+        <div class="about-me">
+            <div class="profile-about-me" id="about-me">
+                <div class="about-me-description">
+                    <p>I am currently an incoming Masters of Science in Robotics Engineering student at <a href="https://www.wpi.edu/" target="_blank">Worcester Polytechnic Institute</a>, MA.
+                    I am interested in automating industrial and logitistical vehicles and other mundane tasks of life.
+                    I believe in Universal Basic Payment and that labour is modern day slavery that can and should be replaced with automation so that we find the dignity of human life once again. My coursework at Worcester Polytechnic Institute involves Machine Learning, Deep Learning, Robot Dynamics, Robot Control, Robot Navigation, Motion Planning and Technology Commercialization. <a href="aboutme.html">Learn more</a> about me.</p>    
                 </div>
-                <div class="skill-languages">
-                    <p>Python</p>
-                    <p>C</p>
-                    <p>C++</p>
-                    <p>HTML/CSS</p>
+                <div class="social-media-links">
+                    <a href="https://www.linkedin.com/in/devesh-datwani-810249129/" target="_blank"><p>LinkedIn<span style="color: black;">&nbsp; / &nbsp;</span></p></a>
+                    <a href="https://github.com/deveshdatwani" target="_blank"><p>Github<span style="color: black;">&nbsp; / &nbsp;</span></p></a>
+                    <a href="https://www.hackerrank.com/datwanidevesh?hr_r=1" target="_blank"><p>Hackerrank<span style="color: black;">&nbsp; / &nbsp;</span></p></a>
+                    <a href="https://twitter.com/datwanidevesh" target="_blank"><p>Twitter</p></a>
                 </div>
             </div>
-            <div class="my-skillset-list">
-                <div class="skill-type">
-                    <p>Libraries / Frameworks</p>
-                </div>
-                <div class="skill-languages">
-                    <p>Django & FastAPI</p>
-                    <p>OpenCV</p>
-                    <p>Pandas</p>
-                    <p>Numpy</p>
-                    <p>Scikit-learn</p>
-                </div>
-            </div>
-            <div class="my-skillset-list">
-                <div class="skill-type">
-                    <p>Micro controllers</p>
-                </div>
-                <div class="skill-languages">
-                    <p>Arduino Uno</p>
-                    <p>Raspberry Pi 3 B+</p>
-                </div>
+            <div class="profile-image">
+                <img src="assets/cover2.jpg" alt="">
             </div>
         </div>
-        <div class="learning">
-            <div class="learning-title">
-                <p>What I'm Currently Learning at WPI, MA</p>
+        <div class="technology-stack">
+            <div class="topic">
+                <h5>Technology Stack</h5>
             </div>
-            <div class="learning-list">
-                <p>Robot Control</p>
-                <p>Robot Dynamics</p>
-                <p>Deep Learning</p>
-                <p>Computer Vision</p>
-                <p>Robot Motion Planning</p>
-                <p>Machine Learning</p>
+            <div>
+                <p>Programming Languages</p>
+                <ul>
+                    <li>C</li>
+                    <li>C++</li>
+                    <li>Python</li>
+                </ul>
+                <br>
+            </div>
+            <div>
+                <p>Libraries/Frameworks</p>
+                <ul>
+                    <li>Django, FastAPI</li>
+                    <li>OpenCV</li>
+                    <li>Pandas, Numpy</li>
+                    <li>Scikit-learn</li>
+                    <li>Tensorflow</li>
+                </ul>
+                <br>
+            </div>
+            <div>
+                <p>Microcontrollers</p>
+                <ul>
+                    <li>Arduino Uno</li>
+                    <li>Raspberry Pi 3 B+</li>
+                </ul>
+                <br>
             </div>
         </div>
-    </div>
-    <div class="projects">
-        <div class="projects-title">
-            <p>My Projects</p>
-        </div>
-        <div class="project-container">
-            <div class="projects-cards">
-                <div class="projects-cards-card">
-                    <div class="card-photo">
+        <div class="projects" id="projects">
+            <div class="topic">
+                <h5>Projects</h5>
+            </div>
+            <div class="project-container">
+                <div class="project">
+                    <div class="project-image">
                         <img src="assets/plasma.png" alt="">
                     </div>
-                    <div class="card-content">
-                        <p>Plasma Actuators For Flow Induction</p>
-                        <a href="https://datwanidevesh.medium.com/experimenting-with-plasma-actuators-inside-hollow-pipes-ddd5c2ef837">
-                            <div class="learn-more">Learn more</div>
+                    <div class="project-description">
+                        <a href="">
+                            <p>Experimenting with plasma actuators for flow induction inside hollow pipes</p>
                         </a>
+                        <p id="year">August 2017 - May 2018</p>
+                        <p id="key">Keywords: plasma actuator, high-voltage transformer, flow control, boundary jet</p>
                     </div>
                 </div>
-                <div class="projects-cards-card">
-                    <div class="card-photo">
+                <div class="project">
+                    <div class="project-image">
                         <img src="assets/trendsonthemap.jpeg" alt="">
                     </div>
-                    <div class="card-content">
-                        <p>Trends On The Map</p>
-                        <a href="https://github.com/deveshdatwani/trendsonthemap">
-                            <div class="learn-more">Learn more</div>
+                    <div class="project-description">
+                        <a href="">
+                            <p>Displaying live twitter trends on a world map for users to stay updated about world happenings</p>
                         </a>
+                        <p id="year">September 2020</p>
+                        <p id="key">Keywords: twitter, python, flask, amazon aws, html/css</p>
                     </div>
                 </div>
-                <div class="projects-cards-card">
-                    <div class="card-photo">
+                <div class="project">
+                    <div class="project-image">
                         <img src="assets/yawn-detection.png" alt="">
                     </div>
-                    <div class="card-content">
-                        <p>Yawn Detection Using DLIB</p>
-                        <a href="https://github.com/deveshdatwani/yawn-detection">
-                            <div class="learn-more">Learn more</div>
+                    <div class="project-description">
+                        <a href="">
+                            <p>Built a yawn detector tool using OpenCV and Dlib Python libraries</p>
                         </a>
+                        <p id="year">July 2019</p>
+                        <p id="key">Keywords: python 3, opncv, dlib, machine learning, facial expression detection</p>
                     </div>
                 </div>
-                <div class="projects-cards-card">
-                    <div class="card-photo">
+                <div class="project">
+                    <div class="project-image">
                         <img src="assets/lane-detection.jpg" alt="">
                     </div>
-                    <div class="card-content">
-                        <p>Lane Detection On Mumbai Roads</p>
-                        <a href="https://github.com/deveshdatwani/self-driving-cars-India">
-                            <div class="learn-more">Learn more</div>
+                    <div class="project-description">
+                        <a href="">
+                            <p>Applied computer vision algorithms using OpenCV library to detect edge (lanes lines) on the streets of Mumbai, India</p>
                         </a>
+                        <p id="year">December 2020</p>
+                        <p id="key">Keywords: python 3, opncv, dlib, machine learning, facial expression detection</p>
                     </div>
                 </div>
-                <div class="projects-cards-card">
-                    <div class="card-photo">
-                        <img src="assets/aerial-vehicles.jpg" alt="">
+                <div class="project">
+                    <div class="project-image">
+                        <img src="assets/devesh-rc.JPG" alt="">
                     </div>
-                    <div class="card-content">
-                        <p>Aerial Vehicles</p>
-                        <a href="aerial-vehicles.html">
-                            <div class="learn-more">Learn more</div>
+                    <div class="project-description">
+                        <a href="">
+                            <p>Hobby designing, building and flying RC aerial vehicles</p>
                         </a>
+                        <p id="year">May 2010 - Present</p>
+                        <p id="key">Keywords: radio, rc plane, quadcopter </p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="updates">
-        <div class="updates-title">
-            <p>Extra Cirricular</p>
+        <div class="research">
+           <!-- <div class="topic"> /
+                <h5>Research</h5>
+            </div> -->
         </div>
-        <div class="updates-content">
-            <a href="https://www.hackerrank.com/datwanidevesh">
-                <div class="news">
-                    <div class="news-img">
-                        <img src="assets/hackerrank-update.jpg" alt="">
+        <div class="updates" id="updates">
+            <div class="topic">
+                <h5>Updates</h5>
+            </div>
+            <div class="updates-container">
+                <div class="update">
+                    <div class="update-year">
+                        <p>August 2021</p>
                     </div>
-                    <div class="news-title">
-                        <p>Solving problems on Hackerrank</p>
-                    </div>
-                </div>
-            </a>
-            <a href="https://www.hackerrank.com/datwanidevesh">
-                <div class="news">
-                    <div class="news-img">
-                        <img src="assets/leet-code.jpeg" alt="">
-                    </div>
-                    <div class="news-title">
-                        <p>My Leet Code</p>
+                    <div class="update-description">
+                        <p>Joining <a href="https://www.wpi.edu/" target="_blank">Worcester Polytechnic Institute</a> as an MS in Robotics Engineering student</p>
                     </div>
                 </div>
-            </a>
-            <a href="https://www.hackerrank.com/datwanidevesh">
-                <div class="news">
-                    <div class="news-img">
-                        <img src="assets/os.jpg" alt="">
+                <div class="update">
+                    <div class="update-year">
+                        <p>May 2021</p>
                     </div>
-                    <div class="news-title">
-                        <p>Reading Operating Systems</p>
+                    <div class="update-description">
+                        <p>Started interning as a web developer (backend) at <a href="https://www.nurturelabs.co/" target="_blank">Nurturelabs</a></p>
                     </div>
                 </div>
-            </a>
+            </div>
         </div>
-    </div>
-    <div class="contact-me">
-    </div>
-    <div style="text-align: center; background: #36454f; color: white; padding: 1rem;">
-        <p>&copy; Devesh Datwani. All rights reserved, 2021</p>
+        <br><br><br>
+        <footer>
+            <p>Website design inspired by Jon Barron's <a href="https://jonbarron.info/">website.</a> Last updated on August 2021. Rights reserved.</p>
+        </footer>
     </div>
 </body>
 </html>
