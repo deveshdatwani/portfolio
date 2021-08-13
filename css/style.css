@@ -55,14 +55,14 @@ a {
     text-align: center;
     height: 18rem;
     width: 18rem;
+    margin-left: 1rem;
 }
 
 .profile-image img {
-    padding-left: 1rem;
     width: inherit;
     height: inherit;
     object-fit: cover;
-    border-radius: 1.5rem; 
+    border-radius: 1rem;
 }
 
 .profile-about-me {
@@ -74,12 +74,12 @@ a {
 }
 
 .social-media-links {
+    margin-top: 1rem;
     flex: 1; 
     text-align: center;
 }
 
 .social-media-links a{
-    margin-top: 1rem;
     display: inline-block;
 }
 
@@ -144,12 +144,31 @@ footer {
 
 @media screen and (max-width:400px) {
     
+    .my-name {
+        font-size: 1.1rem;
+    }
+
+    .navigation {
+        font-size: 0.8rem;
+    }
+
     .about-me {
         margin-top: 2rem;
     }
 
     .container {
         width: 80%;
+        padding: 0;
+    }
+
+    .profile-image {
+        margin-left: 0;
+        padding-left: 0;
+    }
+
+    .social-media-links {
+        font-size: 0.8rem;
+        margin-bottom: 0.8rem
     }
 
 }
