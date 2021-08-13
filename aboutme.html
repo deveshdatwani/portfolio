@@ -5,52 +5,96 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
-    <title>About Devesh Datwani</title>
+    <title>Devesh Datwani</title>
 </head>
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        width: 60%;
+        text-align: justify;
+    }
+    .about-me-learn-more {
+        margin-top: 5rem;
+    }
+    .about-me-gallery {
+        width: 100%;
+        text-align: center;
+    }
+    .about-me-gallery div {
+        height: 20rem;
+        width: auto;
+        object-fit: contain;
+        display: inline-block;
+    }
+    .about-me-gallery div img {
+        height: inherit;
+        object-fit: contain;
+        border-radius: 1rem;
+    }
+    @media screen and (max-width:400px) {
+        .container {
+            width: 80%;
+            margin: 0rem;
+            text-align: center;
+        }
+        .about-me-gallery div {
+            width: inherit;
+            height: auto;
+        }
+        .about-me-gallery div img{
+            width: inherit;
+            height: auto;
+        }           
+    }
+</style>
 <body>
-    <div class="about-me-title">
-        <p>About Me</p>
-    </div>
-    <div class="about-me-description">
-        <p>
-            I embarked on the journey of Robotics back in high school when I started building RC planes for a hobby. Reading about flight dynamics and electronics on the internet,I started building fixed wing RC aircraft from scratch. The process of building an aerial vehicles watch it take flight filled me up with joy. The process of building/creating/innovating is my Ikegai.
-        </p>
-        <div class="devesh-rc" style="width: 100%;">
-            <img src="assets/devesh-rc.JPG" alt="">
-        </div>
-        <br>
-        <p>
-            To fortify my hobby-turned-passion, I pursued undergraduate studies in Mechanical Engineering, which helped me build a strong foundation in engineering. My curriculum involved subjects such as mechatronics, machine design, C programming, and industrial electronics.
-        </p>
-        <br>
-        <p>
-            My career path took a detour when I joined my family-run business in logistics 6 months after completing my undergraduate studies. It was during this time that I realized how automation in logitics, starting from warehouse robotics to driverless trucks could make the logitics operations seemless. During the same time, I was experimenting with quadcopters and signed up for a Python Programming course near my home to learn how to program them. I can say with conviction that taking this course played a pivotal role in defining my career path ahead. This is because I realized the immense power that Python provided me to automate. 
-        </p>
-        <br>
-        <p>
-            Python and Machine Learning bridge the gap between my hobby and passion which is to build autonomous vehicles.
-        </p>
-        <br>
-        <p>
-            Having found my path, I quickly signed up to work in a digital marketing company in which I worked with a team to build machine learning tools for remarketing projects. This was essential as it gave me hands on experience with real world data. Getting hands on experience with real world data has helped me practically understand the benifits of machine learning algorithms.
-        </p>
-        <br>
-        <p>
-            I am currently an incoming student of Ms in Robotics at the Worcester Polytechnic Institute, MA, United States of America.
-        </p>
-        <div class="devesh-rc" style="width: 100%;">
-            <img src="assets/pov.gif" alt="RC POV">
-        </div>
-    </div>
-    <div class="about-me-title">
-        <p>Academics</p>
-    </div>
-    <div class="academics">
-        <p>Master of Science in Robotics Engineering, Worcester Polytechnic Institute, Massachussetts, USA 2021-2023</p>
-        <p>Mechanical Engineering, Mumbai University, Mumbai, India 2014-2018</p>
-    </div>
-    <div style="text-align: center; background: #36454f; padding: 1rem; color: white;">
-        <p>&copy; Devesh Datwani. All rights reserved, 2021</p>
+    <div class="container">
+        <div class="about-me-learn-more">
+            <p>
+                I embarked on the journey of Robotics back in high school when I started building RC planes for a hobby. Reading about flight dynamics and electronics on the internet,I started building fixed wing RC aircraft from scratch. The process of building an aerial vehicles watch it take flight filled me up with joy. The process of building/creating/innovating is my Ikegai.
+            </p>
+            <p>
+                To fortify my hobby-turned-passion, I pursued undergraduate studies in Mechanical Engineering, which helped me build a strong foundation in engineering. My curriculum involved subjects such as mechatronics, machine design, C programming, and industrial electronics.
+            </p>
+            <br>
+            <p>
+                My career path took a detour when I joined my family-run business in logistics 6 months after completing my undergraduate studies. It was during this time that I realized how automation in logitics, starting from warehouse robotics to driverless trucks could make the logitics operations seemless. During the same time, I was experimenting with quadcopters and signed up for a Python Programming course near my home to learn how to program them. I can say with conviction that taking this course played a pivotal role in defining my career path ahead. This is because I realized the immense power that Python provided me to automate. 
+            </p>
+            <br>
+            <p>
+                Python and Machine Learning bridge the gap between my hobby and passion which is to build autonomous vehicles.
+            </p>
+            <br>
+            <p>
+                Having found my path, I quickly signed up to work in a digital marketing company in which I worked with a team to build machine learning tools for remarketing projects. This was essential as it gave me hands on experience with real world data. Getting hands on experience with real world data has helped understand the problem solving capabilities machine learning algorithms have.
+            </p>
+            <br>
+            <div class="about-me-gallery">
+                <div>
+                    <img src="assets/pov.gif" alt="">
+                </div>
+                <div>
+                    <img src="assets/flyby.gif" alt="">
+                </div>
+                <div>
+                    <img src="assets/mikey2.jpg" alt="">
+                </div>
+                <div>
+                    <img src="assets/h-quad-air.jpeg" alt="">
+                </div>
+                <div>
+                    <img src="assets/aerial-vehicles.jpg" alt="">
+                </div>
+                <div>
+                    <img src="assets/foam_rc.jpeg" alt="">
+                </div>
+                <div>
+                    <img src="assets/mission-plane.jpg" alt="">
+                </div>
+            </div>
     </div>
 </body>
 </html>
