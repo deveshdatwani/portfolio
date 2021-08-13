@@ -127,6 +127,7 @@ li {
 
 .update {
     display: flex;
+    margin-bottom: 0.2rem;
 }
 
 .update-year {
