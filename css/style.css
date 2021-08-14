@@ -149,12 +149,18 @@ footer {
         font-size: 1.1rem;
     }
 
+    .about-me {
+        margin-top: 0;
+        padding-top: 0;
+    }
+
     .navigation {
         font-size: 0.8rem;
     }
 
     .about-me {
         margin-top: 2rem;
+        margin-bottom: 0;
     }
 
     .container {
@@ -175,6 +181,10 @@ footer {
 }
 
 @media screen and (max-width:900px) {
+
+    .about-me {
+        margin-top: 0;
+    }
     
     .container {
         width: 80%;
