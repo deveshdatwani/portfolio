@@ -7,6 +7,10 @@
     scroll-behavior: smooth;
 }
 
+h5 {
+    font-size: 1rem;
+}
+
 .container {
     width: 50%;
     margin: auto;
@@ -130,6 +134,7 @@ li {
 .update {
     display: flex;
     margin-bottom: 0.2rem;
+    padding: 0.2rem;
 }
 
 .update-year {
