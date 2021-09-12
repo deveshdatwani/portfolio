@@ -31,6 +31,7 @@ a {
 
 .navigation {
     text-align: center;
+    font-size: 0.9rem;
 }
 
 .navigation div {
@@ -74,6 +75,7 @@ a {
 }
 
 .social-media-links {
+    font-size: 0.9rem;
     margin-top: 1rem;
     flex: 1; 
     text-align: center;
