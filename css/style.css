@@ -150,6 +150,11 @@ footer {
     text-align: center;
 }
 
+.certificate {
+    margin: 0;
+    padding: 0.2rem;
+}
+
 @media screen and (max-width:400px) {
     
     .my-name {
