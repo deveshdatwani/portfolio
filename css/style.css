@@ -6,6 +6,7 @@
     font-family: 'Montserrat';
     /* font-family: 'Open Sans', sans-serif; */
     scroll-behavior: smooth;
+    background-color: #FFF;
 }
 
 /*
@@ -100,12 +101,12 @@ a {
 li {
     margin-left: 1rem;
     font-size: 0.9rem;
-    list-style: circle;
+    list-style:   disc  ;
 }
 
 .project {
     display: flex;
-    margin: 1rem 0 0 0;
+    margin: 1rem 0 5rem 0;
     flex-wrap: wrap;
 }
 
@@ -116,8 +117,8 @@ li {
 }
 
 .project-image img {
-    height: 8rem;
-    width: 8rem;
+    height: 10rem;
+    width: 10rem;
     object-fit: cover;
 }
 
@@ -214,4 +215,15 @@ footer {
         width: 80%;
     }
 
+}
+
+ul {
+     color: grey; 
+     font-weight: bolder;
+     font-size: 0.8rem;
+}
+
+.order {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
 }
