@@ -24,7 +24,7 @@ h5 {
 .topic {
     text-align: left;
     margin: 5rem 0 2rem 0;
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     color: darkgrey;
 }
 
@@ -101,7 +101,8 @@ a {
 li {
     margin-left: 1rem;
     font-size: 0.9rem;
-    list-style:   disc  ;
+    list-style:   disc;
+    padding: 0.18rem;
 }
 
 .project {
