@@ -118,23 +118,25 @@ li {
 }
 
 .project-image img {
+    border-radius: 10%;
     height: 10rem;
     width: 10rem;
     object-fit: cover;
 }
 
 .project-description {
+    font-size: 1.2rem;
     flex: 5;
     margin-left: 1rem;
 }
 
 .project-description #key {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: darkgrey;
 }
 
 .project-description #year {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
 .update {
