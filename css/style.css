@@ -68,6 +68,10 @@ a {
     margin-left: 1rem;
 }
 
+.two-lines p{
+    display: inline-block;
+}
+
 .profile-image img {
     width: inherit;
     height: inherit;
