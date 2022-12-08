@@ -77,6 +77,7 @@ a {
     width: inherit;
     height: inherit;
     object-fit: cover;
+    border-radius: 1rem;
 }
 
 .profile-about-me {
