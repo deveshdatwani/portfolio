@@ -145,6 +145,11 @@ li {
     font-size: 0.8rem;
 }
 
+.project-description a {
+    color: #5A5A5A;
+    font-weight: 500;
+}
+
 .update {
     display: flex;
     margin-bottom: 0.2rem;
