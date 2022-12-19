@@ -14,16 +14,16 @@ p {
 }
 
 .container {
-    width: 50%;
+    width: 60%;
     margin: auto;
     padding: 1rem;
 }
 
 .topic {
     text-align: left;
-    margin: 7rem 0 2rem 0;
-    font-size: 1.3rem;
-    color: darkgrey;
+    margin: 4rem 0 1rem 0;
+    font-size: 1.2rem;
+    color: black;
 }
 
 a { 
@@ -33,7 +33,7 @@ a {
 .my-name {
     text-align: center;
     margin-top: 5rem;
-    font-size: 2.5rem;    
+    font-size: 2rem;    
 }
 
 .navigation {
@@ -50,20 +50,20 @@ a {
     display: flex;
     flex-wrap: wrap;
     margin: auto;
-    color: #5A5A5A;
 }
 
 .about-me-description { 
     flex: 1;
     display: flex;
     text-align: justify;
+    font-size: 0.9rem;
 }
 
 .profile-image {
     flex: 1;
     text-align: center;
-    height: 18rem;
-    width: 18rem;
+    height: 12rem;
+    width: 12rem;
     margin-left: 1rem;
 }
 
@@ -84,17 +84,21 @@ a {
     flex-direction: column;
     text-align: justify;
     align-content: center;
+    font-size: 0.9rem;
 }
+
 
 .social-media-links {
     font-size: 0.9rem;
-    margin-top: 1rem;
+    margin: 0 0 0 0;
     flex: 1; 
-    text-align: center;
+    padding: 0;
+    text-align: left;
 }
 
 .social-media-links a{
     display: inline-block;
+    margin: 0 0 0 0 ;
 }
 
 .technology-stack {
@@ -110,9 +114,8 @@ li {
 
 .project {
     display: flex;
-    margin: 1rem 0 5rem 0;
+    margin: 1rem 0 1rem 0;
     flex-wrap: wrap;
-    color: #5A5A5A;
 }
 
 .project-image {
@@ -130,23 +133,24 @@ li {
 }
 
 .project-description {
-    font-size: 1.2rem;
-    flex: 5;
+    font-size: 1rem;
+    flex: 7;
     margin-left: 1rem;
 }
 
 .project-description #key {
     font-size: 0.8rem;
-    color: darkgrey;
+    color: black;
+    font-style: italic;
 }
 
 .project-description #year {
     font-size: 0.8rem;
 }
 
-.project-description a {
-    color: #5A5A5A;
+.project-description a, p {
     font-weight: 500;
+    font-size: 0.9rem;
 }
 
 .update {
@@ -163,8 +167,8 @@ li {
     flex: 6;
 }
 
-footer {
-    font-size: 0.7rem;
+footer p{
+    font-size: 0.6rem;
     text-align: center;
 }
 
@@ -231,14 +235,17 @@ footer {
 }
 
 ul {
-     color: #5A5A5A;
      font-size: 0.8rem;
 }
 
 .order {
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-    color:#5A5A5A;
+    font-size: 0.9rem;
+    margin: 0 0 0.5rem 0 ;
+}
+
+.order li {
+    font-size: 0.7rem;
+    margin: 0 0 0 0;
 }
 
 
