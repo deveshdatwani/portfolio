@@ -21,7 +21,7 @@ p {
 
 .topic {
     text-align: left;
-    margin: 4rem 0 1rem 0;
+    margin: 4rem 0 1.5rem 0;
     font-size: 1.2rem;
     color: black;
 }
@@ -114,12 +114,12 @@ li {
 
 .project {
     display: flex;
-    margin: 1rem 0 1rem 0;
+    margin: 2rem 0 01rem 0;
     flex-wrap: wrap;
 }
 
 .project-image {
-    flex: 1;
+    flex: 0;
     height: inherit;
     width: inherit;
 }
@@ -133,13 +133,13 @@ li {
 }
 
 .project-description {
-    font-size: 1rem;
+    font-size: 0.9rem;
     flex: 7;
     margin-left: 1rem;
 }
 
 .project-description #key {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: black;
     font-style: italic;
 }
@@ -246,6 +246,13 @@ ul {
 .order li {
     font-size: 0.7rem;
     margin: 0 0 0 0;
+    padding: 0;
+}
+
+li {
+    margin: 0;
+    padding: 0;
+    font-size: 0.8rem;
 }
 
 
