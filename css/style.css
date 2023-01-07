@@ -6,7 +6,7 @@
     font-family: 'Open Sans';
     /* font-family: 'Open Sans', sans-serif; */
     scroll-behavior: smooth;
-    background-color: #FFF;
+    background-color: #F8F8F8;
 }
 
 p {
@@ -129,7 +129,7 @@ li {
     height: 7rem;
     width: 7rem;
     object-fit: cover;
-    border-radius: 0.2rem;
+    border-radius: 0.3rem;
 }
 
 .project-description {
