@@ -186,16 +186,18 @@ footer p{
     .about-me {
         margin-top: 0;
         padding-top: 0;
+        display: block;
     }
 
     .navigation {
         font-size: 0.8rem;
     }
 
-    .about-me {
+    .about-me img{
         margin-top: 2rem;
         margin-bottom: 0;
     }
+
 
     .container {
         width: 80%;
@@ -205,6 +207,7 @@ footer p{
     .profile-image {
         margin-left: 0;
         padding-left: 0;
+        margin: auto;
     }
 
     .social-media-links {
