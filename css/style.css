@@ -13,9 +13,6 @@ p {
     font-size: 1rem;
 }
 
-.company {
-        
-}
 
 .container {
     width: 40%;
@@ -144,8 +141,8 @@ li {
 
 .project-description #key {
     font-size: 0.7rem;
-    color: black;
     font-style: italic;
+    margin-top: 1rem;
 }
 
 .project-description #year {
