@@ -3,5 +3,5 @@ on: push
 
 jobs:
         steps:
-                uses: actions/checkout@v4
+                uses: actions/checkout
                 run: echo "running event"
