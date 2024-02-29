@@ -2,6 +2,5 @@ name: My first action
 on: push
 
 jobs:
-        runs-on: ubuntu:latest
         steps:
                 run: echo "running event"
