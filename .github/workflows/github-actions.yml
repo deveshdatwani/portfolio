@@ -1,7 +1,0 @@
-name: My first action
-on: push
-
-jobs:
-        steps:
-                uses: actions/checkout@v1
-                run: echo "running event"
