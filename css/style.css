@@ -1,264 +1,3 @@
-*, body, html, a {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-    text-decoration: none;
-    font-family: 'Open Sans';
-    /* font-family: 'Open Sans', sans-serif; */
-    scroll-behavior: smooth;
-    background-color: #FFF;
-}
-
-p {
-    font-size: 1rem;
-}
-
-
-.container {
-    width: 40%;
-    margin: auto;
-    padding: 1rem;
-}
-
-.topic {
-    text-align: left;
-    margin: 4rem 0 1.5rem 0;
-    font-size: 1.2rem;
-    color: black;
-}
-
-a { 
-    color: #0071d8;
-}
-
-.my-name {
-    text-align: center;
-    margin-top: 5rem;
-    font-size: 2rem;    
-}
-
-.navigation {
-    text-align: center;
-    font-size: 0.9rem;
-}
-
-.navigation div {
-    display: inline-block;
-    margin-top: 1rem;
-}
-
-.about-me {
-    display: flex;
-    flex-wrap: wrap;
-    margin: auto;
-}
-
-.about-me-description { 
-    flex: 1;
-    display: flex;
-    text-align: justify;
-    font-size: 0.9rem;
-}
-
-.profile-image {
-    flex: 1;
-    text-align: center;
-    height: 12rem;
-    width: 12rem;
-    margin-left: 1rem;
-}
-
-.two-lines p{
-    display: inline-block;
-}
-
-.profile-image img {
-    width: inherit;
-    height: inherit;
-    object-fit: cover;
-    border-radius: 2rem;
-}
-
-.profile-about-me {
-    flex: 5;
-    display: flex;
-    flex-direction: column;
-    text-align: justify;
-    align-content: center;
-    font-size: 0.9rem;
-}
-
-
-.social-media-links {
-    font-size: 0.9rem;
-    margin: 0 0 0 0;
-    flex: 1; 
-    padding: 0;
-    text-align: left;
-}
-
-.social-media-links a{
-    display: inline-block;
-    margin: 0 0 0 0 ;
-}
-
-.technology-stack {
-    margin: 0;
-}
-
-li {
-    margin-left: 1rem;
-    font-size: 0.9rem;
-    list-style:   disc;
-    padding: 0.18rem;
-}
-
-.project {
-    display: flex;
-    margin: 2rem 0 01rem 0;
-    flex-wrap: wrap;
-}
-
-.project-image {
-    flex: 0;
-    height: inherit;
-    width: inherit;
-}
-
-.project-image img {
-    border-radius: 2%;
-    height: 7rem;
-    width: 7rem;
-    object-fit: cover;
-    border-radius: 0.3rem;
-}
-
-.project-description {
-    font-size: 0.9rem;
-    flex: 7;
-    margin-left: 1rem;
-}
-
-.project-description #key {
-    font-size: 0.7rem;
-    font-style: italic;
-}
-
-.project-description #year {
-    font-size: 0.8rem;
-}
-
-.project-description a, p {
-    font-weight: 500;
-    font-size: 0.9rem;
-}
-
-.update {
-    display: flex;
-    margin-bottom: 0.2rem;
-    padding: 0.2rem;
-}
-
-.update-year {
-    flex: 2;
-}
-
-.update-description { 
-    flex: 6;
-}
-
-footer p{
-    font-size: 0.6rem;
-    text-align: center;
-}
-
-.certificate {
-    margin: 0;
-    padding: 0.2rem;
-}
-
-@media screen and (max-width:400px) {
-    
-    .my-name {
-        font-size: 1.1rem;
-    }
-
-    .about-me {
-        margin-top: 0;
-        padding-top: 0;
-        display: block;
-    }
-
-    .navigation {
-        font-size: 0.8rem;
-    }
-
-    .about-me img{
-        margin-top: 2rem;
-        margin-bottom: 0;
-    }
-
-
-    .container {
-        width: 80%;
-        padding: 0;
-    }
-
-    .profile-image {
-        margin-left: 0;
-        padding-left: 0;
-        margin: auto;
-    }
-
-    .social-media-links {
-        font-size: 0.8rem;
-        margin-bottom: 0.8rem
-    }
-
-}
-
-@media screen and (max-width:900px) {
-
-    .about-me {
-        margin-top: 0;
-    }
-    
-    .container {
-        width: 80%;
-    }
-
-}
-
-@media screen and (max-width:1200px) {
-    
-    .container {
-        width: 80%;
-    }
-
-}
-
-ul {
-     font-size: 0.8rem;
-}
-
-.order {
-    font-size: 0.9rem;
-    margin: 0 0 0.5rem 0 ;
-}
-
-.order li {
-    font-size: 0.7rem;
-    margin: 0 0 0 0;
-    padding: 0;
-}
-
-li {
-    margin: 0;
-    padding: 0;
-    font-size: 0.8rem;
-}
-
-
 body {
     margin: 0;
     padding: 0;
@@ -278,7 +17,7 @@ body {
 }
 @media (min-width: 992px) {
     .container {
-        width: 970px;
+        width: 700px;
      }
 }
 .row {
@@ -335,8 +74,8 @@ h2 {
     border-radius: 120px;
 }
 .iico {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
 }
 #demail {
     margin-top: 10px;
@@ -371,7 +110,7 @@ hr {
     vertical-align: top;
     font-size: 17px;
     padding-left: 20px;
-    padding-bottom: 20px;
+    padding-bottom: 50px;
 }
 .entry {
 }
@@ -409,11 +148,6 @@ hr {
     font-size: 36px;
     margin-bottom: 20px;
     margin-top: 40px;
-}
-#featured-talks .row {
-    grid-column-gap: 10px;
-    grid-row-gap: 10px;
-    padding-bottom: 30px;
 }
 .card {
     grid-column: span 3;
@@ -506,4 +240,25 @@ hr {
 .nodot {
     list-style-type: none;
     padding-left: 0;
+}
+.my-name {
+    text-align: center;
+    margin-top: 5rem;
+    font-size: 2rem;    
+}
+.navigation {
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.navigation div {
+    display: inline-block;
+    margin-top: 1rem;
+}
+.location {
+    color:darkgray;
+    font-size: 0.9rem;
+}
+.organization {
+    font-size: 1.2rem;
 }
