@@ -5,7 +5,7 @@ body {
     font-family: sans-serif;
     font-size: 16px;
     line-height: 1.4;
-    color: #333;
+    color: #444;
 }
 
 /* Layout */
@@ -17,7 +17,7 @@ body {
 }
 @media (min-width: 992px) {
     .container {
-        width: 700px;
+        width: 900px;
      }
 }
 .row {
@@ -261,4 +261,10 @@ hr {
 }
 .organization {
     font-size: 1.2rem;
+}
+a {
+    text-decoration: none;
+}
+a:visited {
+    text-decoration: none;
 }
