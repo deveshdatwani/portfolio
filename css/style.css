@@ -264,7 +264,8 @@ hr {
 }
 a {
     text-decoration: none;
+    color: #0077b6;
 }
 a:visited {
-    color: blue;
+    color: #0077b6;
 }
