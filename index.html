@@ -1,60 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Devesh Datwani</title>
-  
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;500&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.cdnfonts.com/css/lucida-console" rel="stylesheet">
-  
-  <!-- Styles -->
-  <style>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+      Devesh Datwani
+    </title><!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"><!-- <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;350;400;500&display=swap" rel="stylesheet"> -->
+    <!-- Styles -->
+
+    <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       color: #000;
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 400;
       font-size: 15px;
-    }
-    
-    h2{
-      font-weight: normal;
     }
 
     body {
-/*      font-family: 'Lucida Console', monospace;*/
-      font-family: 'IBM Plex Mono', monospace;
-      color: #000;
-      background-color: #fff;
-      color:black;
-      line-height: 1.6;
-      padding: 1rem;
+      background: #fff;
+      line-height: 1.7;
+      padding: 2rem 1rem;
     }
 
     .container {
-      max-width: 1000px;
+      max-width: 800px;
       margin: auto;
-      text-align: center;
     }
 
     header {
+      text-align: center;
       margin-bottom: 2rem;
     }
 
     .my-name {
-      font-size: 2rem;
-      font-weight: 500;
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .navigation {
+      font-size: 0.95rem;
+      opacity: 0.8;
     }
 
     .navigation a {
       text-decoration: none;
       color: #000;
-      margin: 0 0.5rem;
-      font-weight: normal;
+      margin: 0 0.4rem;
     }
 
     .navigation a:hover {
@@ -62,37 +57,33 @@
     }
 
     .section {
-      margin-bottom: 2rem;
-      text-align: left;
+      margin-bottom: 2.5rem;
     }
 
     .section h2 {
-      font-size: 1.5rem;
-      color: #000;
+      font-size: 1.2rem;
+      font-weight: 400;
+      margin-bottom: 1rem;
       display: inline-block;
-      padding-bottom: 0.2rem;
-      font-weight: bold;
+      padding-bottom: 0.3rem;
     }
 
     .entry {
-      margin: 1rem 0;
-      display: flex;
-      align-items: flex-start;
-    }
-
-    .entry img {
-      width: 40px;
-      height: 40px;
-      margin-right: 1rem;
-      filter: grayscale(100%);
-    }
-
-    .entry img:hover {
-      filter: none;
+      margin-bottom: 1.5rem;
     }
 
     .desc {
-      flex: 1;
+      line-height: 1.5;
+    }
+
+    .desc strong a {
+      font-weight: 400;
+      font-size: 1rem;
+    }
+
+    .desc small {
+      display: block;
+      opacity: 0.8;
     }
 
     a {
@@ -105,69 +96,89 @@
     }
 
     footer {
-      margin-top: 2rem;
+      text-align: center;
       font-size: 0.8rem;
-      color: #777;
+      color: #999;
+      margin-top: 3rem;
     }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <header style="font-family: 'JetBrains Mono';">
-      <div class="my-name">Devesh Datwani</div>
-      <div class="navigation">
-        <a href="https://github.com/deveshdatwani">GitHub</a>|
-        <a href="https://www.linkedin.com/in/deveshdatwani/">LinkedIn</a>|
-        <a href="mailto:datwanidevesh@gmail.com">Email</a>|
-        <a href="./blog.html">Blog</a>|
-        <a href="./extended.html">Extended portfolio - About me</a>
-      </div>
-    </header>
 
-    <div class="section">
-      <h2>Recents</h2>
-    </div>
+    .recent {
+      border-bottom: 1px solid #ddd;
+    }
 
-    <div class="section">
-      <h2>Experience</h2>
-      <div class="entry">
-        <div class="desc">
-          <strong><a href="https://bolt6.ai">Bolt6</a><br></strong>
-          <span>Development & Operations Engineer</span> <br>
-          <small>Charlotte, NC, USA</small> <br>
-          <small>Product development & operations, Kubernetes, AWS, Deep learning</small>
+    .most {
+
+    }
+
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="my-name">
+          Devesh Datwani
+        </div>
+        <div class="navigation">
+          <a href="https://github.com/deveshdatwani">GitHub</a>| <a href="https://www.linkedin.com/in/deveshdatwani/">LinkedIn</a>| <a href="mailto:datwanidevesh@gmail.com">Email</a>| <a href="./blog.html">Blog</a>| <a href="./extended.html">Extended</a>
+        </div>
+      </header>
+      <div class="section">
+        <h2 class="recent">
+          About me
+        </h2>
+        <div class="entry">
+          <div class="desc">
+            <small>Full stack AI engineer. </small>
+            <small>Talks about deep learning, aviation, space, nature, products and existentialism.</small>
+            <small><a href="file:///home/deveshdatwani/portfolio/extended.html">Extended</a></small>
+          </div>
         </div>
       </div>
-      <!-- Add more entries here -->
-    </div>
-
-    <div class="section">
-      <h2>Education</h2>
-      <div class="entry">
-        <div class="desc">
-          <strong><a href="https://wpi.com">Worcester Polytechnic Institute</a></strong><br>
-          <span>Masters of Science in Robotics Engineering</span> <br>
-          <small>Worcester, MA, USA</small> <br>
-          <small>Computer vision, Machine learning, Robot perception, Project management</small>
+      <div class="section">
+        <h2 class="recent most">
+          Most Recent
+        </h2>
+      </div>
+      <div class="section">
+        <h2>
+          Experience
+        </h2>
+        <div class="entry">
+          <div class="desc">
+            <strong><a href="https://bolt6.ai">Bolt6</a></strong><br>
+            DevOps Engineer<br>
+            <small>2023 - Present</small>
+            <small>Charlotte, NC, USA</small> <small>Kubernetes, AWS, Deep Learning</small>
+          </div>
         </div>
       </div>
-      <!-- Add more entries here -->
-    </div>
-
-    <div class="section">
-      <h2>Project</h2>
-      <div class="entry">
-        <div class="desc">
-          <strong><a href="https://deveshdatwani.github.io/closetx/">ClosetX</a></strong><br>
-          <small>Microservices, Full stack deep learning, AWS</small>
+      <div class="section">
+        <h2>
+          Education
+        </h2>
+        <div class="entry">
+          <div class="desc">
+            <strong><a href="https://wpi.com">Worcester Polytechnic Institute</a></strong><br>
+            Masters of Science in Robotics Engineering<br>
+            <small>2021 - 2023</small>
+            <small>Worcester, MA, USA</small> <small>Computer Vision, Deep Learning, Perception, Project Management</small>
+          </div>
         </div>
       </div>
-      <!-- Add more entries here -->
+      <div class="section">
+        <h2>
+          Project
+        </h2>
+        <div class="entry">
+          <div class="desc">
+            <strong><a href="https://deveshdatwani.github.io/closetx/">ClosetX</a></strong><br>
+            <small>Microservices, Deep Learning, AWS</small>
+          </div>
+        </div>
+      </div>
+      <footer>
+        Updated: June 2025
+      </footer>
     </div>
-
-    <footer>
-      Updated: November 2024
-    </footer>
-  </div>
-</body>
+  </body>
 </html>
