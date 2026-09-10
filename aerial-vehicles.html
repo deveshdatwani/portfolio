@@ -1,78 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Devesh Datwani Aerial Vehicles</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aerial Vehicles — Devesh Datwani</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .aerial-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .aerial-grid img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border-light);
+    }
+
+    .pov-gif img {
+      width: 100%;
+      height: auto;
+      border-radius: 0.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border-light);
+    }
+  </style>
 </head>
-<style>
-    .aerial-vehicles-images{
-        display: flex;
-        flex-wrap: wrap;
-    }
-
-    .aerial-vehicles-images img{
-        object-fit: cover;
-        max-width: 50%;
-        padding: 1rem;
-        border-radius: 1.5rem;
-    }
-
-    .pov {
-        object-fit: contain;
-    }
-
-    .pov img{
-        width: 100%;
-        border-radius: 0.5rem;
-    }
-</style>
 <body>
-    <main>
-        <div class="container">
-            <div class="topic" >
-                Aeriel Vehicles
-            </div>
-                <div class="">
-                    <p>
-                        Since the summer of 2011, I have been building aerial 
-                        vehicles as a means to satiate my passion for aviation. 
-                        Over the years, my projects have included fixed-winged rc 
-                        planes of varying wing configurations and quadcopters.
-                    </p>
-                        <br>
-                    <p>
-                        While most of them were powered by brushless motors, some were powered by
-                        nitro-methane powered IC engines. 
-                    </p>
-                        <br>
-                    <p>
-                        I will keep this page straighforward and put out snapshots of the 
-                        aerial vehicles I built. Please note, these are only some of the drones/planes 
-                        I built. Not all were documented.
-                    </p>
-                </div>
-                <br><br>
-                <div class="pov">
-                    <img src="assets/pov.gif" alt="">
-                </div>
-                <div class="aerial-vehicles-images">
-                    <img src="assets/h-quad.jpeg" alt="">              
-                    <img src="assets/h-quad-air.jpeg" alt="">
-                    <img src="assets/mikey2.jpg" alt="">             
-                    <img src="assets/foam_rc.jpeg" alt="">
-                    <img src="assets/flyby.gif" alt="">    
-                    <img src="assets/foam-2.jpg" alt="">
-                    <img src="assets/mission-plane.jpg" alt="">
-                </div>
-                <br><br><br><br>
-            </div>
-            <div style="text-align: center;">
-                <a href="index.html">Go back</a>
-            </div>
-            <br>
+  <div class="container">
+    <div class="back" style="margin-bottom: 2rem;">
+      <a href="./index.html">&larr; Back to Home</a>
+    </div>
+
+    <div class="section">
+      <h2 class="recent">Aerial Vehicles</h2>
+
+      <div class="desc">
+        <p>Since the summer of 2011, I have been building aerial vehicles as a means to satiate my passion for aviation. Over the years, my projects have included fixed-wing RC planes of varying wing configurations and quadcopters.</p>
+        <br>
+        <p>While most of them were powered by brushless motors, some were powered by nitro-methane IC engines.</p>
+        <br>
+        <p>I will keep this page straightforward and put out snapshots of the aerial vehicles I built. Please note, these are only some of the drones and planes I built—not all were documented.</p>
+        
+        <br>
+
+        <div class="pov-gif">
+          <img src="./assets/pov.gif" alt="POV Flight View">
         </div>
-    </main>
+
+        <div class="aerial-grid">
+          <img src="./assets/h-quad.jpeg" alt="H-Quad Drone">              
+          <img src="./assets/h-quad-air.jpeg" alt="H-Quad Airborne">
+          <img src="./assets/mikey2.jpg" alt="RC Aircraft Project">             
+          <img src="./assets/foam_rc.jpeg" alt="Foam RC Plane">
+          <img src="./assets/flyby.gif" alt="Plane Flyby GIF">    
+          <img src="./assets/foam-2.jpg" alt="Foam RC Plane Design">
+          <img src="./assets/mission-plane.jpg" alt="Mission Plane Build">
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0BLP1F8E0Q"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-0BLP1F8E0Q');
+  </script>
 </body>
 </html>
