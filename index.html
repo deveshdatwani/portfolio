@@ -9,7 +9,13 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="home">
+  <figure class="hero cover" id="hero">
+    <svg id="hero-svg" viewBox="0 62 600 214" role="img"
+      aria-label="Hand-drawn scenes scroll past: a quadcopter launching beside a fixed-wing aircraft, a borescope view inside a turbofan, a plasma actuator pulling air through a pipe, lidar mapping with change detection and path planning, a VR-teleoperated robot arm grasping a mug, a tracked golf ball, a model being trained, deployed and corrected for data drift, and lidar-camera 3D tracking of an aircraft entering a hangar."></svg>
+    <p class="hero-keys" id="hero-keys"></p>
+  </figure>
+
   <div class="container">
     <header>
       <div class="my-name">Devesh Datwani</div>
@@ -25,11 +31,6 @@
         <strong><a href="https://deveshdatwani.com/extended.html">Extended</a></strong>
       </div>
     </header>
-
-    <figure class="hero" id="hero">
-      <svg id="hero-svg" viewBox="0 0 600 320" role="img"
-        aria-label="A figure walks through seven hand-drawn scenes: aerial vehicle design and flight testing in high school; turbofan borescope inspection at Air India Engineering Services; a DBD plasma actuator inducing airflow in a pipe at IIT Bombay; lidar mapping and egress path planning for a fire-safety robot at WPI; VR teleoperation with shared control at the HiRO lab; multi-sensor golf ball tracking at Bolt6; and lidar-camera 3D aircraft tracking at FyveBy."></svg>
-    </figure>
 
     <i>Last updated: August 2026</i>
     <br><br>
@@ -82,7 +83,6 @@
       </div>
     </div>
 
-    <footer>Updated: August 2026</footer>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.js"></script>
@@ -90,24 +90,22 @@
   (() => {
     const NS = "http://www.w3.org/2000/svg";
     const svg = document.getElementById("hero-svg");
+    const keysEl = document.getElementById("hero-keys");
 
-    const INK = "#1e1e1e", SOFT = "#6b6960", FAR = "#8d8a80", FAINT = "#c4c1b6", ACCENT = "#2a7ae2", PAPER = "#faf9f5";
+    const INK = "#1e1e1e", SOFT = "#6b6960", FAR = "#8d8a80", FAINT = "#c4c1b6", ACCENT = "#2a7ae2", PAPER = "#faf9f5", TINT = "#e9e7df";
     const rc = rough.svg(svg, {
       options: { seed: 7, roughness: 0.45, bowing: 0.5, maxRandomnessOffset: 1, stroke: INK, strokeWidth: 1.3 },
     });
 
-    const W = 600, GROUND = 262, PX = 140;
-    const DWELL = 4.6, WALK = 3.2, RAMP = 0.7, STEP = DWELL + WALK;
-    const STRIDE = 200, FPS = 24, START_TIME = 0.4;
-    const THIGH = 32, SHIN = 32, TORSO = 42, UPPER = 28, FORE = 27;
-    const SHOULDER_Y = GROUND - THIGH - SHIN - TORSO;
+    // Scenes scroll left at V px/s; each scene's events fire as its content crosses TRIGGER_X on screen.
+    const W = 600, GROUND = 262, V = 130, FPS = 30, START_CAM = -40, TRIGGER_X = 165;
     const TAU = Math.PI * 2;
 
     const HATCH = { fill: INK, fillStyle: "hachure", hachureGap: 4, fillWeight: 0.6, hachureAngle: -41 };
     const OPAQUE = { fill: PAPER, fillStyle: "solid" };
     const SOLID = color => ({ fill: color, fillStyle: "solid", stroke: color });
     const THIN = { strokeWidth: 1, roughness: 0.3, disableMultiStroke: true };
-    const DASHED = color => ({ stroke: color, strokeWidth: 1, roughness: 0.2, strokeLineDash: [3, 4], disableMultiStroke: true });
+    const DASHED = color => ({ stroke: color, strokeWidth: 1.1, roughness: 0.2, strokeLineDash: [3, 4], disableMultiStroke: true });
 
     const PLANFORM = [
       [26, 0], [14, -3.5], [2, -3.5], [-6, -27], [-11, -27], [-7, -3.5], [-18, -3], [-23, -11], [-27, -11], [-24, 0],
@@ -129,8 +127,7 @@
     const smooth = f => f * f * (3 - 2 * f);
     const lerp = (a, b, f) => a + (b - a) * f;
     const lerpP = (a, b, f) => ({ x: lerp(a.x, b.x, f), y: lerp(a.y, b.y, f) });
-    const mid = (a, b) => lerpP(a, b, 0.5);
-    const put = node => { G.append(node); return node; };
+    const put = el => { G.append(el); return el; };
 
     function node(tag, attrs, parent = G) {
       const el = document.createElementNS(NS, tag);
@@ -157,33 +154,19 @@
     const poly = (points, o = {}) => put(rc.polygon(points, o));
     const polyline = (points, o = {}) => put(rc.linearPath(points, o));
 
-    // Crisp primitives for leaders, keypoints and sensor output.
+    // Crisp primitives for sensor output, data flow and fine detail.
     const seg = (x1, y1, x2, y2, color = SOFT, width = 0.8, dash) =>
       node("line", { x1, y1, x2, y2, stroke: color, "stroke-width": width, "stroke-linecap": "round", ...(dash ? { "stroke-dasharray": dash } : {}) });
     const dot = (x, y, r = 1.6, color = INK) => node("circle", { cx: x, cy: y, r, fill: color });
     const trace = (points, color = ACCENT, width = 1.2, dash) =>
       node("polyline", { points: points.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" "), fill: "none", stroke: color,
-        "stroke-width": width, "stroke-linejoin": "round", ...(dash ? { "stroke-dasharray": dash } : {}) });
+        "stroke-width": width, "stroke-linejoin": "round", "stroke-linecap": "round", ...(dash ? { "stroke-dasharray": dash } : {}) });
 
-    function text(x, y, content, { size = 10, color = SOFT, anchor = "start", weight = 400 } = {}) {
-      const el = node("text", { x, y, fill: color, "font-size": size, "text-anchor": anchor, "font-weight": weight, class: "mono" });
-      el.textContent = content;
-      return el;
-    }
-    const textWidth = (content, size = 10) => content.length * size * 0.6;
-
-    function caption(title, subtitle) {
-      text(18, 28, title, { size: 13, color: INK, weight: 600 });
-      text(18, 46, subtitle, { size: 11 });
+    function arrowhead(tip, angle, color = SOFT, size = 5) {
+      for (const s of [-0.5, 0.5]) seg(tip.x, tip.y, tip.x - size * Math.cos(angle + s), tip.y - size * Math.sin(angle + s), color, 1);
     }
 
-    function callout(ax, ay, tx, ty, content, color = SOFT) {
-      seg(ax, ay, tx, ty, color);
-      dot(ax, ay, 1.6, color);
-      text(tx + 3, ty - 3, content, { color });
-    }
-
-    function place(points, origin, angle, scale) {
+    function place(points, origin, angle, scale = 1) {
       const c = Math.cos(angle), s = Math.sin(angle);
       return points.map(([x, y]) => [origin.x + (x * c - y * s) * scale, origin.y + (x * s + y * c) * scale]);
     }
@@ -204,91 +187,145 @@
       return { elbow, wrist: { x: root.x + dx / d * reach, y: root.y + dy / d * reach } };
     }
 
-    function groundHatch() {
-      for (let x = 8; x < W; x += 22) seg(x, GROUND + 3, x - 5, GROUND + 8, FAINT, 1);
+    function gripper(tip, heading, jaw) {
+      for (const side of [-1, 1]) {
+        const root = { x: tip.x - Math.sin(heading) * jaw * side, y: tip.y + Math.cos(heading) * jaw * side };
+        line(tip.x, tip.y, root.x, root.y, { ...THIN, strokeWidth: 1.8 });
+        line(root.x, root.y, root.x + Math.cos(heading) * 9, root.y + Math.sin(heading) * 9, { ...THIN, strokeWidth: 1.8 });
+      }
     }
 
-    // ---------- 2011: aerial vehicles ----------
+    function groundHatch(width) {
+      for (let x = 8; x < width; x += 22) seg(x, GROUND + 3, x - 5, GROUND + 8, FAINT, 1);
+    }
+
+    // NACA 4-digit section, used for the wing rib on the bench.
+    function airfoil(x0, yc, chord, t = 0.12, m = 0.03, p = 0.4) {
+      const upper = [], lower = [];
+      for (let k = 0; k <= 24; k++) {
+        const xc = (1 - Math.cos(Math.PI * k / 24)) / 2;
+        const yt = 5 * t * (0.2969 * Math.sqrt(xc) - 0.126 * xc - 0.3516 * xc ** 2 + 0.2843 * xc ** 3 - 0.1015 * xc ** 4);
+        const camber = xc < p ? m / p ** 2 * (2 * p * xc - xc ** 2) : m / (1 - p) ** 2 * (1 - 2 * p + 2 * p * xc - xc ** 2);
+        upper.push([x0 + xc * chord, yc - (camber + yt) * chord]);
+        lower.push([x0 + xc * chord, yc - (camber - yt) * chord]);
+      }
+      return [...upper, ...lower.reverse()];
+    }
+
+    // ---------- UAVs ----------
+    const QUAD_X = 232;
     const loopAt = t => {
-      const u = t * 0.6, d = 1 + Math.sin(u) ** 2;
-      return { x: 452 + 108 * Math.cos(u) / d, y: 108 + 86 * Math.sin(u) * Math.cos(u) / d };
+      const a = t * 0.6, d = 1 + Math.sin(a) ** 2;
+      return { x: 440 + 120 * Math.cos(a) / d, y: 118 + 70 * Math.sin(a) * Math.cos(a) / d };
+    };
+    const quadAt = u => {
+      const s = (u - QUAD_X) / V;
+      if (s <= 0) return { x: QUAD_X, y: GROUND - 1, s };
+      return { x: QUAD_X + 90 * s, y: GROUND - 1 - 300 * smooth(clamp(s / 3, 0, 1)) + 2 * Math.sin(s * 6) * Math.min(1, s), s };
     };
 
-    const aerial = {
-      build() {
-        caption("2011–14 · high school", "aerial vehicle design, fabrication + flight testing");
-        const qx = 240;
-        line(qx - 30, GROUND - 13, qx + 30, GROUND - 13, { strokeWidth: 1.5 });
-        rect(qx - 9, GROUND - 18, 18, 8, HATCH);
-        for (const s of [-1, 1]) {
-          rect(qx + s * 30 - 3, GROUND - 19, 6, 6, THIN);
-          line(qx + s * 30 - 12, GROUND - 21, qx + s * 30 + 12, GROUND - 21, THIN);
-          line(qx + s * 20, GROUND - 13, qx + s * 23, GROUND - 1, THIN);
+    function drawQuad(q, t) {
+      const spinning = q.s > -0.05;
+      line(q.x - 30, q.y - 12, q.x + 30, q.y - 12, { ...THIN, strokeWidth: 1.5 });
+      rect(q.x - 9, q.y - 17, 18, 8, { ...HATCH, hachureGap: 3, ...THIN });
+      for (const s of [-1, 1]) {
+        const mx = q.x + s * 30;
+        rect(mx - 3, q.y - 18, 6, 6, { ...OPAQUE, ...THIN });
+        line(q.x + s * 20, q.y - 12, q.x + s * 23, q.y, THIN);
+        if (spinning) {
+          node("ellipse", { cx: mx, cy: q.y - 20, rx: 3 + 10 * Math.abs(Math.cos(t * 37 + s)), ry: 1.4, fill: "none", stroke: INK, "stroke-width": 1 });
+        } else {
+          seg(mx - 12, q.y - 20, mx + 12, q.y - 20, INK, 1.1);
         }
-        callout(qx + 4, GROUND - 23, qx + 16, GROUND - 44, "multirotor · H-frame");
-        text(452, 178, "fixed-wing · BLDC / nitro IC", { anchor: "middle" });
+      }
+    }
+
+    const uav = {
+      keys: ["unmanned aerial vehicles", "airframe design", "fabrication", "flight testing"],
+      build() {
+        line(30, 226, 142, 226, { strokeWidth: 1.6 });
+        line(36, 226, 36, GROUND);
+        line(136, 226, 136, GROUND);
+        poly(airfoil(44, 223, 88), { ...OPAQUE, strokeWidth: 1.2, roughness: 0.25, disableMultiStroke: true });
+        rect(64, 217.5, 4, 7, SOLID(INK));
+        circle(84, 220.4, 4.5, THIN);
+        circle(101, 220.8, 3.2, THIN);
       },
-      draw(local) {
-        const plane = loopAt(local), ahead = loopAt(local + 0.02);
-        const trail = [];
-        for (let k = 26; k >= 0; k--) trail.push(loopAt(local - k * 0.06));
+      draw(u, t) {
+        const plane = loopAt(t), ahead = loopAt(t + 0.02), trail = [];
+        for (let k = 26; k >= 0; k--) trail.push(loopAt(t - k * 0.06));
         trace(trail, SOFT, 1, "3 4");
         poly(place(PLANFORM, plane, Math.atan2(ahead.y - plane.y, ahead.x - plane.x), 0.85), { ...OPAQUE, strokeWidth: 1.3, disableMultiStroke: true });
+        drawQuad(quadAt(u), t);
       },
-      pose: local => ({ both: { x: PX + 22, y: SHOULDER_Y + 26 }, prop: "transmitter", look: loopAt(local) }),
     };
 
-    // ---------- 2017: Air India Engineering Services ----------
-    const ENGINE_Y = 180, PORT = { x: 392, y: ENGINE_Y + 14 };
+    // ---------- turbofan inspection ----------
+    const ENGINE_Y = 176, PORT = { x: 334, y: 190 }, SCOPE = { x: 482, y: 104, r: 30 };
 
-    const airIndia = {
+    const turbofan = {
+      keys: ["aircraft propulsion", "maintenance & overhaul", "non-destructive testing"],
       build() {
-        caption("2017 · Air India Engineering Services", "CFM56 / GE90 turbofan overhaul · non-destructive inspection");
         const cy = ENGINE_Y;
-        poly([[258, cy - 58], [316, cy - 58], [326, cy - 48], [326, cy + 48], [316, cy + 58], [258, cy + 58]], { strokeWidth: 1.6 });
-        poly([[326, cy - 36], [440, cy - 28], [472, cy - 18], [472, cy + 18], [440, cy + 28], [326, cy + 36]], { strokeWidth: 1.6 });
-        poly([[472, cy - 11], [500, cy], [472, cy + 11]]);
-        line(372, cy - 33, 372, cy + 33, { ...THIN, stroke: SOFT });
-        line(414, cy - 30, 414, cy + 30, { ...THIN, stroke: SOFT });
-        put(rc.ellipse(258, cy, 18, 116, { strokeWidth: 1.5 }));
-        line(262, 244, 470, 244, { strokeWidth: 1.6 });
-        line(292, cy + 58, 292, 244);
-        line(446, cy + 27, 446, 244);
-        for (const x of [276, 456]) circle(x, 253, 16);
+        poly([[200, cy - 58], [258, cy - 58], [268, cy - 48], [268, cy + 48], [258, cy + 58], [200, cy + 58]], { strokeWidth: 1.6 });
+        poly([[268, cy - 36], [382, cy - 28], [414, cy - 18], [414, cy + 18], [382, cy + 28], [268, cy + 36]], { strokeWidth: 1.6 });
+        poly([[414, cy - 11], [442, cy], [414, cy + 11]]);
+        line(314, cy - 33, 314, cy + 33, { ...THIN, stroke: SOFT });
+        line(356, cy - 30, 356, cy + 30, { ...THIN, stroke: SOFT });
+        put(rc.ellipse(200, cy, 18, 116, { strokeWidth: 1.5 }));
+        line(204, 244, 412, 244, { strokeWidth: 1.6 });
+        line(234, cy + 58, 234, 244);
+        line(388, cy + 27, 388, 244);
+        for (const x of [218, 398]) circle(x, 253, 16);
         circle(PORT.x, PORT.y, 7, OPAQUE);
-        callout(PORT.x, PORT.y - 4, 474, 124, "borescope port");
+        const clip = node("clipPath", { id: "scope-clip" });
+        node("circle", { cx: SCOPE.x, cy: SCOPE.y, r: SCOPE.r - 1 }, clip);
       },
-      draw(local, pose) {
-        const cy = ENGINE_Y, rotation = local * 0.5;
+      draw(u, t) {
+        const cy = ENGINE_Y, rotation = t * 0.5;
         for (let k = 0; k < 12; k++) {
           const b = rotation + k * Math.PI / 6;
-          seg(258, cy, 258 + 8 * Math.cos(b), cy + 54 * Math.sin(b), FAR, 0.9);
+          seg(200, cy, 200 + 8 * Math.cos(b), cy + 54 * Math.sin(b), FAR, 0.9);
         }
-        put(rc.ellipse(258, cy, 6, 16, { ...OPAQUE, ...THIN }));
-        if (pose) fade(pose.act, () => {
-          const h = pose.hold;
-          put(rc.curve([[h.x + 1, h.y + 5], [h.x + 12, 238], [330, 255], [378, 228], [PORT.x, PORT.y + 3]], { ...THIN, stroke: SOFT }));
+        put(rc.ellipse(200, cy, 6, 16, { ...OPAQUE, ...THIN }));
+
+        const since = (u - PORT.x) / V;
+        fade(clamp(since / 0.3, 0, 1), () => {
+          seg(PORT.x + 3, PORT.y - 4, SCOPE.x - 22, SCOPE.y + 22, SOFT, 0.8, "2 3");
+          circle(SCOPE.x, SCOPE.y, SCOPE.r * 2, { ...OPAQUE, strokeWidth: 1.4, roughness: 0.3, disableMultiStroke: true });
+          withLayer(node("g", { "clip-path": "url(#scope-clip)" }), () => {
+            for (let k = 0; k < 6; k++) {
+              const bx = SCOPE.x - 45 + mod(k * 18 - t * 14, 108), y = SCOPE.y;
+              node("path", { d: `M ${bx} ${y + 36} Q ${bx - 10} ${y} ${bx + 5} ${y - 36} Q ${bx + 1} ${y} ${bx + 7} ${y + 36} Z`,
+                fill: TINT, stroke: INK, "stroke-width": 1 });
+              if (k === 3) {
+                trace([{ x: bx - 3, y: y - 8 }, { x: bx + 0.5, y: y - 4 }, { x: bx - 2.5, y }, { x: bx + 1, y: y + 4 }], ACCENT, 1.3);
+                node("circle", { cx: bx - 1, cy: y - 2, r: 8, fill: "none", stroke: ACCENT, "stroke-width": 1, "stroke-dasharray": "2 2" });
+              }
+            }
+          });
+          for (let k = 0; k < 4; k++) {
+            const a = k * Math.PI / 2;
+            seg(SCOPE.x + 25 * Math.cos(a), SCOPE.y + 25 * Math.sin(a), SCOPE.x + 30 * Math.cos(a), SCOPE.y + 30 * Math.sin(a), INK, 1);
+          }
         });
       },
-      pose: () => ({ both: { x: PX + 22, y: SHOULDER_Y + 22 }, prop: "handset", look: { x: PX + 30, y: SHOULDER_Y + 32 } }),
     };
 
-    // ---------- 2018: DBD plasma actuator, IIT Bombay ----------
-    const PIPE = { x0: 250, x1: 586, cy: 170, ri: 21, ro: 26, ex: 332 };
+    // ---------- plasma flow control ----------
+    const PIPE = { x0: 170, x1: 580, cy: 160, ri: 21, ro: 26, ex: 250 }, SWITCH = { x: 80, y: 184 };
 
     const plasma = {
+      keys: ["plasma actuators", "active flow control", "experimental aerodynamics"],
       build() {
-        caption("2018 · Propulsion Lab, Aerospace Engg., IIT Bombay", "DBD plasma actuator · ionic wind induces pipe flow · no moving parts");
         const { x0, x1, cy, ri, ro, ex } = PIPE;
-        line(160, 198, 214, 198, { strokeWidth: 1.6 });
-        line(166, 198, 166, GROUND);
-        line(208, 198, 208, GROUND);
-        rect(170, 166, 38, 32);
-        text(189, 180, "HV AC", { size: 8, color: INK, anchor: "middle" });
+        line(72, 198, 126, 198, { strokeWidth: 1.6 });
+        line(78, 198, 78, GROUND);
+        line(120, 198, 120, GROUND);
+        rect(80, 166, 38, 32);
         const wave = [];
-        for (let k = 0; k <= 12; k++) wave.push([177 + k * 2, 189 - 3 * Math.sin(k / 12 * TAU)]);
+        for (let k = 0; k <= 12; k++) wave.push([87 + k * 2, 186 - 4 * Math.sin(k / 12 * TAU)]);
         put(rc.curve(wave, THIN));
-        circle(170, 186, 6, { ...OPAQUE, ...THIN });
 
         line(x0, cy - ro, x1, cy - ro, { strokeWidth: 1.5 });
         line(x0, cy + ro, x1, cy + ro, { strokeWidth: 1.5 });
@@ -296,7 +333,7 @@
         line(x0, cy + ri, x1, cy + ri, { ...THIN, stroke: FAR });
         put(rc.ellipse(x0, cy, 10, ro * 2, { strokeWidth: 1.3 }));
         put(rc.ellipse(x1, cy, 10, ro * 2, { strokeWidth: 1.3 }));
-        for (const x of [300, 540]) {
+        for (const x of [220, 540]) {
           line(x, cy + ro, x, GROUND);
           line(x - 8, GROUND, x + 8, GROUND);
         }
@@ -304,199 +341,265 @@
         rect(ex, cy + ri - 3, 10, 3, SOLID(INK));
         rect(ex + 10, cy - ro - 3, 18, 3, SOLID(SOFT));
         rect(ex + 10, cy + ro, 18, 3, SOLID(SOFT));
-        polyline([[208, 172], [226, 136], [ex - 4, 136], [ex + 5, cy - ro]], { ...THIN, stroke: SOFT });
-        polyline([[208, 192], [226, 222], [ex + 8, 222], [ex + 19, cy + ro + 3]], { ...THIN, stroke: SOFT });
-
-        callout(ex + 10, cy - ro - 4, ex + 22, 118, "DBD ring electrodes");
-        text(ex + 25, 128, "exposed / encapsulated");
-        text(x1, cy - ro - 10, "induced flow →", { anchor: "end" });
+        polyline([[118, 172], [136, 126], [ex - 4, 126], [ex + 5, cy - ro]], { ...THIN, stroke: SOFT });
+        polyline([[118, 192], [136, 212], [ex + 8, 212], [ex + 19, cy + ro + 3]], { ...THIN, stroke: SOFT });
       },
-      draw(local) {
+      draw(u) {
         const { x0, x1, cy, ri, ex } = PIPE;
-        const tau = Math.max(0, local - WALK - 0.7);
-        const spool = 1 - Math.exp(-tau / 0.8);
-        const travelled = 80 * (tau - 0.8 * spool);
-        dot(202, 172, 1.8, tau > 0 ? ACCENT : FAINT);
-        if (tau > 0) {
+        const tau = Math.max(0, (u - SWITCH.x) / V);
+        const on = tau > 0, spool = 1 - Math.exp(-tau / 0.6);
+        const travelled = 90 * (tau - 0.6 * spool);
+
+        const lever = on ? -2.4 : 2.4;
+        line(SWITCH.x, SWITCH.y, SWITCH.x + 10 * Math.cos(lever), SWITCH.y + 10 * Math.sin(lever), { ...THIN, strokeWidth: 1.8 });
+        dot(SWITCH.x, SWITCH.y, 2, INK);
+        dot(111, 172, 1.8, on ? ACCENT : FAINT);
+
+        if (on) {
           for (const side of [-1, 1]) {
             for (let k = 0; k < 7; k++) {
-              const glow = dot(ex + 10 + Math.random() * 20, cy + side * (ri - 1 - Math.random() * 3), 1, ACCENT);
-              glow.setAttribute("opacity", (0.4 + Math.random() * 0.6).toFixed(2));
+              dot(ex + 10 + Math.random() * 20, cy + side * (ri - 1 - Math.random() * 3), 1, ACCENT)
+                .setAttribute("opacity", (0.4 + Math.random() * 0.6).toFixed(2));
             }
           }
         }
         [-14, -7, 0, 7, 14].forEach((dy, lane) => {
           const wallJet = 0.55 + 0.45 * Math.abs(dy) / 14;
           const length = 2 + 9 * spool * wallJet;
-          for (let k = 0; k < 5; k++) {
+          for (let k = 0; k < 6; k++) {
             const x = x0 + 8 + length + mod(k * 66 + lane * 29 + travelled * wallJet, x1 - x0 - 16 - length);
             seg(x - length, cy + dy, x, cy + dy, SOFT, 1.2);
           }
         });
       },
-      pose: () => ({ right: { x: 167, y: 186 }, look: { x: 380, y: 170 } }),
     };
 
-    // ---------- 2022: WPI fire-safety evaluator ----------
-    const MAP_X = 430, MAP_Y = 30, CELL = 8, MAP_COLS = 19, MAP_ROWS = 8;
+    // ---------- mapping, change detection, planning ----------
+    const MAP_X = 300, MAP_Y = 72, CELL = 8, MAP_COLS = 19, MAP_ROWS = 8;
     const MAP = Array.from({ length: MAP_ROWS }, (_, r) => Array.from({ length: MAP_COLS }, (_, c) => {
       if (r === 0 || r === MAP_ROWS - 1 || (c === MAP_COLS - 1 && r !== 3 && r !== 4)) return 1;
       return c >= 12 && c <= 13 && r >= 3 && r <= 5 ? 2 : 0;
     }));
-    const mapCol = x => (x - 222) / 19;
+    const mapCol = x => (x - 190) / 19;
     const mapPoint = (c, r) => ({ x: MAP_X + c * CELL, y: MAP_Y + r * CELL });
+    const roombaAt = t => 200 + 110 * (1 - Math.cos(t * 0.9)) / 2;
 
-    const wpi = {
+    const mapping = {
+      keys: ["robot mapping", "change detection", "path planning", "safety assessment"],
       build() {
-        caption("2022 · WPI, MS Robotics", "fire-safety evaluator · 2D lidar map · egress scoring");
-        rect(546, 178, 36, 84);
-        rect(552, 160, 24, 12, THIN);
-        text(564, 169, "EXIT", { size: 8, color: INK, anchor: "middle" });
-        rect(452, 224, 38, 38, HATCH);
+        rect(540, 178, 36, 84);
+        rect(548, 160, 20, 11, THIN);
+        seg(552, 165.5, 563, 165.5, INK, 1);
+        arrowhead({ x: 564, y: 165.5 }, 0, INK, 3.5);
+        rect(430, 224, 38, 38, HATCH);
         rect(MAP_X - 3, MAP_Y - 3, MAP_COLS * CELL + 6, MAP_ROWS * CELL + 6, { ...THIN, stroke: SOFT });
-        text(MAP_X + MAP_COLS * CELL + 3, MAP_Y + MAP_ROWS * CELL + 16, "occupancy grid · informed RRT* to exit", { size: 9, anchor: "end" });
       },
-      draw(local) {
-        const tau = Math.max(0, local - WALK + 0.4);
-        const rx = 250 + 100 * (1 - Math.cos(tau * 0.9)) / 2;
-        const lidarY = GROUND - 16;
-
+      draw(u, t) {
+        const rx = roombaAt(t), lidarY = GROUND - 16;
         rect(rx - 18, GROUND - 12, 36, 9, { ...OPAQUE, strokeWidth: 1.4 });
-        rect(rx - 6, GROUND - 19, 12, 7, HATCH);
-        text(rx, GROUND - 26, "roomba + 2D lidar", { size: 9, anchor: "middle" });
-        seg(rx + 6, lidarY, 452, lidarY, ACCENT, 1, "3 4");
-        dot(452, lidarY, 2, ACCENT);
+        rect(rx - 6, GROUND - 19, 12, 7, { ...HATCH, hachureGap: 3, ...THIN });
+        seg(rx + 6, lidarY, 430, lidarY, ACCENT, 1, "3 4");
+        dot(430, lidarY, 2, ACCENT);
 
-        const revealed = 1 + tau * 6;
+        const revealed = u / 14;
         for (let r = 0; r < MAP_ROWS; r++) {
           for (let c = 0; c < MAP_COLS && c <= revealed; c++) {
             const cell = MAP[r][c];
             node("rect", { x: MAP_X + c * CELL + 0.5, y: MAP_Y + r * CELL + 0.5, width: CELL - 1, height: CELL - 1,
-              fill: cell === 1 ? INK : cell === 2 ? ACCENT : "#e9e7df" });
+              fill: cell === 1 ? INK : cell === 2 ? ACCENT : TINT });
           }
         }
         const robot = mapPoint(mapCol(rx), 4.5);
         dot(robot.x, robot.y, 2.6, ACCENT);
-
-        if (revealed > 12) {
-          rect(446, 218, 50, 44, { ...DASHED(ACCENT), strokeWidth: 1.1 });
-          text(540, 208, "change detection · PCA + k-means", { color: ACCENT, anchor: "end" });
-        }
+        if (revealed > 13) rect(424, 218, 50, 44, DASHED(ACCENT));
         if (revealed >= MAP_COLS) {
           trace([robot, mapPoint(10.6, 4.5), mapPoint(11.5, 6.5), mapPoint(14.5, 6.5), mapPoint(16.6, 4.5), mapPoint(18.9, 4)], ACCENT, 1.3);
         }
       },
-      pose: () => ({ both: { x: PX + 20, y: SHOULDER_Y + 30 }, prop: "laptop", look: { x: PX + 40, y: SHOULDER_Y + 22 } }),
     };
 
-    // ---------- 2023: HiRO lab ----------
-    const HOVER = { x: 410, y: 168 }, GRASP = { x: 392, y: 204 }, ARM_ROOT = { x: 514, y: 240 };
-    const gripperAt = local => lerpP(HOVER, GRASP, (1 - Math.cos(Math.max(0, local - WALK) * 1.4)) / 2);
+    // ---------- VR teleoperation ----------
+    const HOVER = { x: 338, y: 168 }, GRASP = { x: 322, y: 204 }, ARM_ROOT = { x: 440, y: 240 }, HEADSET = { x: 170, y: 176 };
+    const reachAt = t => (1 - Math.cos(t * 2.2)) / 2;
 
-    const hiro = {
+    const teleop = {
+      keys: ["VR teleoperation", "task affordance", "shared control"],
       build() {
-        caption("2023 · HiRO lab, WPI", "VR teleoperation in Unity · task affordance · shared control");
-        line(328, 214, 452, 214, { strokeWidth: 1.8 });
-        line(338, 214, 338, GROUND);
-        line(442, 214, 442, GROUND);
-        rect(362, 194, 18, 20);
-        put(rc.arc(380, 204, 12, 12, -Math.PI / 2, Math.PI / 2, false, { strokeWidth: 1.3 }));
-        rect(494, 244, 40, 18, HATCH);
-        circle(384, 204, 26, { ...DASHED(ACCENT), strokeWidth: 1.1 });
-        seg(390, 217, 390, 235, ACCENT);
-        text(390, 246, "grasp affordance", { color: ACCENT, anchor: "middle" });
+        line(HEADSET.x, GROUND, HEADSET.x, HEADSET.y + 8, { ...THIN, strokeWidth: 1.4, stroke: SOFT });
+        line(HEADSET.x - 10, GROUND, HEADSET.x + 10, GROUND, THIN);
+        put(rc.arc(HEADSET.x, HEADSET.y, 34, 24, Math.PI, TAU, false, THIN));
+        poly([[HEADSET.x - 15, HEADSET.y - 7], [HEADSET.x + 15, HEADSET.y - 7], [HEADSET.x + 13, HEADSET.y + 7], [HEADSET.x - 13, HEADSET.y + 7]],
+          { ...HATCH, hachureGap: 3, ...THIN, strokeWidth: 1.4 });
+
+        line(260, 214, 380, 214, { strokeWidth: 1.8 });
+        line(270, 214, 270, GROUND);
+        line(370, 214, 370, GROUND);
+        rect(292, 194, 18, 20);
+        put(rc.arc(310, 204, 12, 12, -Math.PI / 2, Math.PI / 2, false, { strokeWidth: 1.3 }));
+        rect(420, 244, 40, 18, HATCH);
+        circle(314, 204, 26, DASHED(ACCENT));
       },
-      draw(local, pose) {
-        const target = gripperAt(local);
+      draw(u, t) {
+        const target = lerpP(HOVER, GRASP, reachAt(t));
         const { elbow } = ik(ARM_ROOT, target, 96, 88, false);
         const link = { strokeWidth: 2.6, roughness: 0.3, disableMultiStroke: true };
         line(ARM_ROOT.x, ARM_ROOT.y, elbow.x, elbow.y, link);
         line(elbow.x, elbow.y, target.x, target.y, link);
-        const heading = Math.atan2(target.y - elbow.y, target.x - elbow.x);
-        const jaw = 7 - 3 * (target.y - HOVER.y) / (GRASP.y - HOVER.y);
-        for (const side of [-1, 1]) {
-          const root = { x: target.x - Math.sin(heading) * jaw * side, y: target.y + Math.cos(heading) * jaw * side };
-          line(target.x, target.y, root.x, root.y, { ...THIN, strokeWidth: 1.8 });
-          line(root.x, root.y, root.x + Math.cos(heading) * 10, root.y + Math.sin(heading) * 10, { ...THIN, strokeWidth: 1.8 });
-        }
+        gripper(target, Math.atan2(target.y - elbow.y, target.x - elbow.x), 7 - 3 * reachAt(t));
         for (const joint of [ARM_ROOT, elbow]) dot(joint.x, joint.y, 4, INK);
-
-        if (pose) fade(pose.act, () => {
-          const hand = pose.arms[0].wrist;
-          seg(hand.x + 8, hand.y, target.x - 6, target.y, ACCENT, 1.1, "4 5");
-          text(236, 150, "shared control", { color: ACCENT });
-          callout(pose.head.x + 9, pose.head.y - 5, pose.head.x + 24, pose.head.y - 20, "VR headset · Unity");
-        });
-      },
-      pose(local) {
-        const target = gripperAt(local), centre = mid(HOVER, GRASP);
-        return {
-          right: { x: PX + 40 + (target.x - centre.x) * 0.3, y: SHOULDER_Y + 6 + (target.y - centre.y) * 0.3 },
-          prop: "controller", headset: true, look: { x: 380, y: 200 },
-        };
+        seg(HEADSET.x + 17, HEADSET.y, target.x - 6, target.y, ACCENT, 1.1, "4 5");
       },
     };
 
-    // ---------- 2023: Bolt6 ----------
-    const ballAt = f => ({ x: 262 + 326 * f, y: 251.5 - 130 * 4 * f * (1 - f) });
-    const shotProgress = local => clamp((mod(local, 2.8) - 0.5) / 2.1, 0, 1);
+    // ---------- detection, fusion, tracking ----------
+    const TEE = { x: 90, y: 249 };
+    const ballAt = f => ({ x: TEE.x + 420 * f, y: 251.5 - 130 * 4 * f * (1 - f) });
+    const flightAt = u => clamp((u - TEE.x) / V / 2, 0, 1);
 
-    const bolt6 = {
+    const detection = {
+      keys: ["object detection", "sensor fusion", "trajectory estimation"],
       build() {
-        caption("2023 · Bolt6", "multi-sensor object tracking · deep learning · k8s on AWS");
-        for (const foot of [176, 196, 210]) line(193, 178, foot, GROUND, THIN);
-        rect(182, 160, 24, 18, HATCH);
-        rect(186, 152, 16, 8, THIN);
-        circle(210, 169, 8, { ...OPAQUE, ...THIN });
-        callout(194, 151, 208, 132, "multi-sensor rig");
-        line(262, GROUND, 262, GROUND - 7, THIN);
-        line(258, GROUND - 7, 266, GROUND - 7, THIN);
-        text(586, 72, "detections → 3D track → trajectory fit", { anchor: "end" });
+        line(TEE.x, GROUND, TEE.x, GROUND - 7, THIN);
+        line(TEE.x - 4, GROUND - 7, TEE.x + 4, GROUND - 7, THIN);
+        for (const foot of [314, 330, 346]) line(330, 186, foot, GROUND, THIN);
+        rect(318, 168, 24, 18, HATCH);
+        circle(314, 177, 7, { ...OPAQUE, ...THIN });
+        rect(320, 154, 20, 11, THIN);
+        for (const r of [6, 11]) put(rc.arc(320, 159.5, r * 2, r * 2, Math.PI * 0.7, Math.PI * 1.3, false, { ...THIN, stroke: SOFT }));
       },
-      draw(local) {
-        const progress = shotProgress(local), flying = mod(local, 2.8) >= 0.5;
-        const ball = ballAt(progress);
-        if (flying) {
-          for (let f = 0; f <= progress; f += 0.05) {
-            const p = ballAt(f);
+      draw(u) {
+        const f = flightAt(u), ball = ballAt(f);
+        const flying = f > 0 && f < 1;
+        if (f > 0) {
+          for (let k = 0; k <= f + 1e-6; k += 0.05) {
+            const p = ballAt(k);
             dot(p.x, p.y, 1.6, ACCENT);
           }
-          if (progress < 1) {
-            const ahead = [];
-            for (let f = progress; f <= Math.min(1, progress + 0.3); f += 0.02) ahead.push(ballAt(f));
-            trace(ahead, ACCENT, 1, "3 4");
-          }
+        }
+        if (flying) {
+          const ahead = [];
+          for (let k = f; k <= Math.min(1, f + 0.3); k += 0.02) ahead.push(ballAt(k));
+          trace(ahead, ACCENT, 1, "3 4");
+          seg(310, 177, ball.x, ball.y, ACCENT, 0.8, "2 4");
+          seg(316, 159, ball.x, ball.y, ACCENT, 0.8, "2 4");
+          node("ellipse", { cx: ball.x, cy: GROUND - 1, rx: 5, ry: 1.5, fill: FAINT });
         }
         circle(ball.x, ball.y, 7, { ...OPAQUE, ...THIN });
-        const box = { x0: ball.x - 8, y0: ball.y - 8 };
-        rect(box.x0, box.y0, 16, 16, { stroke: ACCENT, ...THIN });
-        const label = flying ? "ball #31 · 3D track" : "ball #31";
-        text(clamp(box.x0, 8, W - 8 - textWidth(label, 9)), box.y0 - 4, label, { size: 9, color: ACCENT });
+        rect(ball.x - 8, ball.y - 8, 16, 16, { stroke: ACCENT, ...THIN });
       },
-      pose: local => ({ right: { x: 183, y: 168 }, look: ballAt(shotProgress(local)) }),
     };
 
-    // ---------- 2026: FyveBy ----------
-    const SENSOR = { x: 336, y: 124 }, JET = 0.72;
-    const noseAt = local => 330 + 250 * smooth(clamp((local - WALK - 0.3) / (DWELL - 0.6), 0, 1));
+    // ---------- model training, deployment, drift correction ----------
+    const DATA = { x: 86, y: 226 }, EDGE_LENS = { x: 416, y: 153 }, MU0 = 520, SHIFT = 36;
+    const LOSS = { x0: 160, x1: 292, top: 80, base: 136 }, DRIFT = { x0: 470, x1: 612, top: 80, base: 136 };
+    const deployAt = f => ({
+      x: (1 - f) ** 2 * 222 + 2 * (1 - f) * f * 300 + f * f * 386,
+      y: (1 - f) ** 2 * 160 + 2 * (1 - f) * f * 124 + f * f * 150,
+    });
+    const gaussian = mu => {
+      const points = [];
+      for (let x = DRIFT.x0 + 3; x <= DRIFT.x1 - 3; x += 3) points.push({ x, y: DRIFT.base - 50 * Math.exp(-((x - mu) ** 2) / 392) });
+      return points;
+    };
+    const lossAt = k => ({ x: LOSS.x0 + 4 + k * 6.2, y: LOSS.top + 5 + (LOSS.base - LOSS.top - 12) * (1 - Math.exp(-k / 4.5)) + 2 * Math.sin(k * 2.3) * (1 - k / 24) });
 
-    const fyveby = {
+    const mlops = {
+      width: 700,
+      keys: ["model training", "deployment", "drift detection & correction"],
       build() {
-        caption("2026 · FyveBy", "lidar–camera fusion · 3D aircraft tracking · event detection");
-        put(rc.path("M 446 158 Q 523 76 600 158", { strokeWidth: 1.6 }));
-        line(446, 158, 600, 158, { strokeWidth: 1.6 });
-        text(523, 146, "hangar", { anchor: "middle" });
-        line(446, 166, 446, GROUND, { ...DASHED(ACCENT), strokeWidth: 1.1 });
-        text(446, 278, "entry line", { size: 9, color: ACCENT, anchor: "middle" });
-        line(SENSOR.x, GROUND, SENSOR.x, 134, { stroke: SOFT, strokeWidth: 1.4 });
-        rect(328, 112, 16, 10, HATCH);
-        rect(330, 124, 12, 9, THIN);
-        circle(327, 128.5, 5, { ...OPAQUE, ...THIN });
-        text(318, 120, "lidar + camera", { anchor: "end" });
+        for (let k = 0; k < 3; k++) rect(56 + 5 * k, 234 - 5 * k, 40, 28, { ...OPAQUE, ...THIN, strokeWidth: 1.2 });
+        rect(74, 232, 16, 12, { stroke: ACCENT, ...THIN });
+        circle(82, 238, 5, THIN);
+        seg(110, 240, 166, 240, FAINT, 1, "3 3");
+        arrowhead({ x: 168, y: 240 }, 0, FAINT);
+
+        rect(170, 150, 52, 112, { strokeWidth: 1.6 });
+        for (let k = 0; k < 5; k++) {
+          if (k) line(170, 150 + 22.4 * k, 222, 150 + 22.4 * k, { ...THIN, stroke: SOFT });
+          rect(177, 155 + 22.4 * k, 24, 12, { ...HATCH, hachureGap: 3, ...THIN });
+        }
+        line(LOSS.x0, LOSS.top, LOSS.x0, LOSS.base, { ...THIN, stroke: SOFT });
+        line(LOSS.x0, LOSS.base, LOSS.x1, LOSS.base, { ...THIN, stroke: SOFT });
+
+        node("path", { d: "M 222 160 Q 300 124 386 150", fill: "none", stroke: FAINT, "stroke-width": 1, "stroke-dasharray": "3 3" });
+        line(400, GROUND, 400, 160, { stroke: SOFT, strokeWidth: 1.4 });
+        rect(388, 146, 24, 14, { ...HATCH, hachureGap: 3, ...THIN });
+        circle(EDGE_LENS.x, EDGE_LENS.y, 6, { ...OPAQUE, ...THIN });
+        seg(EDGE_LENS.x + 4, EDGE_LENS.y - 4, DRIFT.x0 - 6, DRIFT.base - 12, FAINT, 1, "2 3");
+
+        line(DRIFT.x0, DRIFT.top, DRIFT.x0, DRIFT.base, { ...THIN, stroke: SOFT });
+        line(DRIFT.x0, DRIFT.base, DRIFT.x1, DRIFT.base, { ...THIN, stroke: SOFT });
       },
-      draw(local) {
-        const nose = { x: noseAt(local), y: GROUND };
+      draw(u, t) {
+        const tau = (u - DATA.x) / V;
+        const training = tau > 0 && tau < 1.2;
+        if (training) {
+          for (let k = 0; k < 3; k++) {
+            const x = 112 + mod(tau * 90 + k * 19, 54);
+            node("rect", { x: x - 2, y: 238, width: 4, height: 4, fill: ACCENT });
+          }
+        }
+        for (let k = 0; k < 5; k++) dot(213, 161 + 22.4 * k, 1.8, training && Math.sin(t * 23 + k * 1.7) > 0 ? ACCENT : FAINT);
+
+        const epochs = Math.floor(clamp(tau / 1.2, 0, 1) * 20);
+        if (epochs > 0) trace(Array.from({ length: epochs + 1 }, (_, k) => lossAt(k)), INK, 1.2);
+
+        const deploy = clamp((tau - 1.2) / 0.7, 0, 1);
+        if (deploy > 0 && deploy < 1) {
+          const chip = deployAt(deploy);
+          node("rect", { x: chip.x - 4, y: chip.y - 4, width: 8, height: 8, fill: ACCENT });
+          for (const s of [-1, 1]) seg(chip.x - 3, chip.y + s * 6, chip.x + 3, chip.y + s * 6, ACCENT, 1, "1 2");
+        }
+        dot(406, 150, 1.8, deploy >= 1 ? ACCENT : FAINT);
+
+        const drift = SHIFT * smooth(clamp((tau - 2.0) / 1.0, 0, 1));
+        const fix = SHIFT * smooth(clamp((tau - 3.3) / 0.8, 0, 1));
+        trace(gaussian(MU0 + fix), INK, 1.3);
+        if (deploy >= 1) trace(gaussian(MU0 + drift), ACCENT, 1.3, "3 3");
+        if (drift - fix > 3) {
+          const peak = DRIFT.base - 54, arrowY = DRIFT.base - 58;
+          seg(MU0 + fix, DRIFT.base, MU0 + fix, peak, INK, 0.8, "2 2");
+          seg(MU0 + drift, DRIFT.base, MU0 + drift, peak, ACCENT, 0.8, "2 2");
+          seg(MU0 + fix, arrowY, MU0 + drift - 1, arrowY, ACCENT, 1);
+          arrowhead({ x: MU0 + drift, y: arrowY }, 0, ACCENT, 4);
+        }
+        if (tau > 3.0 && tau < 4.1) {
+          fade(Math.sin(t * 14) > 0 ? 1 : 0.35, () =>
+            rect(DRIFT.x0 - 8, DRIFT.top - 8, DRIFT.x1 - DRIFT.x0 + 16, DRIFT.base - DRIFT.top + 16, { stroke: ACCENT, ...THIN }));
+        }
+        if (tau > 3.2 && tau < 4.4) {
+          const g = { x: 650, y: DRIFT.top + 28 }, a = mod(t * 5, TAU), e = a + 4.6;
+          put(rc.arc(g.x, g.y, 22, 22, a, e, false, { stroke: ACCENT, ...THIN, strokeWidth: 1.4 }));
+          arrowhead({ x: g.x + 11 * Math.cos(e), y: g.y + 11 * Math.sin(e) }, e + Math.PI / 2, ACCENT, 5);
+        }
+      },
+    };
+
+    // ---------- multimodal 3D perception ----------
+    const SENSOR = { x: 300, y: 124 }, JET = 0.72, ENTRY_X = 420;
+    const noseAt = u => clamp(200 + 0.5 * Math.max(0, u + 250), 200, 560);
+
+    const fusion = {
+      keys: ["multimodal perception", "3D tracking", "event detection"],
+      build() {
+        put(rc.path(`M ${ENTRY_X} 158 Q 500 76 580 158`, { strokeWidth: 1.6 }));
+        line(ENTRY_X, 158, 580, 158, { strokeWidth: 1.6 });
+        line(SENSOR.x, GROUND, SENSOR.x, 134, { stroke: SOFT, strokeWidth: 1.4 });
+        rect(292, 112, 16, 10, HATCH);
+        rect(294, 124, 12, 9, THIN);
+        circle(291, 128.5, 5, { ...OPAQUE, ...THIN });
+      },
+      draw(u) {
+        const nose = { x: noseAt(u), y: GROUND };
+        const entered = nose.x > ENTRY_X + 20;
         const at = ([x, y]) => [nose.x + x * JET, nose.y + y * JET];
+
+        seg(ENTRY_X, 166, ENTRY_X, GROUND, ACCENT, entered ? 1.8 : 1.1, entered ? null : "4 4");
+        const since = (u - 230) / V;
+        if (since > 0 && since < 0.9) {
+          node("circle", { cx: ENTRY_X, cy: 200, r: 6 + 44 * since, fill: "none", stroke: ACCENT, "stroke-width": 1.2, opacity: (1 - since / 0.9).toFixed(2) });
+        }
+
         poly(AIRCRAFT_FUSELAGE.map(at), { ...OPAQUE, strokeWidth: 1.5 });
         poly(AIRCRAFT_FIN.map(at), { ...OPAQUE, strokeWidth: 1.5 });
         put(rc.ellipse(nose.x - 95 * JET, nose.y - 31 * JET, 80 * JET, 9 * JET, { ...OPAQUE, ...THIN }));
@@ -506,146 +609,60 @@
           circle(nose.x + x * JET, nose.y - d / 2 * JET, d * JET, { ...OPAQUE, ...THIN });
         }
 
-        const cloud = AIRCRAFT_CLOUD.map(at).map(([x, y]) => [x + (Math.random() - 0.5) * 2, y + (Math.random() - 0.5) * 2]);
-        cloud.forEach(([x, y], index) => {
+        AIRCRAFT_CLOUD.map(at).forEach(([x, y], index) => {
+          x += (Math.random() - 0.5) * 2;
+          y += (Math.random() - 0.5) * 2;
           if (index % 3 === 0) seg(SENSOR.x - 8, SENSOR.y, x, y, ACCENT, 0.7, "2 4").setAttribute("opacity", "0.5");
           dot(x, y, 1.4, ACCENT);
         });
 
         const front = bounds([at([-190, -86]), at([3, 0])], 4);
         const depth = { x: 16, y: -12 };
-        const cuboid = { stroke: ACCENT, ...THIN, strokeWidth: 1.1 };
+        const cuboid = { stroke: ACCENT, ...THIN, strokeWidth: entered ? 1.5 : 1.1 };
         rect(front.x0 + depth.x, front.y0 + depth.y, front.x1 - front.x0, front.y1 - front.y0, cuboid);
         rect(front.x0, front.y0, front.x1 - front.x0, front.y1 - front.y0, cuboid);
         for (const [x, y] of [[front.x0, front.y0], [front.x1, front.y0], [front.x0, front.y1], [front.x1, front.y1]]) {
           line(x, y, x + depth.x, y + depth.y, cuboid);
         }
-        const label = "aircraft #12 · 3D bbox";
-        text(clamp(front.x0 + depth.x, 8, W - 8 - textWidth(label, 9)), front.y0 + depth.y - 5, label, { size: 9, color: ACCENT });
-
-        if (nose.x > 460) {
-          const message = "event: aircraft entered hangar", x = 404, y = 70;
-          rect(x - 6, y - 12, textWidth(message) + 12, 17, { stroke: ACCENT, ...THIN });
-          text(x, y, message, { color: ACCENT });
-        }
       },
-      pose: local => ({ both: { x: PX + 20, y: SHOULDER_Y + 30 }, prop: "laptop", look: { x: noseAt(local) - 60, y: GROUND - 30 } }),
     };
 
-    const SCENES = [aerial, airIndia, plasma, wpi, hiro, bolt6, fyveby];
-    const RULER = ["2011 aero", "2017 AIESL", "2018 IIT-B", "2022 WPI", "2023 HiRO", "2023 Bolt6", "2026 FyveBy"];
-    const CYCLE = SCENES.length * STEP, WORLD = SCENES.length * W;
-
-    // Camera: dwell at a scene, then walk to the next with a trapezoidal velocity profile.
-    function travel(s) {
-      if (s <= 0) return 0;
-      if (s >= WALK) return 1;
-      const v = 1 / (WALK - RAMP);
-      if (s < RAMP) return 0.5 * v * s * s / RAMP;
-      if (s < WALK - RAMP) return v * (s - RAMP / 2);
-      return 1 - 0.5 * v * (WALK - s) ** 2 / RAMP;
+    const SCENES = [uav, turbofan, plasma, mapping, teleop, detection, mlops, fusion];
+    let WORLD = 0;
+    for (const scene of SCENES) {
+      scene.width ??= W;
+      scene.start = WORLD;
+      WORLD += scene.width;
     }
-    const speed = s => s <= 0 || s >= WALK ? 0 : Math.min(1, s / RAMP, (WALK - s) / RAMP);
+    const MAX_WIDTH = Math.max(...SCENES.map(scene => scene.width));
 
-    function cycle(t) {
-      const inCycle = mod(t, CYCLE);
-      const index = Math.floor(inCycle / STEP);
-      const within = inCycle - index * STEP;
-      return { index, within, cam: (index + travel(within - DWELL)) * W };
+    let shownKeys = -1, keysTimer;
+
+    function setKeys(index) {
+      if (index === shownKeys) return;
+      const first = shownKeys < 0;
+      shownKeys = index;
+      const fill = () => {
+        keysEl.replaceChildren();
+        SCENES[index].keys.forEach((key, k) => {
+          if (k) {
+            const sep = document.createElement("span");
+            sep.className = "sep";
+            sep.textContent = " · ";
+            keysEl.append(sep);
+          }
+          const span = document.createElement("span");
+          span.className = "key";
+          span.textContent = key;
+          keysEl.append(span);
+        });
+        keysEl.style.opacity = 1;
+      };
+      clearTimeout(keysTimer);
+      if (first) return fill();
+      keysEl.style.opacity = 0;
+      keysTimer = setTimeout(fill, 180);
     }
-    const sceneLocal = (index, t) => mod(t - (index * STEP - WALK), CYCLE);
-
-    function fk(root, upper, fore) {
-      const elbow = { x: root.x + UPPER * Math.sin(upper), y: root.y + UPPER * Math.cos(upper) };
-      return { elbow, wrist: { x: elbow.x + FORE * Math.sin(upper + fore), y: elbow.y + FORE * Math.cos(upper + fore) } };
-    }
-
-    function computePose({ index, within, cam }) {
-      const act = within < DWELL ? smooth(clamp(within / 0.6, 0, 1)) * smooth(clamp((DWELL - within) / 0.5, 0, 1)) : 0;
-      const spec = SCENES[index].pose(within + WALK);
-      const lean = 0.07 * speed(within - DWELL);
-      // Leg phase is locked to camera travel so planted feet move with the ground.
-      const phi = cam / STRIDE * TAU + Math.PI / 2;
-
-      const legs = [0, Math.PI].map((offset, i) => {
-        const thigh = lerp(0.5 * Math.sin(phi + offset), i ? -0.07 : 0.07, act);
-        const shin = thigh - lerp(0.9 * Math.max(0, Math.cos(phi + offset)), 0, act);
-        const knee = { x: THIGH * Math.sin(thigh), y: THIGH * Math.cos(thigh) };
-        return { knee, ankle: { x: knee.x + SHIN * Math.sin(shin), y: knee.y + SHIN * Math.cos(shin) }, shin };
-      });
-      const hip = { x: PX, y: GROUND - 2 - Math.max(legs[0].ankle.y, legs[1].ankle.y) };
-      for (const leg of legs) {
-        leg.knee = { x: hip.x + leg.knee.x, y: hip.y + leg.knee.y };
-        leg.ankle = { x: hip.x + leg.ankle.x, y: hip.y + leg.ankle.y };
-        const tilt = leg.shin * 0.5;
-        leg.toe = { x: leg.ankle.x + 8 * Math.cos(tilt), y: leg.ankle.y - 8 * Math.sin(tilt) };
-      }
-      const shoulder = { x: hip.x + TORSO * Math.sin(lean), y: hip.y - TORSO * Math.cos(lean) };
-
-      const look = spec.look ?? { x: shoulder.x + 100, y: shoulder.y };
-      let gx = lerp(1, look.x - shoulder.x, act), gy = lerp(0.1, look.y - shoulder.y + 17, act);
-      const gl = Math.hypot(gx, gy) || 1;
-      const gaze = { x: gx / gl, y: gy / gl };
-      const head = { x: shoulder.x + 2 + gaze.x * 2, y: shoulder.y - 17 + gaze.y * 2 };
-
-      const swing = 0.3 * Math.sin(phi);
-      const arms = [-swing, swing].map((angle, i) => {
-        const target = spec.both ? (i ? { x: spec.both.x - 3, y: spec.both.y - 2 } : spec.both) : (i ? null : spec.right);
-        if (!target) return fk(shoulder, lerp(angle, 0.06, act), lerp(0.45, 0.2, act));
-        const walk = fk(shoulder, angle, 0.45), reach = ik(shoulder, target, UPPER, FORE);
-        return { elbow: lerpP(walk.elbow, reach.elbow, act), wrist: lerpP(walk.wrist, reach.wrist, act) };
-      });
-
-      return { hip, shoulder, head, gaze, legs, arms, act, prop: spec.prop, headset: spec.headset, hold: mid(arms[0].wrist, arms[1].wrist) };
-    }
-
-    function drawProp(p) {
-      const m = p.hold;
-      if (p.prop === "transmitter") {
-        rect(m.x - 9, m.y - 6, 18, 11, { ...HATCH, hachureGap: 3.5, ...THIN });
-        line(m.x + 6, m.y - 6, m.x + 12, m.y - 26, THIN);
-      } else if (p.prop === "handset") {
-        rect(m.x - 5, m.y - 11, 11, 15, { ...OPAQUE, ...THIN });
-        rect(m.x - 3, m.y - 9, 7, 7, { ...THIN, stroke: SOFT });
-      } else if (p.prop === "laptop") {
-        line(m.x - 6, m.y, m.x + 20, m.y, { ...THIN, strokeWidth: 2 });
-        line(m.x + 20, m.y, m.x + 25, m.y - 18, { ...THIN, strokeWidth: 2 });
-      } else if (p.prop === "controller") {
-        const w = p.arms[0].wrist;
-        rect(w.x - 2, w.y - 5, 9, 7, SOLID(INK));
-      }
-    }
-
-    function drawPerson(p) {
-      const limb = (a, b, color) => line(a.x, a.y, b.x, b.y, { stroke: color, strokeWidth: 2, roughness: 0.3, disableMultiStroke: true });
-      const [nearLeg, farLeg] = p.legs, [nearArm, farArm] = p.arms;
-
-      for (const [leg, arm, color] of [[farLeg, farArm, FAR]]) {
-        limb(p.hip, leg.knee, color); limb(leg.knee, leg.ankle, color); limb(leg.ankle, leg.toe, color);
-        limb(p.shoulder, arm.elbow, color); limb(arm.elbow, arm.wrist, color);
-      }
-      limb(p.hip, p.shoulder, INK);
-      limb(p.shoulder, { x: p.head.x - p.gaze.x * 2, y: p.head.y + 10 }, INK);
-      circle(p.head.x, p.head.y, 22, { ...OPAQUE, strokeWidth: 1.8, roughness: 0.3, disableMultiStroke: true });
-      dot(p.head.x + p.gaze.x * 6, p.head.y + p.gaze.y * 6 - 1, 1.5, INK);
-      limb(p.hip, nearLeg.knee, INK); limb(nearLeg.knee, nearLeg.ankle, INK); limb(nearLeg.ankle, nearLeg.toe, INK);
-      fade(p.act, () => {
-        drawProp(p);
-        if (p.headset) {
-          const c = { x: p.head.x + p.gaze.x * 7, y: p.head.y - 2 };
-          line(c.x - 4, c.y, p.head.x - 10, p.head.y - 3, { ...THIN, strokeWidth: 1.4 });
-          rect(c.x - 4, c.y - 4, 10, 8, { ...HATCH, hachureGap: 2.5, ...THIN });
-        }
-      });
-      limb(p.shoulder, nearArm.elbow, INK); limb(nearArm.elbow, nearArm.wrist, INK);
-
-      for (const joint of [p.shoulder, p.hip, nearArm.elbow, nearArm.wrist, farArm.elbow, farArm.wrist,
-        nearLeg.knee, nearLeg.ankle, farLeg.knee, farLeg.ankle]) {
-        dot(joint.x, joint.y, 1.7, ACCENT);
-      }
-    }
-
-    let personLayer, marker;
 
     function build() {
       svg.replaceChildren();
@@ -654,68 +671,47 @@
       const world = node("g", {});
       for (const scene of SCENES) {
         scene.layer = node("g", {}, world);
-        withLayer(node("g", {}, scene.layer), () => { groundHatch(); scene.build(); });
+        withLayer(node("g", {}, scene.layer), () => { groundHatch(scene.width); scene.build(); });
         scene.dynamic = node("g", {}, scene.layer);
       }
-      personLayer = node("g", {});
-      withLayer(node("g", {}), () => {
-        const rulerY = 298, gap = (W - 40) / SCENES.length;
-        seg(20, rulerY, W - 20, rulerY, FAINT, 1);
-        RULER.forEach((name, index) => {
-          const x = 20 + gap * (index + 0.5);
-          seg(x, rulerY - 3, x, rulerY + 3, FAINT, 1);
-          text(x, rulerY + 14, name, { size: 8.5, color: FAR, anchor: "middle" });
-        });
-        marker = dot(0, rulerY, 3.2, INK);
-      });
     }
 
-    function render(t) {
-      const state = cycle(t);
-      const pose = computePose(state);
-      SCENES.forEach((scene, index) => {
-        const offset = mod(index * W - state.cam + W, WORLD) - W;
-        const visible = offset > -W && offset < W;
+    function render(cam, t) {
+      let current = SCENES[0];
+      for (const scene of SCENES) {
+        const offset = mod(scene.start - cam + MAX_WIDTH, WORLD) - MAX_WIDTH;
+        if (offset <= W / 2 && offset + scene.width > W / 2) current = scene;
+        const visible = offset < W && offset > -scene.width;
         scene.layer.setAttribute("display", visible ? "inline" : "none");
-        if (!visible) return;
+        if (!visible) continue;
         scene.layer.setAttribute("transform", `translate(${offset.toFixed(2)} 0)`);
         scene.dynamic.replaceChildren();
-        withLayer(scene.dynamic, () => scene.draw(sceneLocal(index, t), index === state.index ? pose : null));
-      });
-      personLayer.replaceChildren();
-      withLayer(personLayer, () => drawPerson(pose));
-      const gap = (W - 40) / SCENES.length;
-      let markerX = 20 + gap * (state.cam / W + 0.5);
-      if (markerX > W - 20) markerX -= W - 40;
-      marker.setAttribute("cx", markerX.toFixed(1));
+        withLayer(scene.dynamic, () => scene.draw(TRIGGER_X - offset, t));
+      }
+      setKeys(SCENES.indexOf(current));
     }
 
     const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let startTime = 0, lastDraw = 0, lastScene = -1;
+    let startTime = 0, lastDraw = 0, lastStill = -1;
 
     function tick(now) {
       const t = (now - startTime) / 1000;
       if (reduceMotion) {
-        const scene = Math.floor(mod(t, CYCLE) / STEP);
-        if (scene !== lastScene) {
-          lastScene = scene;
-          render(scene * STEP + DWELL * 0.75);
+        const index = Math.floor(t / 6) % SCENES.length;
+        if (index !== lastStill) {
+          lastStill = index;
+          render(SCENES[index].start + 160, 2);
         }
       } else if (now - lastDraw >= 1000 / FPS) {
         lastDraw = now;
-        render(t);
+        render(START_CAM + V * t, t);
       }
       requestAnimationFrame(tick);
     }
 
-    async function start() {
-      try { await document.fonts.load('11px "IBM Plex Mono"'); } catch {}
-      build();
-      startTime = performance.now() - START_TIME * 1000;
-      requestAnimationFrame(tick);
-    }
-
-    start();
+    build();
+    startTime = performance.now();
+    requestAnimationFrame(tick);
   })();
   </script>
 
