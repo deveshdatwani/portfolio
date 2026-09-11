@@ -113,6 +113,49 @@ h1, h2, h3, h4, .section h2 {
   font-family: var(--font-mono);
 }
 
+.hero-keys {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  min-height: 3em;
+  margin-top: 0.75rem;
+  text-align: center;
+  color: var(--text-primary);
+  transition: opacity 180ms ease;
+}
+
+body.home {
+  padding-top: 1.5rem;
+}
+
+.cover {
+  max-width: 760px;
+  margin: 0 auto 2rem;
+}
+
+header {
+  text-align: center;
+}
+
+.hero-keys .key {
+  white-space: nowrap;
+}
+
+.hero-keys .sep {
+  color: #b5b2a7;
+}
+
+@media (max-width: 520px) {
+  .hero-keys {
+    font-size: 0.8rem;
+    min-height: 4.5em;
+  }
+
+  .hero-keys .key {
+    white-space: normal;
+  }
+}
+
 .section {
   margin-bottom: 3.5rem;
 }
