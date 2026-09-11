@@ -264,7 +264,7 @@
     const ENGINE_Y = 176, PORT = { x: 334, y: 190 }, SCOPE = { x: 482, y: 104, r: 30 };
 
     const turbofan = {
-      keys: ["aircraft propulsion", "maintenance & overhaul", "non-destructive testing"],
+      keys: ["maintenance & overhaul", "non-destructive testing"],
       build() {
         const cy = ENGINE_Y;
         poly([[200, cy - 58], [258, cy - 58], [268, cy - 48], [268, cy + 48], [258, cy + 58], [200, cy + 58]], { strokeWidth: 1.6 });
@@ -580,6 +580,7 @@
     const noseAt = u => clamp(200 + 0.5 * Math.max(0, u + 250), 200, 560);
 
     const fusion = {
+      width: 700,
       keys: ["multimodal perception", "3D tracking", "event detection"],
       build() {
         put(rc.path(`M ${ENTRY_X} 158 Q 500 76 580 158`, { strokeWidth: 1.6 }));
