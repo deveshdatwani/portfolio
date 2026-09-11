@@ -12,7 +12,7 @@
 <body class="home">
   <figure class="hero cover" id="hero">
     <svg id="hero-svg" viewBox="0 62 600 214" role="img"
-      aria-label="Hand-drawn scenes scroll past: a quadcopter launching beside a fixed-wing aircraft, a borescope view inside a turbofan, a plasma actuator pulling air through a pipe, lidar mapping with change detection and path planning, a VR-teleoperated robot arm grasping a mug, a tracked golf ball, a model being trained, deployed and corrected for data drift, lidar-camera 3D tracking of an aircraft entering a hangar, captured frames being filtered, auto-labelled on a conveyor and fed to a neural network, and code flowing through a release loop into a cloud cluster, a team of coordinated agents and a fleet of edge devices."></svg>
+      aria-label="Hand-drawn scenes scroll past: a quadcopter launching beside a fixed-wing trainer, a borescope view inside a turbofan, a plasma actuator pulling air through a pipe, lidar mapping with change detection and path planning, a VR-teleoperated robot arm grasping a mug, a tracked golf ball, a model being trained, deployed and corrected for data drift, lidar-camera 3D tracking of an aircraft entering a hangar, images being curated and labelled then used to train a neural network, and racks of GPUs training a model, then deploying it to edge devices."></svg>
     <p class="hero-keys" id="hero-keys"></p>
   </figure>
 
@@ -107,10 +107,14 @@
     const THIN = { strokeWidth: 1, roughness: 0.3, disableMultiStroke: true };
     const DASHED = color => ({ stroke: color, strokeWidth: 1.1, roughness: 0.2, strokeLineDash: [3, 4], disableMultiStroke: true });
 
-    const PLANFORM = [
-      [26, 0], [14, -3.5], [2, -3.5], [-6, -27], [-11, -27], [-7, -3.5], [-18, -3], [-23, -11], [-27, -11], [-24, 0],
-      [-27, 11], [-23, 11], [-18, 3], [-7, 3.5], [-11, 27], [-6, 27], [2, 3.5], [14, 3.5],
-    ];
+    // Side profile of a foam-board sport trainer: plank fuselage, flat high wing on a saddle, motor pod, rounded fin, no gear.
+    const TRAINER = {
+      fin: [[-20, -2], [-25, -11], [-27, -13], [-30, -13], [-31.5, -11], [-31.5, -2]],
+      body: [[16, -3], [-30, -2], [-31.5, -0.5], [-30, 1], [16, 3]],
+      pod: [[16, -3.5], [22, -3], [23, -1], [22, 2.5], [16, 3.5]],
+      saddle: [[6, -2.8], [5, -6.5], [-5, -6.5], [-7, -2.5]],
+      wing: [[13, -6.5], [12, -8], [6, -9.5], [-6, -9], [-11, -7.5], [-11, -6.5]],
+    };
     const AIRCRAFT_FUSELAGE = [
       [2, -38], [-2, -45], [-12, -49], [-30, -50], [-150, -50], [-172, -46], [-186, -42], [-176, -34],
       [-150, -29], [-30, -27], [-10, -29], [-1, -33],
@@ -214,10 +218,8 @@
 
     // ---------- UAVs ----------
     const QUAD_X = 232;
-    const loopAt = t => {
-      const a = t * 0.6, d = 1 + Math.sin(a) ** 2;
-      return { x: 440 + 120 * Math.cos(a) / d, y: 118 + 70 * Math.sin(a) * Math.cos(a) / d };
-    };
+    // A straight, level pass across its own scene: slower than the scroll, so it never drifts over a neighbour.
+    const planeAt = u => ({ x: 60 + 0.45 * (u + 435), y: 112 });
     const quadAt = u => {
       const s = (u - QUAD_X) / V;
       if (s <= 0) return { x: QUAD_X, y: GROUND - 1, s };
@@ -252,10 +254,15 @@
         circle(101, 220.8, 3.2, THIN);
       },
       draw(u, t) {
-        const plane = loopAt(t), ahead = loopAt(t + 0.02), trail = [];
-        for (let k = 26; k >= 0; k--) trail.push(loopAt(t - k * 0.06));
-        trace(trail, SOFT, 1, "3 4");
-        poly(place(PLANFORM, plane, Math.atan2(ahead.y - plane.y, ahead.x - plane.x), 0.85), { ...OPAQUE, strokeWidth: 1.3, disableMultiStroke: true });
+        const plane = planeAt(u);
+        seg(plane.x - 100, plane.y, plane.x - 38, plane.y, SOFT, 1, "3 4");
+        const at = points => place(points, plane, 0, 1.1);
+        for (const part of [TRAINER.fin, TRAINER.body, TRAINER.pod, TRAINER.saddle, TRAINER.wing]) {
+          poly(at(part), { ...OPAQUE, strokeWidth: 1.2, disableMultiStroke: true });
+        }
+        const blade = 2 + 8 * Math.abs(Math.cos(t * 37));
+        const [tipA, tipB] = at([[24, -blade], [24, blade]]);
+        seg(tipA[0], tipA[1], tipB[0], tipB[1], INK, 1.2);
         drawQuad(quadAt(u), t);
       },
     };
@@ -583,7 +590,6 @@
       width: 700,
       keys: ["multimodal perception", "3D tracking", "event detection"],
       build() {
-        put(rc.path(`M ${ENTRY_X} 158 Q 500 76 580 158`, { strokeWidth: 1.6 }));
         line(ENTRY_X, 158, 580, 158, { strokeWidth: 1.6 });
         line(SENSOR.x, GROUND, SENSOR.x, 134, { stroke: SOFT, strokeWidth: 1.4 });
         rect(292, 112, 16, 10, HATCH);
@@ -628,354 +634,118 @@
       },
     };
 
-    // ---------- data collection, curation, labelling, training ----------
-    const BELT_Y = 226, BELT_A = [70, 198], BELT_B = [214, 470], FW = 20, FH = 15;
-    const FRAME_PERIOD = 0.55, BELT_SPEED = 50, EJECT = 0.35, DROP_X = 196, END_X = 462;
-    const LENS = { x: 206, y: 218, r: 13 }, LABEL_X = 300, STORE = { x: 500, y: 214, rx: 24, ry: 6 };
-    const NET = [3, 4, 4, 2].map((n, l) => Array.from({ length: n }, (_, k) => ({ x: 572 + 36 * l, y: 150 + (k - (n - 1) / 2) * 18 })));
-    const FEED = [{ x: 520, y: 206 }, { x: 552, y: 204 }, { x: 556, y: 152 }];
-    const bezier = ([a, c, b], f) => ({ x: (1 - f) ** 2 * a.x + 2 * (1 - f) * f * c.x + f * f * b.x, y: (1 - f) ** 2 * a.y + 2 * (1 - f) * f * c.y + f * f * b.y });
+    // ---------- data curation, labelling, training ----------
+    const THUMB = { x: 100, y: 118, w: 28, h: 21, gap: 7 }, REJECT = [1, 5, 6], REVIEW = 0.16;
+    const NET = [3, 4, 4, 2].map((n, l) => Array.from({ length: n }, (_, k) => ({ x: 400 + 40 * l, y: 150 + (k - (n - 1) / 2) * 20 })));
+    const FEED = { x0: THUMB.x + 3 * THUMB.w + 2 * THUMB.gap + 8, x1: NET[0][0].x - 10, y: 150 };
 
-    // Every captured frame rides the belts; rejects drop into the bin, the rest get labelled and stored.
-    function framesAt(t) {
-      const frames = [], newest = Math.floor(t / FRAME_PERIOD);
-      for (let n = newest; n > newest - 20; n--) {
-        const age = t - n * FRAME_PERIOD, bad = mod(n, 7) === 2 || mod(n, 7) === 5;
-        const bx = BELT_A[0] + 4 + Math.max(0, age - EJECT) * BELT_SPEED;
-        const f = { bx, bad, labelled: bx + FW / 2 >= LABEL_X, x: bx, y: BELT_Y - FH, spin: 0, stored: -1 };
-        if (age < EJECT) {
-          const e = smooth(age / EJECT);
-          f.x = lerp(56, bx, e);
-          f.y = lerp(182, BELT_Y - FH, e);
-        } else if (bad && bx > DROP_X) {
-          const s = (bx - DROP_X) / BELT_SPEED;
-          if (s > 0.8) continue;
-          Object.assign(f, { x: DROP_X + 18 * s, y: f.y + 600 * s * s, spin: 2.5 * s });
-        } else if (bx > END_X) {
-          const s = (bx - END_X) / BELT_SPEED;
-          if (s > 0.6) continue;
-          Object.assign(f, { x: END_X + 55 * s, y: f.y - 20 * s + 500 * s * s, spin: 1.2 * s, stored: s });
-        }
-        frames.push(f);
-      }
-      return frames;
-    }
-
-    function drawFrame(f) {
-      withLayer(node("g", f.spin ? { transform: `rotate(${(f.spin * 57.3).toFixed(1)} ${f.x + FW / 2} ${f.y + FH / 2})` } : {}), () => {
-        node("rect", { x: f.x, y: f.y, width: FW, height: FH, fill: PAPER, stroke: INK, "stroke-width": 1 });
-        seg(f.x + 2, f.y + FH - 3, f.x + FW - 2, f.y + FH - 3, FAINT, 0.8);
-        const o = { x: f.x + 12, y: f.y + 7 };
-        if (f.bad) {
-          for (const d of [-1.6, 1.6]) node("circle", { cx: o.x + d, cy: o.y, r: 3.2, fill: "none", stroke: FAR, "stroke-width": 0.8 });
-        } else {
-          node("circle", { cx: o.x, cy: o.y, r: 3.2, fill: TINT, stroke: INK, "stroke-width": 0.9 });
-        }
-        if (f.labelled) {
-          node("rect", { x: o.x - 5.5, y: o.y - 5.5, width: 11, height: 11, fill: "none", stroke: ACCENT, "stroke-width": 1 });
-          node("rect", { x: o.x - 5.5, y: o.y - 5.5, width: 5, height: 2.5, fill: ACCENT });
-        }
-      });
-    }
-
-    function conveyor([x0, x1]) {
-      line(x0, BELT_Y, x1, BELT_Y, { strokeWidth: 1.5 });
-      line(x0, BELT_Y + 8, x1, BELT_Y + 8, THIN);
-      for (const x of [x0, x1]) circle(x, BELT_Y + 4, 8, { ...OPAQUE, ...THIN });
-      for (const x of [x0 + 10, x1 - 10]) line(x, BELT_Y + 8, x, GROUND, THIN);
-    }
-
-    const dataEngine = {
-      width: 700,
-      keys: ["data collection", "curation", "labelling", "pipeline automation", "model training"],
+    const curation = {
+      keys: ["data curation", "labelling", "model training"],
       build() {
-        for (const foot of [30, 44, 58]) line(44, 196, foot, GROUND, THIN);
-        rect(32, 178, 26, 18, HATCH);
-        rect(38, 171, 12, 7, THIN);
-        circle(28, 187, 10, { ...OPAQUE, ...THIN });
-        seg(22, 184, 2, 172, FAINT, 1, "2 3");
-        seg(22, 190, 2, 202, FAINT, 1, "2 3");
-
-        conveyor(BELT_A);
-        conveyor(BELT_B);
-
-        line(236, GROUND, 236, 192, { stroke: SOFT, strokeWidth: 1.4 });
-        line(LENS.x + 9, LENS.y - 9, 236, 192, { ...THIN, strokeWidth: 2.6 });
-        const clip = node("clipPath", { id: "lens-clip" });
-        node("circle", { cx: LENS.x, cy: LENS.y, r: LENS.r - 1 }, clip);
-
-        for (const x of [LABEL_X - 22, LABEL_X + 22]) line(x, GROUND, x, 170, THIN);
-        line(LABEL_X - 28, 170, LABEL_X + 28, 170, { strokeWidth: 1.6 });
-
+        seg(FEED.x0, FEED.y, FEED.x1, FEED.y, FAINT, 1, "3 3");
+        arrowhead({ x: FEED.x1 + 2, y: FEED.y }, 0, FAINT);
         for (let l = 1; l < NET.length; l++) {
           for (const a of NET[l - 1]) for (const b of NET[l]) seg(a.x, a.y, b.x, b.y, FAINT, 0.6);
         }
-        for (const layer of NET) for (const p of layer) circle(p.x, p.y, 9, { ...OPAQUE, ...THIN });
-        node("path", { d: `M ${FEED[0].x} ${FEED[0].y} Q ${FEED[1].x} ${FEED[1].y} ${FEED[2].x} ${FEED[2].y}`, fill: "none", stroke: FAINT, "stroke-width": 1, "stroke-dasharray": "3 3" });
+        for (const layer of NET) for (const p of layer) circle(p.x, p.y, 10, { ...OPAQUE, ...THIN });
       },
       draw(u, t) {
-        const frames = framesAt(t);
-
-        const flash = mod(t, FRAME_PERIOD) < 0.12;
-        dot(52, 174, 1.6, flash ? ACCENT : FAINT);
-        if (flash) {
-          circle(28, 187, 16, { stroke: ACCENT, ...THIN });
-          seg(22, 184, 2, 172, ACCENT, 1, "2 3");
-          seg(22, 190, 2, 202, ACCENT, 1, "2 3");
-        }
-
-        for (const belt of [BELT_A, BELT_B]) {
-          const length = belt[1] - belt[0];
-          for (let x = 0; x < length; x += 14) seg(belt[0] + mod(x + t * BELT_SPEED, length), BELT_Y + 3, belt[0] + mod(x + t * BELT_SPEED, length), BELT_Y + 5, FAINT, 1);
-          for (const x of belt) {
-            const a = t * BELT_SPEED / 4;
-            seg(x - 3.5 * Math.cos(a), BELT_Y + 4 - 3.5 * Math.sin(a), x + 3.5 * Math.cos(a), BELT_Y + 4 + 3.5 * Math.sin(a), SOFT, 0.9);
-          }
-        }
-
-        const labelling = frames.filter(f => !f.bad && f.stored < 0).reduce((best, f) =>
-          Math.abs(f.bx + FW / 2 - LABEL_X) < Math.abs(best.bx + FW / 2 - LABEL_X) ? f : best, { bx: -1e9 });
-        const press = smooth(clamp(1 - Math.abs(labelling.bx + FW / 2 - LABEL_X) / 12, 0, 1));
-        const headY = 180 + 14 * press;
-        if (press > 0.5) {
-          node("polygon", { points: `${LABEL_X - 3},${headY + 12} ${LABEL_X + 3},${headY + 12} ${labelling.x + FW},${BELT_Y - FH} ${labelling.x},${BELT_Y - FH}`,
-            fill: ACCENT, opacity: 0.18 });
-        }
-
-        frames.forEach(drawFrame);
-
-        line(LABEL_X, 170, LABEL_X, headY, { ...THIN, strokeWidth: 1.8 });
-        rect(LABEL_X - 8, headY, 16, 10, { ...HATCH, hachureGap: 3, ...THIN });
-        poly([[LABEL_X - 3, headY + 10], [LABEL_X + 3, headY + 10], [LABEL_X, headY + 13]], SOLID(INK));
-        const gear = { x: LABEL_X + 28, y: 170 }, turn = t * 2;
-        for (let k = 0; k < 8; k++) {
-          const a = turn + k * Math.PI / 4;
-          seg(gear.x + 4 * Math.cos(a), gear.y + 4 * Math.sin(a), gear.x + 8 * Math.cos(a), gear.y + 8 * Math.sin(a), INK, 2);
-        }
-        node("circle", { cx: gear.x, cy: gear.y, r: 5, fill: PAPER, stroke: INK, "stroke-width": 1.2 });
-        dot(gear.x, gear.y, 1.5, INK);
-
-        poly([[190, 240], [222, 240], [218, GROUND], [194, GROUND]], { ...OPAQUE, ...THIN });
-        line(188, 240, 224, 240, { ...THIN, strokeWidth: 1.6 });
-
-        const { x: sx, y: sy, rx, ry } = STORE;
-        put(rc.path(`M ${sx - rx} ${sy} L ${sx - rx} ${GROUND - ry} A ${rx} ${ry} 0 0 0 ${sx + rx} ${GROUND - ry} L ${sx + rx} ${sy} A ${rx} ${ry} 0 0 1 ${sx - rx} ${sy} Z`,
-          { ...OPAQUE, strokeWidth: 1.4 }));
-        for (const y of [sy + 14, sy + 28]) put(rc.arc(sx, y, rx * 2, ry * 2, 0, Math.PI, false, { ...THIN, stroke: SOFT }));
-        const filling = frames.some(f => f.stored > 0.1 && f.stored < 0.35);
-        put(rc.ellipse(sx, sy, rx * 2, ry * 2, { ...THIN, strokeWidth: 1.4, stroke: filling ? ACCENT : INK }));
-
-        withLayer(node("g", { "clip-path": "url(#lens-clip)" }), () => {
-          node("circle", { cx: LENS.x, cy: LENS.y, r: LENS.r, fill: PAPER });
-          const zoom = `translate(${LENS.x} ${LENS.y}) scale(1.7) translate(${-LENS.x} ${-LENS.y})`;
-          for (const f of frames) {
-            if (Math.abs(f.x + FW / 2 - LENS.x) < FW / 2 + LENS.r) withLayer(node("g", { transform: zoom }), () => drawFrame(f));
-          }
-        });
-        circle(LENS.x, LENS.y, LENS.r * 2, { ...THIN, strokeWidth: 1.5 });
-        const inspected = frames.find(f => Math.abs(f.bx + FW / 2 - LENS.x) < 9);
-        if (inspected) {
-          const v = { x: LENS.x - 20, y: LENS.y - 18 };
-          if (inspected.bad) {
-            seg(v.x - 3.5, v.y - 3.5, v.x + 3.5, v.y + 3.5, INK, 1.4);
-            seg(v.x - 3.5, v.y + 3.5, v.x + 3.5, v.y - 3.5, INK, 1.4);
+        const tau = (u - THUMB.x) / V;
+        for (let k = 0; k < 9; k++) {
+          const x = THUMB.x + (k % 3) * (THUMB.w + THUMB.gap), y = THUMB.y + Math.floor(k / 3) * (THUMB.h + THUMB.gap);
+          const o = { x: x + 17, y: y + 10 }, bad = REJECT.includes(k), reviewed = tau > (k + 1) * REVIEW;
+          fade(reviewed && bad ? 0.3 : 1, () => {
+            node("rect", { x, y, width: THUMB.w, height: THUMB.h, fill: PAPER, stroke: INK, "stroke-width": 1 });
+            seg(x + 3, y + 17, x + THUMB.w - 3, y + 17, FAINT, 0.8);
+            if (bad) for (const d of [-2, 2]) node("circle", { cx: o.x + d, cy: o.y, r: 4.5, fill: "none", stroke: FAR, "stroke-width": 0.8 });
+            else node("circle", { cx: o.x, cy: o.y, r: 4.5, fill: TINT, stroke: INK, "stroke-width": 0.9 });
+          });
+          if (!reviewed) {
+            if (tau > k * REVIEW) node("rect", { x: x - 3, y: y - 3, width: THUMB.w + 6, height: THUMB.h + 6, fill: "none", stroke: ACCENT, "stroke-width": 1, "stroke-dasharray": "2 2" });
+          } else if (bad) {
+            seg(x + 4, y + 3, x + THUMB.w - 4, y + THUMB.h - 3, INK, 1.2);
+            seg(x + 4, y + THUMB.h - 3, x + THUMB.w - 4, y + 3, INK, 1.2);
           } else {
-            trace([{ x: v.x - 4, y: v.y }, { x: v.x - 1, y: v.y + 3 }, { x: v.x + 4, y: v.y - 4 }], ACCENT, 1.6);
+            node("rect", { x: o.x - 7, y: o.y - 7, width: 14, height: 14, fill: "none", stroke: ACCENT, "stroke-width": 1.1 });
           }
         }
 
+        if (tau < 9 * REVIEW + 0.2) return;
         for (let k = 0; k < 3; k++) {
-          const p = bezier(FEED, mod(t * 0.7 + k / 3, 1));
-          node("rect", { x: p.x - 2.5, y: p.y - 2.5, width: 5, height: 5, fill: ACCENT });
+          const x = lerp(FEED.x0, FEED.x1 - 6, mod(t * 0.8 + k / 3, 1));
+          node("rect", { x: x - 2.5, y: FEED.y - 2.5, width: 5, height: 5, fill: ACCENT });
         }
         const phase = mod(t * 1.1, 2), backward = phase >= 1;
         const active = backward ? NET.length - 1 - Math.floor((phase - 1) * NET.length) : Math.floor(phase * NET.length);
         const edges = backward ? active + 1 : active;
         if (edges > 0 && edges < NET.length) {
           for (const a of NET[edges - 1]) for (const b of NET[edges]) {
-            const d = Math.hypot(b.x - a.x, b.y - a.y), ux = (b.x - a.x) / d * 4.5, uy = (b.y - a.y) / d * 4.5;
+            const d = Math.hypot(b.x - a.x, b.y - a.y), ux = (b.x - a.x) / d * 5, uy = (b.y - a.y) / d * 5;
             seg(a.x + ux, a.y + uy, b.x - ux, b.y - uy, ACCENT, 0.8, backward ? "2 2" : null);
           }
         }
-        if (!backward) for (const p of NET[active]) dot(p.x, p.y, 2.6, ACCENT);
+        if (!backward) for (const p of NET[active]) dot(p.x, p.y, 2.8, ACCENT);
       },
     };
 
-    // ---------- cloud operations ----------
-    const OPS_LAP = 3, INF = { x: 160, y: 132, a: 58 }, HELM = { x: 280, y: 146 }, HUB = { x: 516, y: 142 };
-    const NODES = [308, 352, 396], NODE_Y = 118, SLOTS = [[5, 5], [21, 5], [5, 16], [21, 16]];
-    const STAGES = [1.25, 1.75, 0.25, 0.75].map(k => k * Math.PI);
-    const CODE = [[0, 22], [4, 16], [4, 26], [8, 12], [0, 18]];
-    const COMMIT = [{ x: 88, y: 194 }, { x: 90, y: 150 }, { x: INF.x - INF.a, y: INF.y }];
-    const AGENTS = [[-34, -20], [34, -20], [-34, 22], [34, 22]].map(([dx, dy]) => ({ x: HUB.x + dx, y: HUB.y + dy }));
-    const LINKS = [[{ x: 330, y: 176 }, { x: 330, y: 210 }], [{ x: 446, y: 176 }, { x: 446, y: 218 }],
-      [{ x: 529, y: 176 }, { x: 529, y: 214 }], [{ x: 574, y: 176 }, { x: 626, y: 192 }]];
-    const LEDS = [{ x: 344, y: 215 }, { x: 430, y: 248 }, { x: 542, y: 243 }, { x: 636, y: 199 }];
-    const CLOUD_PATH = "M 262 176 L 578 176 A 26 26 0 0 0 590 134 A 38 38 0 0 0 536 100 A 44 44 0 0 0 462 88 " +
-      "A 46 46 0 0 0 384 90 A 44 44 0 0 0 306 110 A 42 42 0 0 0 262 176 Z";
-    const infAt = s => {
-      const d = 1 + Math.sin(s) ** 2;
-      return { x: INF.x + INF.a * Math.cos(s) / d, y: INF.y + INF.a * Math.sin(s) * Math.cos(s) / d };
-    };
+    // ---------- GPU cluster training and deployment ----------
+    const GPU_LAP = 4, RACKS = [110, 160, 210], RACK_Y = 150, TRAY_Y = 140, SHIP = { x: 230, y: TRAY_Y };
+    const TARGETS = [{ x: 420, y: 196 }, { x: 528, y: 216 }], DEVICE_LEDS = [{ x: 434, y: 208 }, { x: 512, y: 250 }];
+    const shipAt = (target, f) => ({ x: lerp(SHIP.x, target.x, f), y: lerp(SHIP.y, target.y, f) - 50 * Math.sin(Math.PI * f) });
 
-    // Each lap one node gets a rolling update; one container elsewhere crashes and is rescheduled.
-    function slotState(i, j, t) {
-      const lap = Math.floor(t / OPS_LAP);
-      let last = null;
-      for (let n = lap - 3; n <= lap; n++) {
-        const t0 = n * OPS_LAP, update = t0 + (0.25 + 0.07 * j) * OPS_LAP, crash = t0 + 0.6 * OPS_LAP;
-        if (mod(n, 3) === i && update <= t) last = { at: update, down: 0 };
-        if (mod(n + 1, 3) === i && mod(n, 4) === j && crash <= t) last = { at: crash, down: 0.4 };
-      }
-      if (!last) return "idle";
-      const age = t - last.at;
-      if (age < last.down) return "crashed";
-      if (age < last.down + 0.3) return "pending";
-      return age < last.down + 0.3 + 1.6 * OPS_LAP ? "fresh" : "idle";
-    }
-
-    const cloudOps = {
-      width: 700,
-      keys: ["cloud operations", "continuous delivery", "container & agent orchestration", "edge IoT"],
+    // The cluster trains for most of each lap, then ships the model out to the edge devices.
+    const gpuCluster = {
+      keys: ["GPU clusters", "distributed training", "model deployment"],
       build() {
-        line(18, 228, 112, 228, { strokeWidth: 1.6 });
-        for (const x of [26, 104]) line(x, 228, x, GROUND);
-        rect(44, 194, 44, 29, { ...OPAQUE, strokeWidth: 1.3 });
-        poly([[38, 228], [94, 228], [89, 223], [43, 223]], { ...OPAQUE, ...THIN });
-        node("path", { d: `M ${COMMIT[0].x} ${COMMIT[0].y} Q ${COMMIT[1].x} ${COMMIT[1].y} ${COMMIT[2].x} ${COMMIT[2].y}`, fill: "none", stroke: FAINT, "stroke-width": 1, "stroke-dasharray": "3 3" });
-
-        const loop = [];
-        for (let k = 0; k <= 64; k++) loop.push(infAt(k / 64 * TAU));
-        put(rc.curve(loop.map(p => [p.x, p.y]), { strokeWidth: 1.5 }));
-
-        put(rc.path(CLOUD_PATH, { strokeWidth: 1.6 }));
-        for (const nx of NODES) {
-          rect(nx, NODE_Y, 38, 30, { ...OPAQUE, strokeWidth: 1.3 });
-          seg(nx + 19, NODE_Y + 30, nx + 19, 164, SOFT, 0.9);
+        line(RACKS[0] + 20, TRAY_Y, RACKS[2] + 20, TRAY_Y, { strokeWidth: 1.5 });
+        for (const x of RACKS) {
+          seg(x + 20, TRAY_Y, x + 20, RACK_Y, SOFT, 1);
+          rect(x, RACK_Y, 40, GROUND - RACK_Y, { ...OPAQUE, strokeWidth: 1.6 });
+          for (let k = 0; k < 5; k++) {
+            const y = RACK_Y + 8 + 20 * k;
+            rect(x + 4, y, 32, 14, THIN);
+            for (const fx of [x + 16, x + 28]) node("circle", { cx: fx, cy: y + 7, r: 4.5, fill: "none", stroke: INK, "stroke-width": 0.9 });
+          }
         }
-        seg(HELM.x, HELM.y + 15, HELM.x, 164, SOFT, 0.9);
-        seg(HELM.x, 164, NODES[2] + 19, 164, SOFT, 0.9);
+        for (const target of TARGETS) trace(Array.from({ length: 25 }, (_, k) => shipAt(target, k / 24)), FAINT, 1, "3 3");
 
-        for (const a of AGENTS) {
-          seg(HUB.x, HUB.y, a.x, a.y, FAINT, 1);
-          rect(a.x - 7, a.y - 5, 14, 11, { ...OPAQUE, ...THIN });
-          seg(a.x, a.y - 5, a.x, a.y - 9, INK, 1);
-          dot(a.x - 3, a.y, 1.2);
-          dot(a.x + 3, a.y, 1.2);
-        }
-        rect(HUB.x - 11, HUB.y - 8, 22, 17, { ...OPAQUE, strokeWidth: 1.5 });
-        seg(HUB.x, HUB.y - 8, HUB.x, HUB.y - 14, INK, 1.2);
-        dot(HUB.x, HUB.y - 15, 2, ACCENT);
-
-        for (const [top, bottom] of LINKS) seg(top.x, top.y, bottom.x, bottom.y, FAINT, 1, "3 3");
-        line(330, GROUND, 330, 224, { stroke: SOFT, strokeWidth: 1.4 });
-        rect(320, 212, 20, 12, { ...HATCH, hachureGap: 3, ...THIN });
-        circle(317, 218, 6, { ...OPAQUE, ...THIN });
-        rect(424, 242, 28, 20, { ...OPAQUE, strokeWidth: 1.3 });
-        line(446, 242, 446, 226, THIN);
-        for (const r of [5, 9]) put(rc.arc(446, 226, r * 2, r * 2, Math.PI * 1.25, Math.PI * 1.75, false, { ...THIN, stroke: SOFT }));
-        rect(510, 236, 38, 14, { ...OPAQUE, strokeWidth: 1.3 });
-        for (const x of [518, 540]) circle(x, 255, 12, { ...OPAQUE, ...THIN });
-        line(529, 236, 529, 226, THIN);
-        rect(523, 220, 12, 6, { ...HATCH, hachureGap: 2, ...THIN });
+        line(420, GROUND, 420, 214, { stroke: SOFT, strokeWidth: 1.4 });
+        rect(410, 202, 20, 12, { ...HATCH, hachureGap: 3, ...THIN });
+        circle(407, 208, 6, { ...OPAQUE, ...THIN });
+        rect(506, 242, 28, 20, { ...OPAQUE, strokeWidth: 1.3 });
+        line(528, 242, 528, 228, THIN);
+        for (const r of [5, 9]) put(rc.arc(528, 228, r * 2, r * 2, Math.PI * 1.25, Math.PI * 1.75, false, { ...THIN, stroke: SOFT }));
       },
       draw(u, t) {
-        const phi = mod(t, OPS_LAP) / OPS_LAP, lap = Math.floor(t / OPS_LAP);
-
-        const typed = clamp(mod(phi - 0.5, 1) / 0.85 * CODE.length, 0, CODE.length);
-        CODE.forEach(([indent, length], k) => {
-          const shown = clamp(typed - k, 0, 1) * length;
-          if (shown > 0) seg(49 + indent, 200 + 5 * k, 49 + indent + shown, 200 + 5 * k, k === CODE.length - 1 ? ACCENT : SOFT, 1.6);
-        });
-        if (Math.sin(t * 9) > 0 && typed < CODE.length) {
-          const k = Math.floor(typed), x = 50 + CODE[k][0] + (typed - k) * CODE[k][1];
-          seg(x, 197 + 5 * k, x, 203 + 5 * k, INK, 1);
-        }
-        if (phi >= 0.35 && phi < 0.5) {
-          const p = bezier(COMMIT, smooth((phi - 0.35) / 0.15));
-          dot(p.x, p.y, 3, ACCENT);
-        }
-
-        const s = phi * TAU, trail = [];
-        for (let k = 14; k >= 0; k--) trail.push(infAt(s - k * 0.07));
-        trace(trail, ACCENT, 1.4);
-        STAGES.forEach(stage => {
-          const p = infAt(stage), lit = mod(s - stage, TAU) < 2.2;
-          node("rect", { x: p.x - 3, y: p.y - 3, width: 6, height: 6, fill: lit ? ACCENT : PAPER, stroke: INK, "stroke-width": 1 });
-        });
-        const token = infAt(s);
-        dot(token.x, token.y, 3.2, ACCENT);
-
-        const target = NODES[mod(lap, 3)];
-        if (phi < 0.22) {
-          const from = infAt(0), to = { x: target + 19, y: NODE_Y - 4 };
-          const p = bezier([from, { x: (from.x + to.x) / 2, y: 80 }, to], smooth(phi / 0.22));
-          node("rect", { x: p.x - 4, y: p.y - 3.5, width: 8, height: 7, fill: ACCENT });
-          seg(p.x - 4, p.y - 1, p.x + 4, p.y - 1, PAPER, 0.8);
-        } else if (phi < 0.4) {
-          rect(target - 3, NODE_Y - 3, 44, 36, { stroke: ACCENT, ...THIN });
-        }
-
-        let crashed = false;
-        NODES.forEach((nx, i) => SLOTS.forEach(([dx, dy], j) => {
-          const state = slotState(i, j, t), x = nx + dx, y = NODE_Y + dy;
-          if (state === "crashed") {
-            crashed = true;
-            node("rect", { x, y, width: 12, height: 9, fill: PAPER, stroke: INK, "stroke-width": 0.9 });
-            seg(x + 3, y + 1.5, x + 9, y + 7.5, INK, 1.2);
-            seg(x + 3, y + 7.5, x + 9, y + 1.5, INK, 1.2);
-          } else if (state === "pending") {
-            node("rect", { x, y, width: 12, height: 9, fill: "none", stroke: SOFT, "stroke-width": 0.9, "stroke-dasharray": "2 2" });
-          } else {
-            node("rect", { x, y, width: 12, height: 9, fill: state === "fresh" ? ACCENT : TINT, stroke: state === "fresh" ? ACCENT : INK, "stroke-width": 0.9 });
-          }
-        }));
-
-        const turn = t * (crashed ? 3 : 0.8);
-        node("circle", { cx: HELM.x, cy: HELM.y, r: 10, fill: PAPER, stroke: INK, "stroke-width": 1.4 });
-        for (let k = 0; k < 7; k++) {
-          const a = turn + k * TAU / 7;
-          seg(HELM.x + 3 * Math.cos(a), HELM.y + 3 * Math.sin(a), HELM.x + 14 * Math.cos(a), HELM.y + 14 * Math.sin(a), INK, 1.3);
-          dot(HELM.x + 15 * Math.cos(a), HELM.y + 15 * Math.sin(a), 1.8, INK);
-        }
-        node("circle", { cx: HELM.x, cy: HELM.y, r: 3, fill: crashed ? ACCENT : PAPER, stroke: INK, "stroke-width": 1.2 });
-
-        let gaze = { x: 0, y: 0 };
-        AGENTS.forEach((a, k) => {
-          const w = mod(phi - k * 0.25, 1);
-          const busy = w < 0.24;
-          dot(a.x, a.y - 10, 1.8, busy && w >= 0.08 && w < 0.16 && Math.sin(t * 30) > 0 ? ACCENT : busy ? INK : FAINT);
-          if (!busy) return;
-          gaze = { x: Math.sign(a.x - HUB.x), y: Math.sign(a.y - HUB.y) };
-          seg(HUB.x, HUB.y, a.x, a.y, ACCENT, 1);
-          if (w < 0.08) {
-            const p = lerpP(HUB, a, smooth(w / 0.08));
-            dot(p.x, p.y, 2.4, ACCENT);
-          } else if (w >= 0.16) {
-            const p = lerpP(a, HUB, smooth((w - 0.16) / 0.08));
-            node("rect", { x: p.x - 2.2, y: p.y - 2.2, width: 4.4, height: 4.4, fill: ACCENT });
+        const phi = mod(t, GPU_LAP) / GPU_LAP, training = phi < 0.6;
+        RACKS.forEach((x, i) => {
+          for (let k = 0; k < 5; k++) {
+            const y = RACK_Y + 8 + 20 * k;
+            dot(x + 8, y + 7, 1.5, training && Math.sin(t * 17 + i * 2.1 + k * 1.3) > 0 ? ACCENT : FAINT);
+            [x + 16, x + 28].forEach((fx, j) => {
+              const a = t * (training ? 24 : 3) + i + k * 0.7 + j * 1.4;
+              seg(fx - 3.5 * Math.cos(a), y + 7 - 3.5 * Math.sin(a), fx + 3.5 * Math.cos(a), y + 7 + 3.5 * Math.sin(a), SOFT, 1);
+            });
           }
         });
-        for (const side of [-1, 1]) dot(HUB.x + side * 4 + gaze.x * 1.2, HUB.y + gaze.y * 1.2, 1.6);
-
-        drawQuad({ x: 636, y: 218 + 2 * Math.sin(t * 3), s: 1 }, t);
-
-        LINKS.forEach(([top, bottom], k) => {
-          for (let j = 0; j < 2; j++) {
-            const p = lerpP(bottom, top, mod(t * 0.6 + k * 0.37 + j * 0.5, 1));
-            dot(p.x, p.y, 1.2, SOFT);
+        if (training) {
+          for (let k = 0; k < 3; k++) {
+            const f = mod(t * 1.2 + k / 3, 1);
+            dot(lerp(RACKS[0] + 20, RACKS[2] + 20, k % 2 ? f : 1 - f), TRAY_Y, 1.8, ACCENT);
           }
-          const f = (phi - 0.45 - 0.07 * k) / 0.18;
+        }
+        TARGETS.forEach((target, k) => {
+          const f = (phi - 0.6 - 0.06 * k) / 0.2;
           if (f > 0 && f < 1) {
-            const p = lerpP(top, bottom, smooth(f));
-            node("rect", { x: p.x - 2.5, y: p.y - 2.5, width: 5, height: 5, fill: ACCENT });
+            const p = shipAt(target, smooth(f));
+            node("rect", { x: p.x - 3.5, y: p.y - 3.5, width: 7, height: 7, fill: ACCENT });
           }
-          dot(LEDS[k].x, LEDS[k].y, 1.8, f >= 1 && f < 2.6 ? ACCENT : FAINT);
+          dot(DEVICE_LEDS[k].x, DEVICE_LEDS[k].y, 1.8, f >= 1 ? ACCENT : FAINT);
         });
       },
     };
 
-    const SCENES = [uav, turbofan, plasma, mapping, teleop, detection, mlops, fusion, dataEngine, cloudOps];
+    const SCENES = [uav, turbofan, plasma, mapping, teleop, detection, mlops, fusion, curation, gpuCluster];
     let WORLD = 0;
     for (const scene of SCENES) {
       scene.width ??= W;
