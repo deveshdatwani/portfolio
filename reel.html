@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Devesh Datwani</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Poppins:wght@500;600;800&display=swap" rel="stylesheet">
+  <link rel="preload" href="assets/reel/pov.mp4" as="video" type="video/mp4">
+  <style>
+    @font-face {
+      font-family: "Virgil";
+      src: url("assets/Virgil.woff2") format("woff2");
+      font-display: swap;
+    }
+
+    :root {
+      --ink: #0d0d0b;
+      --paper: #faf9f5;
+      --dim: rgba(250, 249, 245, 0.72);
+      --faint: rgba(250, 249, 245, 0.28);
+      --accent: #3b8bff;
+      --gutter: clamp(1rem, 4vw, 3rem);
+
+      --font-sans: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+      --font-hand: "Virgil", "Segoe Print", "Comic Sans MS", cursive;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { background: var(--ink); color: var(--paper); }
+
+    body {
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .reel {
+      position: relative;
+      height: 100svh;
+      min-height: 600px;
+      overflow: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* ---------- media ---------- */
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.7s ease;
+    }
+    .slide.on { opacity: 1; }
+
+    .media {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform-origin: var(--ox, 50%) var(--oy, 50%);
+    }
+
+    .slide.on .media,
+    .slide.leaving .media {
+      animation: drift var(--dur, 5s) linear forwards;
+    }
+    .reel.paused .media { animation-play-state: paused; }
+
+    @keyframes drift {
+      from { transform: scale(var(--s0, 1.02)); }
+      to   { transform: scale(var(--s1, 1.14)); }
+    }
+
+    /* Low-res grids: sharp and whole in front, blurred copy filling the frame behind. */
+    .slide.fit .backdrop {
+      position: absolute;
+      inset: -40px;
+      width: calc(100% + 80px);
+      height: calc(100% + 80px);
+      object-fit: cover;
+      filter: blur(28px) brightness(0.45) saturate(1.2);
+    }
+    .slide.fit .media {
+      object-fit: contain;
+      padding: 7rem var(--gutter) 22rem;
+    }
+
+    .slide.card .media {
+      background:
+        linear-gradient(var(--ink), transparent 30%, transparent 70%, var(--ink)),
+        linear-gradient(90deg, rgba(59, 139, 255, 0.09) 1px, transparent 1px) 0 0 / 48px 48px,
+        linear-gradient(rgba(59, 139, 255, 0.09) 1px, transparent 1px) 0 0 / 48px 48px,
+        radial-gradient(circle at 70% 35%, rgba(59, 139, 255, 0.28), transparent 55%),
+        var(--ink);
+    }
+
+    .shade {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(to bottom, rgba(13, 13, 11, 0.7), transparent 22%),
+        linear-gradient(to top, rgba(13, 13, 11, 0.92) 8%, rgba(13, 13, 11, 0.55) 42%, transparent 68%);
+    }
+
+    /* ---------- tap zones (stories-style) ---------- */
+
+    .tap {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tap.prev { left: 0; width: 30%; cursor: w-resize; }
+    .tap.next { right: 0; width: 70%; cursor: e-resize; }
+    .tap:focus-visible { outline: 2px solid var(--accent); outline-offset: -6px; }
+
+    /* ---------- overlay ---------- */
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 0.9rem var(--gutter) clamp(1.25rem, 4vh, 2.5rem);
+      pointer-events: none;
+    }
+    .overlay a, .overlay button { pointer-events: auto; }
+
+    .bars {
+      display: flex;
+      gap: 5px;
+    }
+    .bar {
+      flex: 1;
+      height: 3px;
+      border-radius: 3px;
+      background: var(--faint);
+      overflow: hidden;
+    }
+    .bar i {
+      display: block;
+      height: 100%;
+      background: var(--paper);
+      transform-origin: left;
+      transform: scaleX(0);
+    }
+
+    .topline {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 0.8rem;
+      font-size: 0.85rem;
+    }
+    .avatar {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--paper);
+      color: var(--ink);
+      font-weight: 800;
+      font-size: 0.75rem;
+      box-shadow: 0 0 0 2px var(--ink), 0 0 0 4px var(--accent);
+    }
+    .handle { font-weight: 600; }
+    .when { color: var(--dim); }
+    .pp {
+      margin-left: auto;
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(13, 13, 11, 0.35);
+      color: var(--paper);
+      font: 600 0.8rem var(--font-mono);
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+    }
+    .pp:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    .caps {
+      display: grid;
+      margin-top: auto;
+      max-width: 50rem;
+    }
+    .cap {
+      grid-area: 1 / 1;
+      align-self: end;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .cap.on { opacity: 1; transform: none; transition-delay: 0.15s; }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font: 400 0.78rem var(--font-mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+    .kicker::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #ff4d4d;
+      box-shadow: 0 0 10px #ff4d4d;
+    }
+
+    .cap h1 {
+      margin-top: 0.4rem;
+      font-weight: 800;
+      font-size: clamp(2.1rem, 6.4vw, 4.6rem);
+      line-height: 1.02;
+      letter-spacing: -0.035em;
+      text-wrap: balance;
+    }
+    mark {
+      color: inherit;
+      background: linear-gradient(transparent 58%, var(--accent) 58%, var(--accent) 92%, transparent 92%);
+      padding: 0 0.05em;
+    }
+
+    .note {
+      display: inline-block;
+      margin-top: 0.7rem;
+      font-family: var(--font-hand);
+      font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+      color: #ffd84d;
+      transform: rotate(-2deg);
+    }
+
+    .dock {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1.25rem 2rem;
+      margin-top: clamp(1.5rem, 4vh, 2.5rem);
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--faint);
+    }
+    .who h2 {
+      font-weight: 600;
+      font-size: 1.15rem;
+      letter-spacing: -0.01em;
+    }
+    .who p {
+      color: var(--dim);
+      font-size: 0.95rem;
+    }
+
+    .cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.7rem 1.2rem;
+      border-radius: 999px;
+      border: 1px solid var(--faint);
+      font-weight: 600;
+      font-size: 0.92rem;
+      background: rgba(13, 13, 11, 0.3);
+      backdrop-filter: blur(8px);
+      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+    .btn:hover { transform: translateY(-2px); border-color: var(--paper); }
+    .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .btn.primary { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+    .btn.primary:hover { background: #fff; }
+
+    .hint {
+      position: absolute;
+      right: var(--gutter);
+      top: 50%;
+      font: 400 0.72rem var(--font-mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--dim);
+      pointer-events: none;
+      animation: nudge 1.6s ease-in-out 3;
+      opacity: 0;
+    }
+    @keyframes nudge {
+      0%, 100% { opacity: 0; transform: translateX(0); }
+      40% { opacity: 1; transform: translateX(-8px); }
+    }
+
+    @media (max-width: 640px) {
+      .slide.fit .media { padding: 6.5rem var(--gutter) 24rem; }
+      .who p { font-size: 0.88rem; }
+      .cta { width: 100%; }
+      .btn { flex: 1; justify-content: center; padding: 0.7rem 0.9rem; }
+      .hint { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .slide, .cap { transition: none; }
+      .slide .media { animation: none !important; }
+      .hint { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="reel" id="reel" aria-roledescription="carousel" aria-label="What I build">
+
+    <div class="slides">
+      <figure class="slide" data-dur="7500" style="--s0:1.0;--s1:1.06">
+        <video class="media" src="assets/reel/pov.mp4" poster="assets/reel/pov-poster.jpg" muted playsinline loop preload="auto"
+          aria-label="View from the wing of a home-built RC plane flying low over a field"></video>
+      </figure>
+      <figure class="slide" data-dur="5000" style="--ox:50%;--oy:49%;--s0:1.05;--s1:1.45">
+        <img class="media" src="assets/reel/quad.jpg" alt="A home-built quadcopter hovering against grey clouds">
+      </figure>
+      <figure class="slide" data-dur="5000" style="--ox:45%;--oy:55%">
+        <img class="media" src="assets/reel/plane.jpg" alt="A blue foam-board RC plane on a living-room floor">
+      </figure>
+      <figure class="slide fit" data-dur="5000" style="--s0:1;--s1:1.04">
+        <img class="backdrop" src="assets/reel/hands.png" alt="">
+        <img class="media" src="assets/reel/hands.png" alt="Eight photos of hands with every finger joint tracked by a vision model">
+      </figure>
+      <figure class="slide" data-dur="5000" style="--ox:60%;--oy:45%">
+        <img class="media" src="assets/reel/pose.jpg" alt="The Joker dancing on the stairs with a detected body skeleton overlaid">
+      </figure>
+      <figure class="slide card" data-dur="6500" style="--s0:1;--s1:1.08">
+        <div class="media" role="img" aria-label="Blueprint grid"></div>
+      </figure>
+    </div>
+
+    <div class="shade"></div>
+
+    <button class="tap prev" id="prev" aria-label="Previous"></button>
+    <button class="tap next" id="next" aria-label="Next"></button>
+    <span class="hint" aria-hidden="true">tap →</span>
+
+    <div class="overlay">
+      <div class="bars" id="bars" aria-hidden="true"></div>
+
+      <div class="topline">
+        <span class="avatar" aria-hidden="true">DD</span>
+        <span class="handle">deveshdatwani</span>
+        <span class="when">robotics engineer</span>
+        <button class="pp" id="pp" aria-label="Pause">❚❚</button>
+      </div>
+
+      <div class="caps" aria-live="polite">
+        <div class="cap">
+          <span class="kicker">POV · my plane</span>
+          <h1>Building <mark>aircraft</mark> since 2011.</h1>
+          <span class="note">↑ that's my wing. mid-flight.</span>
+        </div>
+        <div class="cap">
+          <span class="kicker">Drones</span>
+          <h1>From a pile of parts to <mark>the sky</mark>.</h1>
+          <span class="note">built it. wired it. flew it.</span>
+        </div>
+        <div class="cap">
+          <span class="kicker">Planes</span>
+          <h1>Foam, tape, a motor &amp; <mark>a lot of math</mark>.</h1>
+          <span class="note">living room = hangar</span>
+        </div>
+        <div class="cap">
+          <span class="kicker">AI vision</span>
+          <h1>I teach cameras to <mark>read hands</mark>.</h1>
+          <span class="note">every finger, tracked</span>
+        </div>
+        <div class="cap">
+          <span class="kicker">AI vision</span>
+          <h1>…and to get how <mark>people move</mark>.</h1>
+          <span class="note">yes, that's the Joker</span>
+        </div>
+        <div class="cap">
+          <span class="kicker">Right now</span>
+          <h1>Senior Computer Vision Engineer at <mark>FyveBy</mark>.</h1>
+          <span class="note">3D tracking · sensor fusion · MS Robotics, WPI</span>
+        </div>
+      </div>
+
+      <div class="dock">
+        <div class="who">
+          <h2>Devesh Datwani</h2>
+          <p>I make machines that see, fly and move. Then I ship them.</p>
+        </div>
+        <div class="cta">
+          <a class="btn primary" href="assets/ResumeDeveshDatwani.pdf" target="_blank" rel="noopener noreferrer">Resume ↗</a>
+          <a class="btn" href="mailto:datwanidevesh@gmail.com">Say hi</a>
+          <a class="btn" href="https://www.linkedin.com/in/deveshdatwani/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+  (() => {
+    const reel = document.getElementById("reel");
+    const slides = [...reel.querySelectorAll(".slide")];
+    const caps = [...reel.querySelectorAll(".cap")];
+    const barsEl = document.getElementById("bars");
+    const pp = document.getElementById("pp");
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const fills = slides.map(() => {
+      const bar = document.createElement("span");
+      bar.className = "bar";
+      const fill = document.createElement("i");
+      bar.append(fill);
+      barsEl.append(bar);
+      return fill;
+    });
+
+    let index = 0, elapsed = 0, last = performance.now(), paused = reduced, holding = false;
+
+    const duration = slide => Number(slide.dataset.dur) || 5000;
+
+    function show(next) {
+      const previous = slides[index];
+      index = (next + slides.length) % slides.length;
+      elapsed = 0;
+
+      slides.forEach((slide, k) => {
+        const on = k === index;
+        slide.style.setProperty("--dur", `${duration(slide)}ms`);
+        slide.classList.toggle("on", on);
+        slide.setAttribute("aria-hidden", String(!on));
+        const video = slide.querySelector("video");
+        if (video) {
+          if (on) { video.currentTime = 0; if (!paused) video.play().catch(() => {}); }
+          else video.pause();
+        }
+      });
+      caps.forEach((cap, k) => cap.classList.toggle("on", k === index));
+      fills.forEach((fill, k) => fill.style.transform = `scaleX(${k < index ? 1 : 0})`);
+
+      // Let the outgoing slide keep drifting while it fades, so it doesn't snap back.
+      if (previous !== slides[index]) {
+        previous.classList.add("leaving");
+        setTimeout(() => previous.classList.remove("leaving"), 800);
+      }
+    }
+
+    function setPaused(value) {
+      paused = value;
+      reel.classList.toggle("paused", paused);
+      pp.textContent = paused ? "▶" : "❚❚";
+      pp.setAttribute("aria-label", paused ? "Play" : "Pause");
+      const video = slides[index].querySelector("video");
+      if (video) paused ? video.pause() : video.play().catch(() => {});
+    }
+
+    function tick(now) {
+      const dt = now - last;
+      last = now;
+      if (!paused && !holding) {
+        elapsed += dt;
+        const dur = duration(slides[index]);
+        fills[index].style.transform = `scaleX(${Math.min(elapsed / dur, 1)})`;
+        if (elapsed >= dur) show(index + 1);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    // Press-and-hold anywhere on the media pauses, like stories; a quick tap skips.
+    let downAt = 0;
+    for (const [id, step] of [["prev", -1], ["next", 1]]) {
+      const zone = document.getElementById(id);
+      zone.addEventListener("pointerdown", () => { downAt = performance.now(); holding = true; reel.classList.add("paused"); });
+      zone.addEventListener("pointerup", () => {
+        holding = false;
+        if (!paused) reel.classList.remove("paused");
+        if (performance.now() - downAt < 250) show(index + step);
+      });
+      zone.addEventListener("pointerleave", () => { holding = false; if (!paused) reel.classList.remove("paused"); });
+      zone.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); show(index + step); } });
+    }
+
+    pp.addEventListener("click", () => setPaused(!paused));
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "ArrowRight") show(index + 1);
+      else if (e.key === "ArrowLeft") show(index - 1);
+      else if (e.key === " " && e.target === document.body) { e.preventDefault(); setPaused(!paused); }
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) { holding = true; } else { holding = false; last = performance.now(); }
+    });
+
+    show(0);
+    setPaused(paused);
+    requestAnimationFrame(tick);
+  })();
+  </script>
+</body>
+</html>
