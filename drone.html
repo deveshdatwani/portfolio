@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Devesh Datwani</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Poppins:wght@500;600;800&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: "Virgil";
+      src: url("assets/Virgil.woff2") format("woff2");
+      font-display: swap;
+    }
+
+    :root {
+      --paper: #faf9f5;
+      --ink: #1e1e1e;
+      --dim: #5f5d56;
+      --line: #e8e6dc;
+      --accent: #2a7ae2;
+      --highlight: #cfe0fb;
+      --gutter: clamp(1rem, 4vw, 3rem);
+      --size: 76px;
+
+      --font-sans: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+      --font-hand: "Virgil", "Segoe Print", "Comic Sans MS", cursive;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { background: var(--paper); }
+
+    body {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      padding-block: 3rem;
+      padding-inline: var(--gutter);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      background:
+        linear-gradient(90deg, rgba(30, 30, 30, 0.045) 1px, transparent 1px) 0 0 / 32px 32px,
+        linear-gradient(rgba(30, 30, 30, 0.045) 1px, transparent 1px) 0 0 / 32px 32px,
+        var(--paper);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    main {
+      width: 100%;
+      max-width: 56rem;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font: 400 0.76rem var(--font-mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+    .kicker::before {
+      content: "";
+      flex: none;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #2fb36d;
+      box-shadow: 0 0 8px #2fb36d;
+    }
+
+    h1 {
+      margin-top: 1.4rem;
+      font-weight: 600;
+      font-size: 1.15rem;
+      letter-spacing: -0.01em;
+    }
+
+    .lede {
+      margin-top: 0.3rem;
+      font-weight: 800;
+      font-size: clamp(2.1rem, 6.2vw, 4.4rem);
+      line-height: 1.04;
+      letter-spacing: -0.035em;
+      text-wrap: balance;
+    }
+    mark {
+      color: inherit;
+      background: linear-gradient(transparent 58%, var(--highlight) 58%, var(--highlight) 94%, transparent 94%);
+      padding: 0 0.05em;
+    }
+
+    .proof {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.9rem 2rem;
+      margin-top: 2.2rem;
+      list-style: none;
+    }
+    .proof li {
+      padding-top: 0.8rem;
+      border-top: 1px solid var(--line);
+      color: var(--dim);
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+    .proof b {
+      display: block;
+      color: var(--ink);
+      font-weight: 800;
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+    }
+
+    .cta {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 3.4rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      min-height: 52px;
+      padding: 0.7rem 1.3rem;
+      border-radius: 999px;
+      border: 1px solid #cfccc0;
+      background: var(--paper);
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .btn:hover { transform: translateY(-2px); border-color: var(--ink); }
+    .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+    .btn.hire {
+      gap: 0.75rem;
+      padding: 0.4rem 1.5rem 0.4rem 0.4rem;
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--paper);
+    }
+    .pad {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--paper);
+      border: 1.5px dashed #8d8a80;
+      font: 600 0.9rem var(--font-mono);
+      color: var(--accent);
+    }
+
+    .note {
+      position: absolute;
+      left: 0.3rem;
+      bottom: calc(100% + 1.1rem);
+      font-family: var(--font-hand);
+      font-size: 1.2rem;
+      color: var(--accent);
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(6px) rotate(-3deg);
+      transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.4);
+    }
+    .note.on { opacity: 1; transform: rotate(-3deg); }
+
+    .hint {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem 1.2rem;
+      margin-top: 1.4rem;
+      font: 400 0.74rem var(--font-mono);
+      letter-spacing: 0.04em;
+      color: var(--dim);
+    }
+    .telemetry { color: #8d8a80; text-transform: uppercase; }
+
+    /* ---------- drone ---------- */
+
+    .drone, .shadow {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: var(--size);
+      height: var(--size);
+      pointer-events: none;
+      visibility: hidden;
+      will-change: transform;
+    }
+    .drone { z-index: 21; }
+    .shadow { z-index: 20; opacity: 0.2; }
+    .drone svg, .shadow svg { display: block; width: 100%; height: 100%; overflow: visible; }
+    .shadow svg { filter: brightness(0); }
+
+    @media (max-width: 640px) {
+      :root { --size: 62px; }
+      .proof { grid-template-columns: 1fr; }
+      .cta { display: grid; grid-template-columns: 1fr 1fr; }
+      .btn.hire { grid-column: 1 / -1; justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="kicker">Senior Computer Vision Engineer · FyveBy · Charlotte, NC</p>
+    <h1>Devesh Datwani</h1>
+    <p class="lede" id="lede">Robotics engineer. I make machines that <mark>see, fly &amp; move</mark>.</p>
+
+    <ul class="proof">
+      <li><b>52M frames a day</b>through the aircraft-detection AI I architect, live in 10 hangars.</li>
+      <li><b>120+ 4K cameras</b>in the real-time tracking system I steered for a premier golf organization.</li>
+      <li><b>Emmy-winning</b>drone AR project. I led product &amp; operations (2025).</li>
+      <li><b>Since 2011</b>building aircraft. MS in Robotics Engineering, WPI.</li>
+    </ul>
+
+    <div class="cta">
+      <a class="btn hire" id="hire" href="mailto:datwanidevesh@gmail.com"><span class="pad" id="pad" aria-hidden="true">H</span>Hire me</a>
+      <a class="btn" id="resume" href="assets/ResumeDeveshDatwani.pdf" target="_blank" rel="noopener noreferrer">Resume ↗</a>
+      <a class="btn" id="linkedin" href="https://www.linkedin.com/in/deveshdatwani/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <span class="note" id="note" aria-hidden="true">↓ landed. your move.</span>
+    </div>
+
+    <p class="hint">
+      <span id="hint">move your mouse. the drone follows. stop, and it lands on "Hire me".</span>
+      <span class="telemetry" id="tele" aria-hidden="true"></span>
+    </p>
+  </main>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="quad" viewBox="-50 -50 100 100">
+        <!-- Paper-coloured halo so the ink airframe still reads over the dark "Hire me" button. -->
+        <g stroke="#faf9f5" stroke-linecap="round">
+          <line x1="-27" y1="-27" x2="27" y2="27" stroke-width="9"/>
+          <line x1="27" y1="-27" x2="-27" y2="27" stroke-width="9"/>
+          <rect x="-11" y="-16" width="22" height="32" rx="6" stroke-width="4" fill="#faf9f5"/>
+          <circle cx="-27" cy="-27" r="6" stroke-width="3" fill="#faf9f5"/>
+          <circle cx="27" cy="-27" r="6" stroke-width="3" fill="#faf9f5"/>
+          <circle cx="27" cy="27" r="6" stroke-width="3" fill="#faf9f5"/>
+          <circle cx="-27" cy="27" r="6" stroke-width="3" fill="#faf9f5"/>
+        </g>
+        <g stroke="#1e1e1e" stroke-width="5" stroke-linecap="round">
+          <line x1="-27" y1="-27" x2="27" y2="27"/>
+          <line x1="27" y1="-27" x2="-27" y2="27"/>
+        </g>
+        <g class="prop" transform="translate(-27 -27)">
+          <circle class="disc" r="17" fill="#1e1e1e"/>
+          <circle r="5.5" fill="#2a7ae2"/>
+          <rect class="blades" x="-16" y="-1.8" width="32" height="3.6" rx="1.8" fill="#1e1e1e"/>
+        </g>
+        <g class="prop" transform="translate(27 -27)">
+          <circle class="disc" r="17" fill="#1e1e1e"/>
+          <circle r="5.5" fill="#2a7ae2"/>
+          <rect class="blades" x="-16" y="-1.8" width="32" height="3.6" rx="1.8" fill="#1e1e1e"/>
+        </g>
+        <g class="prop" transform="translate(27 27)">
+          <circle class="disc" r="17" fill="#1e1e1e"/>
+          <circle r="5.5" fill="#1e1e1e"/>
+          <rect class="blades" x="-16" y="-1.8" width="32" height="3.6" rx="1.8" fill="#1e1e1e"/>
+        </g>
+        <g class="prop" transform="translate(-27 27)">
+          <circle class="disc" r="17" fill="#1e1e1e"/>
+          <circle r="5.5" fill="#1e1e1e"/>
+          <rect class="blades" x="-16" y="-1.8" width="32" height="3.6" rx="1.8" fill="#1e1e1e"/>
+        </g>
+        <rect x="-11" y="-16" width="22" height="32" rx="6" fill="#1e1e1e"/>
+        <rect x="-7" y="-8" width="14" height="15" rx="3" fill="#3a3a36"/>
+        <circle cx="0" cy="-12.5" r="3" fill="#2a7ae2"/>
+        <circle cx="0" cy="12" r="1.6" fill="#ff4d4d"/>
+      </symbol>
+    </defs>
+  </svg>
+  <div class="shadow" id="shadow" aria-hidden="true"><svg><use href="#quad"/></svg></div>
+  <div class="drone" id="drone" aria-hidden="true"><svg><use href="#quad"/></svg></div>
+
+  <script>
+  (() => {
+    const drone = document.getElementById("drone");
+    const shadow = document.getElementById("shadow");
+    const pad = document.getElementById("pad");
+    const hire = document.getElementById("hire");
+    const note = document.getElementById("note");
+    const tele = document.getElementById("tele");
+    const hintEl = document.getElementById("hint");
+    const discs = [...document.querySelectorAll("#quad .disc")];
+    const blades = [...document.querySelectorAll("#quad .blades")];
+    const WAYPOINTS = ["lede", "resume", "linkedin"].map(id => document.getElementById(id));
+
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let touch = matchMedia("(hover: none)").matches;
+
+    // PD gains are slightly underdamped so the drone overshoots a touch, like a real quad.
+    const KP = 26, KD = 7.5, AMAX = 3200, VMAX = 1500, IDLE_MS = 3000;
+    const TILT_PER_ACCEL = 0.009, TILT_MAX = 24, PX_PER_M = 100;
+    const OFFSET = { x: -36, y: -40 };
+    const TAU = Math.PI * 2;
+
+    const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+    const ease = (rate, dt) => 1 - Math.exp(-rate * dt);
+    const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+    const angleDiff = (a, b) => ((b - a + Math.PI) % TAU + TAU) % TAU - Math.PI;
+
+    const center = el => {
+      const r = el.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    };
+    const above = el => {
+      const r = el.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top - 34 };
+    };
+    const clampView = pt => ({
+      x: clamp(pt.x, 40, innerWidth - 40),
+      y: clamp(pt.y, 40, innerHeight - 40),
+    });
+    const idlePoint = () => {
+      const r = document.getElementById("lede").getBoundingClientRect();
+      return { x: Math.min(r.left + r.width * 0.8, innerWidth - 60), y: r.top - 10 };
+    };
+
+    let p = center(pad), v = { x: 0, y: 0 }, acc = { x: 0, y: 0 };
+    let pitch = 0, roll = 0, yaw = 0, alt = 0, omega = 0, spin = 0;
+    let mode = "landed", nextMode = "follow", modeAt = performance.now();
+    let pointer = null, tap = null, lastMove = performance.now(), landedAt = 0, overHire = false;
+    let patrolStep = 0, holdUntil = 0, teleAt = 0, last = performance.now();
+
+    function setMode(next) {
+      mode = next;
+      modeAt = performance.now();
+      holdUntil = 0;
+      if (next === "landed") landedAt = modeAt;
+      note.classList.toggle("on", next === "landed");
+    }
+
+    function takeOff(after) {
+      nextMode = after;
+      setMode("takeoff");
+    }
+
+    function target() {
+      switch (mode) {
+        case "follow":
+          return clampView(pointer ? { x: pointer.x + OFFSET.x, y: pointer.y + OFFSET.y } : idlePoint());
+        case "goto":
+          return clampView(tap);
+        case "patrol":
+          return clampView(above(WAYPOINTS[patrolStep]));
+        default:
+          return center(pad);
+      }
+    }
+
+    const arrived = (goal, radius, speed) => dist(p, goal) < radius && Math.hypot(v.x, v.y) < speed;
+
+    function decide(now, dt) {
+      switch (mode) {
+        case "landed":
+          if (!reduced && touch && now - modeAt > 3500) takeOff("patrol");
+          break;
+        case "takeoff":
+          alt = Math.min(1, alt + dt / 0.55);
+          if (alt >= 1) setMode(nextMode);
+          break;
+        case "follow":
+          if (overHire || now - lastMove > IDLE_MS) setMode("rtl");
+          break;
+        case "rtl":
+          if (arrived(center(pad), 6, 45)) setMode("landing");
+          break;
+        case "landing":
+          alt = Math.max(0, alt - dt / 0.8);
+          if (alt === 0) setMode("landed");
+          break;
+        case "patrol":
+          if (arrived(target(), 16, 90)) {
+            if (!holdUntil) holdUntil = now + 900;
+            else if (now > holdUntil) {
+              patrolStep++;
+              holdUntil = 0;
+              if (patrolStep >= WAYPOINTS.length) { patrolStep = 0; setMode("rtl"); }
+            }
+          }
+          break;
+        case "goto":
+          if (arrived(target(), 16, 90)) {
+            if (!holdUntil) holdUntil = now + 2500;
+            else if (now > holdUntil) setMode("patrol");
+          }
+          break;
+      }
+    }
+
+    function fly(dt) {
+      const pc = center(pad);
+      const onPad = reduced || mode === "landed" || mode === "landing" || (mode === "takeoff" && alt < 0.45);
+
+      if (onPad) {
+        // Vertical phases: stay over the pad and settle into its centre.
+        const k = mode === "landed" || reduced ? 1 : ease(14, dt);
+        p.x += (pc.x - p.x) * k;
+        p.y += (pc.y - p.y) * k;
+        v = { x: 0, y: 0 };
+        acc = { x: 0, y: 0 };
+        return;
+      }
+
+      const goal = target();
+      let ax = KP * (goal.x - p.x) - KD * v.x;
+      let ay = KP * (goal.y - p.y) - KD * v.y;
+      const a = Math.hypot(ax, ay);
+      if (a > AMAX) { ax *= AMAX / a; ay *= AMAX / a; }
+      v.x += ax * dt;
+      v.y += ay * dt;
+      const s = Math.hypot(v.x, v.y);
+      if (s > VMAX) { v.x *= VMAX / s; v.y *= VMAX / s; }
+      p.x += v.x * dt;
+      p.y += v.y * dt;
+      acc.x += (ax - acc.x) * ease(10, dt);
+      acc.y += (ay - acc.y) * ease(10, dt);
+    }
+
+    function attitude(dt) {
+      const speed = Math.hypot(v.x, v.y);
+      if (speed > 140 && alt > 0.5) yaw += angleDiff(yaw, Math.atan2(v.y, v.x) + Math.PI / 2) * ease(3.5, dt);
+      else if (mode === "landing") yaw += angleDiff(yaw, 0) * ease(4, dt);
+
+      // Quads lean into their acceleration: nose down to speed up, bank to turn (body frame).
+      const fwd = acc.x * Math.sin(yaw) - acc.y * Math.cos(yaw);
+      const right = acc.x * Math.cos(yaw) + acc.y * Math.sin(yaw);
+      const pitchGoal = clamp(fwd * TILT_PER_ACCEL, -TILT_MAX, TILT_MAX) * alt;
+      const rollGoal = clamp(right * TILT_PER_ACCEL, -TILT_MAX, TILT_MAX) * alt;
+      pitch += (pitchGoal - pitch) * ease(12, dt);
+      roll += (rollGoal - roll) * ease(12, dt);
+
+      const grounded = reduced || mode === "landed";
+      const omegaGoal = grounded ? 0 : mode === "landing" ? 45 : 60;
+      omega += (omegaGoal - omega) * ease(omegaGoal > omega ? 6 : 1.6, dt);
+      spin += omega * dt;
+    }
+
+    function render(now) {
+      const size = drone.offsetWidth;
+      const bob = alt * Math.sin(now / 1000 * 2.4);
+      const scale = 0.84 + 0.16 * alt + 0.02 * bob;
+
+      drone.style.transform =
+        `translate3d(${(p.x - size / 2).toFixed(1)}px, ${(p.y - size / 2 + bob * 1.5).toFixed(1)}px, 0) ` +
+        `perspective(420px) rotateZ(${yaw.toFixed(3)}rad) rotateX(${pitch.toFixed(2)}deg) rotateY(${roll.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
+
+      shadow.style.transform =
+        `translate3d(${(p.x - size / 2 + 16 * alt).toFixed(1)}px, ${(p.y - size / 2 + 20 * alt).toFixed(1)}px, 0) ` +
+        `rotateZ(${yaw.toFixed(3)}rad) scale(${(0.84 + 0.06 * alt).toFixed(3)})`;
+      shadow.style.opacity = (0.24 - 0.1 * alt).toFixed(3);
+      shadow.style.filter = `blur(${(1 + 4 * alt).toFixed(1)}px)`;
+
+      const bladeOpacity = clamp(1 - omega / 30, 0.12, 1).toFixed(2);
+      const discOpacity = clamp(omega / 40, 0, 1) * 0.22;
+      const deg = spin * 180 / Math.PI;
+      blades.forEach((blade, k) => {
+        // Diagonal pairs counter-rotate, as on a real quad.
+        blade.setAttribute("transform", `rotate(${((k % 2 ? -deg : deg) + k * 45) % 360})`);
+        blade.setAttribute("opacity", bladeOpacity);
+      });
+      discs.forEach(disc => disc.setAttribute("opacity", discOpacity.toFixed(3)));
+
+      if (now - teleAt > 120) {
+        teleAt = now;
+        const label = { landed: "landed", takeoff: "takeoff", follow: "follow", rtl: "return to pad", landing: "landing", patrol: "patrol", goto: "goto" }[mode];
+        tele.textContent = `mode ${label} · alt ${(alt * 1.2).toFixed(1)} m · spd ${(Math.hypot(v.x, v.y) / PX_PER_M).toFixed(1)} m/s`;
+      }
+    }
+
+    function frame(now) {
+      const dt = Math.min((now - last) / 1000, 1 / 30);
+      last = now;
+      if (!reduced) decide(now, dt);
+      fly(dt);
+      attitude(dt);
+      render(now);
+      requestAnimationFrame(frame);
+    }
+
+    function updateHint() {
+      hintEl.textContent = reduced
+        ? "the drone is parked on \"Hire me\"."
+        : touch
+          ? "tap anywhere. the drone flies there."
+          : "move your mouse. the drone follows. stop, and it lands on \"Hire me\".";
+    }
+
+    addEventListener("pointermove", e => {
+      if (e.pointerType === "touch") return;
+      pointer = { x: e.clientX, y: e.clientY };
+      lastMove = performance.now();
+      if (touch) { touch = false; updateHint(); }
+      if (reduced || overHire) return;
+      if (mode === "landed" && lastMove - landedAt > 500 && dist(pointer, center(pad)) > 90) takeOff("follow");
+      else if (mode === "rtl" || mode === "patrol" || mode === "goto") setMode("follow");
+    }, { passive: true });
+
+    addEventListener("pointerdown", e => {
+      if (e.pointerType !== "touch") return;
+      if (!touch) { touch = true; updateHint(); }
+      if (reduced) return;
+      tap = { x: e.clientX, y: e.clientY - 56 };
+      if (mode === "landed" || mode === "landing") takeOff("goto");
+      else if (mode === "takeoff") nextMode = "goto";
+      else setMode("goto");
+    }, { passive: true });
+
+    const seekPad = () => {
+      overHire = true;
+      if (mode === "follow" || mode === "patrol" || mode === "goto") setMode("rtl");
+      else if (mode === "takeoff") nextMode = "rtl";
+    };
+    const leavePad = () => { overHire = false; lastMove = performance.now(); };
+    hire.addEventListener("pointerenter", e => { if (e.pointerType !== "touch") seekPad(); });
+    hire.addEventListener("pointerleave", leavePad);
+    hire.addEventListener("focus", seekPad);
+    hire.addEventListener("blur", leavePad);
+
+    updateHint();
+    drone.style.visibility = shadow.style.visibility = "visible";
+    if (reduced) setMode("landed");
+    else setTimeout(() => {
+      // A short demo flight on load, so visitors who never touch the mouse still see it fly and land.
+      if (mode !== "landed") return;
+      lastMove = performance.now();
+      takeOff(touch ? "patrol" : "follow");
+    }, 700);
+    requestAnimationFrame(frame);
+  })();
+  </script>
+</body>
+</html>

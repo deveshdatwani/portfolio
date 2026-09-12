@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Devesh Datwani — Receipts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Poppins:wght@500;600;800&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: "Virgil";
+      src: url("assets/Virgil.woff2") format("woff2");
+      font-display: swap;
+    }
+
+    :root {
+      --table: #131311;
+      --paper: #f7f5ee;
+      --print: #23221f;
+      --faded: #7a776d;
+      --light: #faf9f5;
+      --dim: rgba(250, 249, 245, 0.68);
+      --faint: rgba(250, 249, 245, 0.24);
+      --accent: #3b8bff;
+      --pen: #d6352b;
+      --highlight: #ffe45c;
+      --gutter: clamp(1rem, 4vw, 3rem);
+      --receipt: 420px;
+
+      --font-sans: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+      --font-hand: "Virgil", "Segoe Print", "Comic Sans MS", cursive;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      background: var(--table);
+      color: var(--light);
+    }
+
+    body {
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      padding-inline: var(--gutter);
+      background:
+        radial-gradient(ellipse at 70% 0%, rgba(59, 139, 255, 0.14), transparent 55%),
+        var(--table);
+      min-height: 100svh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .sr {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    .stage {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, var(--receipt));
+      gap: 4rem;
+      align-items: start;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding-block: clamp(2rem, 7vh, 4.5rem) 5rem;
+    }
+
+    /* ---------- intro ---------- */
+
+    .intro {
+      position: sticky;
+      top: clamp(2rem, 7vh, 4.5rem);
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font: 400 0.78rem var(--font-mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+    .kicker::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #3ddc84;
+      box-shadow: 0 0 10px #3ddc84;
+    }
+
+    .intro h1 {
+      margin-top: 0.6rem;
+      font-weight: 800;
+      font-size: clamp(2.3rem, 5.6vw, 4.2rem);
+      line-height: 1.02;
+      letter-spacing: -0.035em;
+      text-wrap: balance;
+    }
+    mark {
+      color: inherit;
+      background: linear-gradient(transparent 58%, var(--accent) 58%, var(--accent) 92%, transparent 92%);
+      padding: 0 0.05em;
+    }
+
+    .intro .note {
+      display: inline-block;
+      margin-top: 0.9rem;
+      font-family: var(--font-hand);
+      font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+      color: var(--highlight);
+      transform: rotate(-2deg);
+    }
+
+    .who {
+      margin-top: 2rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--faint);
+    }
+    .who h2 {
+      font-weight: 600;
+      font-size: 1.15rem;
+      letter-spacing: -0.01em;
+    }
+    .who p {
+      color: var(--dim);
+      font-size: 0.95rem;
+    }
+
+    .cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1.25rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.7rem 1.2rem;
+      border-radius: 999px;
+      border: 1px solid var(--faint);
+      background: transparent;
+      color: var(--light);
+      font: 600 0.92rem var(--font-sans);
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+    .btn:hover { transform: translateY(-2px); border-color: var(--light); }
+    .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .btn.primary { background: var(--light); color: var(--table); border-color: var(--light); }
+    .btn.primary:hover { background: #fff; }
+
+    .reprint {
+      margin-top: 1.1rem;
+      border: 0;
+      background: none;
+      color: var(--dim);
+      font: 400 0.78rem var(--font-mono);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .reprint:hover { color: var(--light); }
+    .reprint:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+    .end-cta { display: none; }
+
+    /* ---------- printer ---------- */
+
+    .till {
+      width: 100%;
+      max-width: var(--receipt);
+      justify-self: end;
+    }
+
+    .printer {
+      position: relative;
+      z-index: 2;
+      height: 46px;
+      margin: 0 -14px;
+      border-radius: 14px 14px 8px 8px;
+      background: linear-gradient(#34332f, #1f1e1b);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 8px;
+      font: 400 0.68rem var(--font-mono);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(250, 249, 245, 0.45);
+    }
+    .printer::after {
+      content: "";
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: 5px;
+      height: 5px;
+      border-radius: 3px;
+      background: #050504;
+    }
+    .led {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #3ddc84;
+      box-shadow: 0 0 8px #3ddc84;
+    }
+    .printing .led { animation: blink 0.35s steps(2) infinite; }
+    @keyframes blink { 50% { opacity: 0.2; } }
+    .printer .status { margin-left: auto; }
+
+    .feed {
+      position: relative;
+      margin-top: -9px;
+      padding-bottom: 14px;
+      overflow: hidden;
+    }
+
+    /* ---------- receipt ---------- */
+
+    .receipt {
+      position: relative;
+      padding: 2.2rem 1.5rem 1.8rem;
+      background:
+        linear-gradient(rgba(0, 0, 0, 0.05), transparent 40px),
+        var(--paper);
+      color: var(--print);
+      font: 400 0.86rem/1.5 var(--font-mono);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+      transform: translateY(0);
+    }
+    .printing .receipt { animation: feed 3.4s cubic-bezier(0.3, 0.55, 0.35, 1) both; }
+    @keyframes feed {
+      from { transform: translateY(-100%); }
+      to   { transform: translateY(0); }
+    }
+
+    /* torn bottom edge */
+    .receipt::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -10px;
+      height: 10px;
+      background:
+        linear-gradient(135deg, var(--paper) 50%, transparent 50%) 0 0 / 14px 14px repeat-x,
+        linear-gradient(-135deg, var(--paper) 50%, transparent 50%) 0 0 / 14px 14px repeat-x;
+    }
+
+    .head { text-align: center; }
+    .head .brand {
+      font: 800 1.35rem/1.1 var(--font-sans);
+      letter-spacing: -0.02em;
+    }
+    .head .sub {
+      margin-top: 0.3rem;
+      font-size: 0.74rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--faded);
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.74rem;
+      color: var(--faded);
+      text-transform: uppercase;
+    }
+
+    .rule {
+      margin: 1rem 0;
+      border: 0;
+      border-top: 1.5px dashed rgba(35, 34, 31, 0.45);
+    }
+    .rule.double {
+      border-top: 3px double rgba(35, 34, 31, 0.7);
+    }
+
+    .section-title {
+      margin: 1.2rem 0 0.7rem;
+      text-align: center;
+      font-size: 0.74rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .section-title span {
+      display: block;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      text-transform: none;
+      color: var(--faded);
+    }
+
+    .items { list-style: none; }
+
+    .item {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      padding: 0.45rem 0;
+    }
+    .item + .item { border-top: 1px dotted rgba(35, 34, 31, 0.25); }
+    .item .what { flex: 1; min-width: 0; }
+    .item .what b { font-weight: 600; }
+    .item .what small {
+      display: block;
+      font-size: 0.74rem;
+      line-height: 1.4;
+      color: var(--faded);
+    }
+    .item .val {
+      flex: none;
+      font-weight: 600;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+      text-align: right;
+      white-space: nowrap;
+    }
+    .item .val s {
+      font-weight: 400;
+      font-size: 0.8rem;
+      color: var(--faded);
+      margin-right: 0.3rem;
+    }
+
+    .hl {
+      background: linear-gradient(transparent 52%, var(--highlight) 52%, var(--highlight) 90%, transparent 90%);
+    }
+
+    .circled { position: relative; margin-left: 0.35rem; }
+    .circled::before {
+      content: "";
+      position: absolute;
+      inset: -0.35rem -0.55rem -0.3rem -0.5rem;
+      border: 2px solid var(--pen);
+      border-radius: 50% 45% 55% 48% / 55% 50% 48% 52%;
+      transform: rotate(-4deg);
+      opacity: 0;
+      transition: opacity 0.4s ease 0.2s;
+    }
+    .done .circled::before { opacity: 0.85; }
+
+    .pen {
+      display: block;
+      margin: -0.1rem 0 0.35rem;
+      text-align: right;
+      font: 400 1.05rem/1.2 var(--font-hand);
+      color: var(--pen);
+      transform: rotate(-3deg);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .done .pen { opacity: 1; }
+    .done .pen:nth-of-type(2) { transition-delay: 0.35s; }
+
+    .totals .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.15rem 0;
+    }
+    .totals .row span:last-child { text-align: right; }
+    .totals .grand {
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1.5px solid var(--print);
+      font: 800 1.2rem/1.2 var(--font-sans);
+      letter-spacing: -0.01em;
+      align-items: baseline;
+    }
+    .totals .grand span:last-child { font-size: 1.05rem; }
+    .approved {
+      display: inline-block;
+      padding: 0 0.35rem;
+      border: 1.5px solid var(--print);
+      font-weight: 600;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      transform: rotate(-3deg);
+    }
+
+    .foot {
+      margin-top: 1.4rem;
+      text-align: center;
+    }
+    .foot .thanks {
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .foot .small {
+      font-size: 0.74rem;
+      color: var(--faded);
+    }
+    .barcode {
+      display: block;
+      width: 100%;
+      height: 58px;
+      margin: 1rem 0 0.3rem;
+    }
+    .barcode rect { fill: var(--print); }
+    .foot .code {
+      font-size: 0.74rem;
+      letter-spacing: 0.3em;
+    }
+
+    .receipt-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.4rem 1rem;
+      margin-top: 1rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .receipt-links a {
+      text-decoration: underline;
+      text-decoration-thickness: 1.5px;
+      text-underline-offset: 3px;
+    }
+    .receipt-links a:hover { color: var(--accent); }
+    .receipt-links a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    @media (max-width: 900px) {
+      .stage {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2.5rem;
+      }
+      .intro { position: static; }
+      .till { justify-self: center; }
+    }
+
+    @media (max-width: 480px) {
+      .receipt { padding: 1.8rem 1.1rem 1.5rem; font-size: 0.82rem; }
+      .item { gap: 0.5rem; }
+      .item .val { font-size: 1.05rem; }
+      .printer { margin: 0 -8px; }
+      .cta .btn { flex: 1; padding: 0.7rem 0.9rem; }
+      .end-cta { display: flex; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .printing .receipt, .printing .led { animation: none; }
+      .pen, .circled::before { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage">
+
+    <section class="intro">
+      <span class="kicker">proof, not vibes</span>
+      <h1>Don't take my word for it. Here are the <mark>receipts</mark>.</h1>
+      <span class="note">↘ itemized. no cap.</span>
+
+      <div class="who">
+        <h2>Devesh Datwani</h2>
+        <p>Robotics engineer. I make machines that see, fly and move. Then I ship them.</p>
+      </div>
+
+      <div class="cta">
+        <a class="btn primary" href="assets/ResumeDeveshDatwani.pdf" target="_blank" rel="noopener noreferrer">Resume ↗</a>
+        <a class="btn" href="mailto:datwanidevesh@gmail.com">Say hi</a>
+        <a class="btn" href="https://www.linkedin.com/in/deveshdatwani/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+
+      <button class="reprint" id="reprint" type="button">↻ print it again</button>
+    </section>
+
+    <section class="till printing" id="till" aria-label="Receipt of results">
+      <div class="printer" aria-hidden="true">
+        <span class="led"></span>
+        <span>DD-2026</span>
+        <span class="status" id="status">printing…</span>
+      </div>
+
+      <div class="feed">
+        <article class="receipt" id="receipt">
+          <header class="head">
+            <div class="brand">DEVESH DATWANI</div>
+            <div class="sub">Robotics engineer · perception systems</div>
+            <div class="sub">Charlotte, NC · deveshdatwani.com</div>
+          </header>
+
+          <hr class="rule">
+          <div class="meta">
+            <span>Order #0001</span>
+            <span id="printed">Printed today</span>
+          </div>
+          <div class="meta">
+            <span>Cashier: DD</span>
+            <span>Items: 12</span>
+          </div>
+          <hr class="rule">
+
+          <h3 class="section-title">Now · FyveBy <span>Senior Computer Vision Engineer · aircraft AI</span></h3>
+          <ul class="items">
+            <li class="item">
+              <span class="what"><b>Video frames my AI checks</b><small>every day, across 10 aircraft hangars</small></span>
+              <span class="val">52M</span>
+            </li>
+            <li class="item">
+              <span class="what"><b>Aircraft-spotting accuracy</b><small>after retraining the models</small></span>
+              <span class="val"><s><span class="sr">up from </span>84%</s><span class="sr">to </span><span class="hl">96%</span></span>
+            </li>
+            <li class="item">
+              <span class="what"><b>Tail numbers read correctly</b><small>the ID painted on every plane</small></span>
+              <span class="val"><s><span class="sr">up from </span>85%</s><span class="sr">to </span>94%</span>
+            </li>
+          </ul>
+
+          <h3 class="section-title">Before · Bolt6 <span>Development &amp; Operations Engineer · sports tracking</span></h3>
+          <ul class="items">
+            <li class="item">
+              <span class="what"><b>4K cameras kept running</b><small>live tracking for a premier golf organization</small></span>
+              <span class="val">120+</span>
+            </li>
+            <li class="item">
+              <span class="what"><b>Tracking accuracy</b><small>by fusing radar + cameras</small></span>
+              <span class="val"><s><span class="sr">up from </span>45%</s><span class="sr">to </span><span class="circled">96%</span></span>
+            </li>
+          </ul>
+          <span class="pen" aria-hidden="true">that's the big one ↑</span>
+          <ul class="items">
+            <li class="item">
+              <span class="what"><b>Same object, matched across cameras</b><small>camera 1 and camera 2 agree</small></span>
+              <span class="val">92%</span>
+            </li>
+            <li class="item">
+              <span class="what"><b>Response time</b><small>while staying centimeter-accurate</small></span>
+              <span class="val">&lt;1 sec</span>
+            </li>
+          </ul>
+
+          <h3 class="section-title">Bonus items <span>no extra charge</span></h3>
+          <ul class="items">
+            <li class="item">
+              <span class="what"><b class="hl">Emmy-winning Drone AR Project</b><small>George Wensel Technical Award, 2025 · product development &amp; operations lead</small></span>
+              <span class="val">🏆</span>
+            </li>
+          </ul>
+          <span class="pen" aria-hidden="true">yes, an actual Emmy</span>
+          <ul class="items">
+            <li class="item">
+              <span class="what"><b>NASA Big Idea Challenge</b><small>represented WPI in a team of 15</small></span>
+              <span class="val">2022</span>
+            </li>
+            <li class="item">
+              <span class="what"><b>Fire-safety robot</b><small>built with the Worcester Fire Department</small></span>
+              <span class="val">✓</span>
+            </li>
+            <li class="item">
+              <span class="what"><b>MS, Robotics Engineering</b><small>Worcester Polytechnic Institute</small></span>
+              <span class="val">2023</span>
+            </li>
+            <li class="item">
+              <span class="what"><b>Building aircraft since</b><small>RC planes &amp; drones, by hand</small></span>
+              <span class="val">2011</span>
+            </li>
+          </ul>
+
+          <hr class="rule double">
+
+          <div class="totals">
+            <div class="row"><span>Subtotal</span><span>machines that see, fly &amp; move</span></div>
+            <div class="row"><span>Cap detected</span><span>0.00</span></div>
+            <div class="row"><span>Tax</span><span>included</span></div>
+            <div class="row grand"><span>TOTAL</span><span>1 engineer who ships</span></div>
+            <div class="row"><span>Paid with</span><span>a coffee chat ☕ <span class="approved">APPROVED</span></span></div>
+          </div>
+
+          <hr class="rule">
+
+          <footer class="foot">
+            <div class="thanks">Thank you for scrolling</div>
+            <div class="small">Keep this receipt. It's proof.</div>
+            <svg class="barcode" id="barcode" role="img" aria-label="Barcode"></svg>
+            <div class="code">*HIRE-DD-2026*</div>
+            <div class="small">Returns: none. Upgrades: always.</div>
+            <nav class="receipt-links" aria-label="Contact">
+              <a href="assets/ResumeDeveshDatwani.pdf" target="_blank" rel="noopener noreferrer">Resume</a>
+              <a href="mailto:datwanidevesh@gmail.com">Email</a>
+              <a href="https://www.linkedin.com/in/deveshdatwani/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            </nav>
+          </footer>
+        </article>
+      </div>
+    </section>
+
+    <div class="cta end-cta">
+      <a class="btn primary" href="assets/ResumeDeveshDatwani.pdf" target="_blank" rel="noopener noreferrer">Resume ↗</a>
+      <a class="btn" href="mailto:datwanidevesh@gmail.com">Say hi</a>
+      <a class="btn" href="https://www.linkedin.com/in/deveshdatwani/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </div>
+  </main>
+
+  <script>
+  (() => {
+    const till = document.getElementById("till");
+    const receipt = document.getElementById("receipt");
+    const status = document.getElementById("status");
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    try {
+      document.getElementById("printed").textContent =
+        new Date().toLocaleDateString("en-US", { month: "2-digit", day: "2-digit", year: "numeric" });
+    } catch (e) {}
+
+    // Barcode: each character's bits become thin or thick bars, framed by guard bars.
+    const svg = document.getElementById("barcode");
+    const bars = [];
+    let x = 0;
+    const bar = w => { bars.push(`<rect x="${x}" y="0" width="${w}" height="58"/>`); x += w; };
+    const gap = w => { x += w; };
+    bar(2); gap(1.5); bar(2); gap(3);
+    for (const ch of "HIRE-DD-2026") {
+      const n = ch.charCodeAt(0);
+      for (let b = 0; b < 7; b++) {
+        bar((n >> b) & 1 ? 3 : 1.2);
+        gap((n >> (6 - b)) & 1 ? 2.2 : 1.2);
+      }
+      gap(1.2);
+    }
+    gap(2); bar(2); gap(1.5); bar(2);
+    svg.setAttribute("viewBox", `0 0 ${x} 58`);
+    svg.setAttribute("preserveAspectRatio", "none");
+    svg.innerHTML = bars.join("");
+
+    function finish() {
+      till.classList.remove("printing");
+      till.classList.add("done");
+      status.textContent = "done ✓";
+    }
+
+    function print() {
+      till.classList.remove("done");
+      status.textContent = "printing…";
+      if (reduced) { finish(); return; }
+      till.classList.remove("printing");
+      void receipt.offsetWidth;
+      till.classList.add("printing");
+    }
+
+    receipt.addEventListener("animationend", e => { if (e.target === receipt) finish(); });
+    document.getElementById("reprint").addEventListener("click", print);
+
+    print();
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Devesh Datwani</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Poppins:wght@500;600;800&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: "Virgil";
+      src: url("assets/Virgil.woff2") format("woff2");
+      font-display: swap;
+    }
+
+    :root {
+      --paper: #faf9f5;
+      --ink: #0d0d0b;
+      --soft: #6b6960;
+      --line: #e8e6dc;
+      --accent: #2a7ae2;
+      --nope: #ff4d5e;
+      --gutter: 1rem;
+
+      --font-sans: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+      --font-hand: "Virgil", "Segoe Print", "Comic Sans MS", cursive;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { background: var(--paper); color: var(--ink); }
+
+    body {
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      padding: 1rem var(--gutter) 1.25rem;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ---------- header ---------- */
+
+    .top {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      max-width: 30rem;
+      width: 100%;
+      margin: 0 auto;
+      font-size: 0.85rem;
+    }
+    .avatar {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: var(--paper);
+      font-weight: 800;
+      font-size: 0.75rem;
+      box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--accent);
+    }
+    .handle { font-weight: 600; }
+    .count {
+      margin-left: auto;
+      font: 400 0.78rem var(--font-mono);
+      color: var(--soft);
+    }
+
+    .ask {
+      max-width: 30rem;
+      width: 100%;
+      margin: 1rem auto 0;
+      text-align: center;
+    }
+    .ask h1 {
+      font-weight: 800;
+      font-size: clamp(1.4rem, 5vw, 1.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      text-wrap: balance;
+    }
+    .ask p {
+      margin-top: 0.3rem;
+      font-family: var(--font-hand);
+      color: var(--soft);
+      font-size: 1rem;
+    }
+
+    /* ---------- stack ---------- */
+
+    .stage {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      margin-top: 1rem;
+      min-height: 0;
+    }
+    .deck {
+      position: relative;
+      width: min(360px, 100%);
+      height: clamp(430px, calc(100svh - 300px), 560px);
+    }
+
+    .card {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 18px 40px -18px rgba(13, 13, 11, 0.35), 0 2px 6px rgba(13, 13, 11, 0.06);
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      transform-origin: 50% 90%;
+      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.35s ease;
+      will-change: transform;
+    }
+    .card.top { cursor: grab; }
+    .card.dragging { cursor: grabbing; transition: none; }
+    .card[data-depth="1"] { transform: translateY(12px) scale(0.955); }
+    .card[data-depth="2"] { transform: translateY(24px) scale(0.91); opacity: 0.7; }
+    .card[data-depth="3"] { transform: translateY(24px) scale(0.91); opacity: 0; }
+
+    .media {
+      position: relative;
+      flex: 0 0 56%;
+      overflow: hidden;
+      background: #1a1a18;
+    }
+    .media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+      -webkit-user-drag: none;
+    }
+    .media.fit img { object-fit: contain; padding: 1.25rem; }
+    .media svg { width: 100%; height: 100%; display: block; }
+
+    .body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 1rem 1.15rem 1.1rem;
+      min-height: 0;
+    }
+    .kicker {
+      font: 400 0.7rem var(--font-mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--soft);
+    }
+    .card h2 {
+      margin-top: 0.2rem;
+      font-weight: 800;
+      font-size: 1.3rem;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+    }
+    .line {
+      margin-top: 0.4rem;
+      font-size: 0.92rem;
+      line-height: 1.45;
+      color: #33322d;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: auto;
+      padding-top: 0.7rem;
+    }
+    .tag {
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: #f1efe7;
+      font-size: 0.72rem;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .stamp {
+      position: absolute;
+      top: 1.2rem;
+      padding: 0.25rem 0.7rem;
+      border: 3px solid currentColor;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 1.6rem;
+      letter-spacing: 0.06em;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 2;
+      background: rgba(255, 255, 255, 0.85);
+    }
+    .stamp.like { left: 1.1rem; color: var(--accent); transform: rotate(-14deg); }
+    .stamp.nope { right: 1.1rem; color: var(--nope); transform: rotate(14deg); }
+
+    /* ---------- controls ---------- */
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 1.4rem;
+    }
+    .round {
+      display: grid;
+      place-items: center;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: #fff;
+      font-size: 1.6rem;
+      cursor: pointer;
+      box-shadow: 0 8px 20px -10px rgba(13, 13, 11, 0.4);
+      transition: transform 0.15s ease;
+    }
+    .round:hover { transform: scale(1.08); }
+    .round:active { transform: scale(0.94); }
+    .round:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .round.nope { color: var(--nope); }
+    .keys {
+      font: 400 0.72rem var(--font-mono);
+      color: var(--soft);
+      text-align: center;
+      margin-top: 0.8rem;
+    }
+
+    /* ---------- designed cards ---------- */
+
+    .art-fyveby { background: radial-gradient(circle at 70% 20%, #1d3a66, #0b1424 70%); }
+    .art-golf { background: linear-gradient(to bottom, #9fd0ff 0%, #d9eeff 48%, #3f8f4a 48%, #2c6b35 100%); }
+    .art-emmy { background: radial-gradient(circle at 50% 42%, #6b5215, #1b1507 70%); }
+
+    /* ---------- end screen ---------- */
+
+    .end {
+      display: none;
+      max-width: 30rem;
+      width: 100%;
+      margin: 1.5rem auto 0;
+      flex: 1;
+      flex-direction: column;
+    }
+    body.done .end { display: flex; }
+    body.done .ask, body.done .stage, body.done .controls, body.done .keys { display: none; }
+
+    .end .big {
+      font-weight: 800;
+      font-size: clamp(2rem, 8vw, 2.8rem);
+      line-height: 1.02;
+      letter-spacing: -0.035em;
+      text-wrap: balance;
+    }
+    .end mark {
+      color: inherit;
+      -webkit-box-decoration-break: clone;
+      box-decoration-break: clone;
+      background: linear-gradient(transparent 58%, #9ec5ff 58%, #9ec5ff 92%, transparent 92%);
+    }
+    .end .sub {
+      margin-top: 0.5rem;
+      font-family: var(--font-hand);
+      color: var(--soft);
+      font-size: 1.05rem;
+    }
+    .matches {
+      list-style: none;
+      margin-top: 1.25rem;
+      display: grid;
+      gap: 0.5rem;
+    }
+    .matches li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.55rem 0.7rem;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+    .thumb {
+      flex: 0 0 44px;
+      height: 44px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #1a1a18;
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+    }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .thumb.fit { background: #fff; border: 1px solid var(--line); }
+    .thumb.fit img { object-fit: contain; padding: 3px; }
+
+    .cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1.5rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.75rem 1.2rem;
+      border-radius: 999px;
+      border: 1px solid var(--ink);
+      background: transparent;
+      color: var(--ink);
+      font: 600 0.92rem var(--font-sans);
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .btn.primary { background: var(--ink); color: var(--paper); }
+    .btn.primary { flex: 1 1 100%; }
+
+    @media (max-width: 480px) {
+      .btn:not(.primary) { flex: 1; }
+      .card h2 { font-size: 1.18rem; }
+      .line { font-size: 0.88rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card, .btn, .round { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <span class="avatar" aria-hidden="true">DD</span>
+    <span class="handle">deveshdatwani</span>
+    <span class="count" id="count" aria-live="polite"></span>
+  </div>
+
+  <div class="ask">
+    <h1>Swipe right on what you'd hire me for.</h1>
+    <p>drag the card, or tap the buttons ↓</p>
+  </div>
+
+  <div class="stage">
+    <div class="deck" id="deck" aria-label="Project cards"></div>
+  </div>
+
+  <div class="controls">
+    <button class="round nope" id="nope" aria-label="Pass">✕</button>
+    <button class="round like" id="like" aria-label="Interested">💙</button>
+  </div>
+  <p class="keys">← pass · interested →</p>
+
+  <section class="end" id="end" aria-live="polite">
+    <h2 class="big" id="endTitle"></h2>
+    <p class="sub" id="endSub"></p>
+    <ul class="matches" id="matches"></ul>
+    <div class="cta">
+      <a class="btn primary" id="mail" href="mailto:datwanidevesh@gmail.com">Email me about these →</a>
+      <a class="btn" href="assets/ResumeDeveshDatwani.pdf" target="_blank" rel="noopener noreferrer">Resume ↗</a>
+      <button class="btn" id="restart">Swipe again ↺</button>
+    </div>
+  </section>
+
+  <script>
+  (() => {
+    const ART = {
+      fyveby: `
+        <svg viewBox="0 0 300 200" aria-hidden="true">
+          <path d="M20 70 L150 30 L280 70" fill="none" stroke="#3a5f96" stroke-width="2"/>
+          <path d="M20 70 V200 M280 70 V200" stroke="#3a5f96" stroke-width="2"/>
+          <g fill="#e9eef7">
+            <path d="M58 118 Q62 106 78 106 L218 104 Q244 104 258 114 Q244 124 218 124 L78 126 Q62 126 58 118 Z"/>
+            <path d="M70 106 L56 70 L76 70 L98 106 Z"/>
+            <path d="M136 118 L180 118 L126 150 L108 150 Z" fill="#c9d4e6"/>
+            <ellipse cx="150" cy="128" rx="16" ry="6" fill="#c9d4e6"/>
+          </g>
+          <rect x="46" y="60" width="222" height="96" rx="4" fill="none" stroke="#5aa2ff" stroke-width="2" stroke-dasharray="7 5"/>
+          <rect x="46" y="42" width="138" height="18" rx="3" fill="#5aa2ff"/>
+          <text x="54" y="55" font-family="IBM Plex Mono, monospace" font-size="11" fill="#0b1424">AIRCRAFT · TRACKED</text>
+          <rect x="54" y="72" width="34" height="14" rx="2" fill="none" stroke="#ffd84d" stroke-width="1.5"/>
+          <text x="96" y="83" font-family="IBM Plex Mono, monospace" font-size="10" fill="#ffd84d">TAIL # READ ✓</text>
+          <text x="150" y="186" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="#8fb4e8" letter-spacing="1">52M FRAMES / DAY · 10 HANGARS</text>
+        </svg>`,
+      golf: `
+        <svg viewBox="0 0 300 200" aria-hidden="true">
+          <path d="M30 150 Q150 -10 270 118" fill="none" stroke="#fff" stroke-width="2.5" stroke-dasharray="2 7" stroke-linecap="round"/>
+          <circle cx="206" cy="62" r="7" fill="#fff" stroke="#0d0d0b" stroke-width="1"/>
+          <circle cx="206" cy="62" r="16" fill="none" stroke="#ff4d5e" stroke-width="2"/>
+          <g fill="#0d0d0b">
+            <rect x="14" y="14" width="26" height="16" rx="3"/><circle cx="44" cy="22" r="4"/>
+            <rect x="260" y="14" width="26" height="16" rx="3"/><circle cx="256" cy="22" r="4"/>
+          </g>
+          <path d="M44 26 L206 62 M256 26 L206 62" stroke="#0d0d0b" stroke-width="1" stroke-dasharray="3 4" opacity="0.55"/>
+          <path d="M262 140 V100 L284 108 L262 116" fill="#ff4d5e" stroke="#fff" stroke-width="1"/>
+          <rect x="84" y="164" width="132" height="22" rx="11" fill="rgba(13,13,11,0.7)"/>
+          <text x="150" y="179" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="#fff" letter-spacing="1">120+ 4K CAMERAS</text>
+        </svg>`,
+      emmy: `
+        <svg viewBox="0 0 300 200" aria-hidden="true">
+          <text x="150" y="112" text-anchor="middle" font-size="84">🏆</text>
+          <text x="150" y="152" text-anchor="middle" font-family="Poppins, sans-serif" font-weight="800" font-size="20" fill="#f5d77a" letter-spacing="3">TECHNICAL EMMY</text>
+          <text x="150" y="176" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="#d8c18a" letter-spacing="1">GEORGE WENSEL AWARD · 2025</text>
+        </svg>`,
+    };
+
+    const CARDS = [
+      { title: "Aircraft tracking at FyveBy", kicker: "Right now · 2026", art: "fyveby", emoji: "✈️",
+        line: "Cameras that spot aircraft, follow them through 10 hangars and read their tail numbers.",
+        tags: ["Current job", "AI vision", "94% tail-number reads"] },
+      { title: "Live golf ball tracking", kicker: "Bolt6 · 2023–2026", art: "golf", emoji: "⛳",
+        line: "Ran a system that follows golf balls live with 120+ 4K cameras, for a premier golf organization.",
+        tags: ["Live sports", "Radar + cameras", "45% → 96% accuracy"] },
+      { title: "Emmy-winning drone AR", kicker: "Award · 2025", art: "emmy", emoji: "🏆",
+        line: "Led product and operations on a drone augmented-reality project that won a technical Emmy.",
+        tags: ["Drones", "Augmented reality", "Leadership"] },
+      { title: "Home-built aircraft", kicker: "Since 2011", img: "assets/reel/plane.jpg",
+        line: "I design, build and fly my own RC planes and drones. Foam, tape, motors, math.",
+        tags: ["Planes", "Quadcopters", "Hands-on"] },
+      { title: "Fire-safety robot", kicker: "WPI + Worcester Fire Dept · 2022", img: "assets/lidar-slam.png", fit: true,
+        line: "A small home robot that maps a house to check its fire safety, built with the Worcester Fire Department.",
+        tags: ["Robot mapping", "Lidar", "ROS"] },
+      { title: "Hand & body tracking", kicker: "AI vision", img: "assets/reel/hands.png", fit: true, dark: true,
+        line: "Teaching cameras to follow every finger, and every move a person makes.",
+        tags: ["Pose estimation", "Deep learning"] },
+      { title: "ClosetX", kicker: "Side quest", img: "assets/closetx-logo.png", fit: true,
+        line: "An AI stylist that looks at what's already in your closet and tells you what to buy next.",
+        tags: ["AI", "Fashion", "AWS"] },
+      { title: "Moving air with electricity", kicker: "Undergrad thesis", img: "assets/plasma.png", fit: true,
+        line: "Used plasma to push air through a pipe with no fans and no moving parts. Tested at IIT Bombay.",
+        tags: ["Aerospace", "Experiments"] },
+      { title: "Reading road signs", kicker: "Self-driving", img: "assets/traffic_sign.jpg",
+        line: "Trained an AI to spot and recognise traffic signs, the way a self-driving car sees the road.",
+        tags: ["Object detection", "Deep learning"] },
+    ];
+
+    const deck = document.getElementById("deck");
+    const count = document.getElementById("count");
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const THRESHOLD = 110, FLING = 0.55;
+
+    let index = 0, liked = [], els = [];
+
+    const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+
+    function mediaHTML(card) {
+      if (card.art) return `<div class="media art-${card.art}">${ART[card.art]}</div>`;
+      const bg = card.dark ? "" : card.fit ? ` style="background:#fff"` : "";
+      return `<div class="media${card.fit ? " fit" : ""}"${bg}><img src="${card.img}" alt="" draggable="false"></div>`;
+    }
+
+    function build() {
+      deck.innerHTML = "";
+      els = CARDS.map((card, k) => {
+        const el = document.createElement("article");
+        el.className = "card";
+        el.style.zIndex = String(CARDS.length - k);
+        el.setAttribute("aria-label", `${card.title}. ${card.line}`);
+        el.innerHTML = `
+          <span class="stamp like" aria-hidden="true">LIKE</span>
+          <span class="stamp nope" aria-hidden="true">NOPE</span>
+          ${mediaHTML(card)}
+          <div class="body">
+            <span class="kicker">${esc(card.kicker)}</span>
+            <h2>${esc(card.title)}</h2>
+            <p class="line">${esc(card.line)}</p>
+            <div class="tags">${card.tags.map(t => `<span class="tag">${esc(t)}</span>`).join("")}</div>
+          </div>`;
+        deck.append(el);
+        return el;
+      });
+      layout();
+    }
+
+    function layout() {
+      els.forEach((el, k) => {
+        const depth = k - index;
+        if (depth < 0) return;
+        el.dataset.depth = String(Math.min(depth, 3));
+        el.classList.toggle("top", depth === 0);
+        el.setAttribute("aria-hidden", String(depth !== 0));
+        if (depth === 0) el.style.transform = "";
+      });
+      count.textContent = index < CARDS.length ? `${index + 1} / ${CARDS.length}` : `${CARDS.length} / ${CARDS.length}`;
+    }
+
+    function setStamps(el, dx) {
+      const f = Math.min(Math.abs(dx) / THRESHOLD, 1);
+      el.querySelector(".stamp.like").style.opacity = dx > 0 ? f : 0;
+      el.querySelector(".stamp.nope").style.opacity = dx < 0 ? f : 0;
+    }
+
+    // Decide immediately and let the old card animate out on its own, so rapid taps never lose a swipe.
+    function decide(dir, dy = 0) {
+      if (index >= CARDS.length) return;
+      const el = els[index];
+      if (dir > 0) liked.push(CARDS[index]);
+      index++;
+
+      el.classList.remove("dragging", "top");
+      el.removeAttribute("data-depth");
+      setStamps(el, dir * THRESHOLD);
+      if (reduced) {
+        el.style.display = "none";
+      } else {
+        const x = dir * (window.innerWidth * 0.6 + 320);
+        el.style.transform = `translate(${x}px, ${dy + 40}px) rotate(${dir * 28}deg)`;
+        el.style.opacity = "0";
+        setTimeout(() => { el.style.display = "none"; }, 380);
+      }
+
+      layout();
+      if (index >= CARDS.length) setTimeout(finish, reduced ? 0 : 320);
+    }
+
+    function finish() {
+      const n = liked.length;
+      document.body.classList.add("done");
+      document.getElementById("endTitle").innerHTML = n
+        ? `You matched with <mark>${n} project${n === 1 ? "" : "s"}</mark> 💙`
+        : `0 matches. <mark>Tough crowd.</mark>`;
+      document.getElementById("endSub").textContent = n
+        ? "it's mutual. let's talk about them."
+        : "no hard feelings. my resume might still change your mind.";
+
+      document.getElementById("matches").innerHTML = liked.map(card => {
+        const thumb = card.art
+          ? `<span class="thumb art-${card.art}">${card.emoji}</span>`
+          : `<span class="thumb${card.fit && !card.dark ? " fit" : ""}"><img src="${card.img}" alt=""></span>`;
+        return `<li>${thumb}${esc(card.title)}</li>`;
+      }).join("");
+
+      const mail = document.getElementById("mail");
+      const subject = n ? `Swiped right on your work: ${liked.map(c => c.title).join(", ")}` : "Saw your portfolio";
+      const body = n
+        ? `Hi Devesh,\n\nI swiped right on:\n${liked.map(c => `- ${c.title}`).join("\n")}\n\nLet's talk.\n`
+        : "Hi Devesh,\n\n";
+      mail.href = `mailto:datwanidevesh@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      mail.textContent = n ? "Email me about these →" : "Say hi anyway →";
+      document.getElementById("endTitle").focus?.();
+    }
+
+    function restart() {
+      index = 0;
+      liked = [];
+      document.body.classList.remove("done");
+      build();
+    }
+
+    // Pointer drag on the top card: follow the finger, then fling if far or fast enough.
+    let drag = null;
+    deck.addEventListener("pointerdown", e => {
+      const el = e.target.closest(".card.top");
+      if (!el) return;
+      el.setPointerCapture(e.pointerId);
+      el.classList.add("dragging");
+      drag = { el, x0: e.clientX, y0: e.clientY, dx: 0, dy: 0, t: performance.now(), vx: 0 };
+    });
+    deck.addEventListener("pointermove", e => {
+      if (!drag) return;
+      const now = performance.now();
+      const dx = e.clientX - drag.x0, dy = e.clientY - drag.y0;
+      drag.vx = (dx - drag.dx) / Math.max(now - drag.t, 1);
+      Object.assign(drag, { dx, dy, t: now });
+      drag.el.style.transform = `translate(${dx}px, ${dy * 0.4}px) rotate(${reduced ? 0 : dx * 0.06}deg)`;
+      setStamps(drag.el, dx);
+    });
+    const release = () => {
+      if (!drag) return;
+      const { el, dx, dy, vx } = drag;
+      drag = null;
+      if (Math.abs(dx) > THRESHOLD || Math.abs(vx) > FLING) {
+        decide(Math.sign(dx || vx), dy * 0.4);
+      } else {
+        el.classList.remove("dragging");
+        el.style.transform = "";
+        setStamps(el, 0);
+      }
+    };
+    deck.addEventListener("pointerup", release);
+    deck.addEventListener("pointercancel", release);
+
+    document.getElementById("like").addEventListener("click", () => decide(1));
+    document.getElementById("nope").addEventListener("click", () => decide(-1));
+    document.getElementById("restart").addEventListener("click", restart);
+    document.addEventListener("keydown", e => {
+      if (document.body.classList.contains("done")) return;
+      if (e.key === "ArrowRight") decide(1);
+      else if (e.key === "ArrowLeft") decide(-1);
+    });
+
+    build();
+  })();
+  </script>
+</body>
+</html>

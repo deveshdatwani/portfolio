@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
+  <title>Ask D-bot — Devesh Datwani</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Poppins:wght@400;500;600;800&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: "Virgil";
+      src: url("assets/Virgil.woff2") format("woff2");
+      font-display: swap;
+    }
+
+    :root {
+      --bg: #faf9f5;
+      --ink: #1e1e1e;
+      --soft: #6b6960;
+      --line: #e8e6dc;
+      --card: #ffffff;
+      --accent: #2a7ae2;
+      --tint: #eef4fd;
+      --screen: #1b1b19;
+      --eye: #7fe0ff;
+
+      --font-sans: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+      --font-hand: "Virgil", "Segoe Print", "Comic Sans MS", cursive;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { height: 100%; background: var(--bg); color: var(--ink); }
+
+    body {
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    a { color: var(--accent); }
+
+    .sr {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      height: 100dvh;
+      max-width: 760px;
+      margin: 0 auto;
+      padding-inline: 16px;
+    }
+
+    /* ---------- robot ---------- */
+
+    .avatar { display: block; }
+    .bot-svg { display: block; width: 100%; height: 100%; overflow: visible; }
+    .bot-svg .head { fill: var(--accent); }
+    .bot-svg .screen { fill: var(--screen); }
+    .bot-svg .eye { fill: var(--eye); }
+    .bot-svg .mouth { stroke: var(--eye); }
+    .bot-svg .stalk { stroke: var(--accent); }
+    .bot-svg .led { fill: #ff5a5a; animation: led 2.4s ease-in-out infinite; }
+    .bot-svg .eyes {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: blink 5s infinite;
+    }
+    @keyframes blink {
+      0%, 93%, 100% { transform: scaleY(1); }
+      96% { transform: scaleY(0.1); }
+    }
+    @keyframes led {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+
+    /* ---------- header ---------- */
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding-block: 0.9rem;
+      border-bottom: 1px solid var(--line);
+    }
+    header .avatar { width: 40px; height: 40px; flex: none; }
+    header h1 { font-size: 1rem; font-weight: 600; line-height: 1.2; }
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--soft);
+    }
+    .status::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22b35e;
+    }
+    .top-links { margin-left: auto; display: flex; gap: 0.4rem; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.4rem 0.8rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--card);
+      color: var(--ink);
+      font: 500 0.82rem var(--font-sans);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+    .pill:hover { border-color: var(--ink); transform: translateY(-1px); }
+    .pill:focus-visible, .chip:focus-visible, .techy:focus-visible, #q:focus-visible, .send:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .pill.primary { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+
+    /* ---------- log ---------- */
+
+    .log {
+      flex: 1;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      padding-block: 1.25rem;
+    }
+
+    .intro {
+      text-align: center;
+      padding-block: 1.5rem 0.75rem;
+    }
+    .intro .avatar { width: 76px; height: 76px; margin: 0 auto 0.9rem; }
+    .intro h2 { font-size: clamp(1.5rem, 5vw, 2rem); font-weight: 800; letter-spacing: -0.03em; }
+    .intro p { color: var(--soft); max-width: 30rem; margin: 0.35rem auto 0; font-size: 0.95rem; }
+    .intro .note {
+      display: inline-block;
+      margin-top: 0.8rem;
+      font-family: var(--font-hand);
+      font-size: 1.1rem;
+      color: var(--accent);
+      transform: rotate(-2deg);
+    }
+
+    .msg {
+      display: flex;
+      align-items: flex-end;
+      gap: 0.5rem;
+      max-width: min(88%, 34rem);
+      animation: pop 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    @keyframes pop {
+      from { opacity: 0; transform: translateY(8px) scale(0.98); }
+      to { opacity: 1; transform: none; }
+    }
+    .msg .avatar { width: 28px; height: 28px; flex: none; margin-bottom: 2px; }
+    .msg.me { align-self: flex-end; }
+
+    .bubble {
+      padding: 0.65rem 0.95rem;
+      font-size: 0.95rem;
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+    }
+    .bot .bubble {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px 18px 18px 6px;
+    }
+    .me .bubble {
+      background: var(--ink);
+      color: var(--bg);
+      border-radius: 18px 18px 6px 18px;
+    }
+    .bubble p + p, .bubble p + ul, .bubble ul + p { margin-top: 0.5rem; }
+    .bubble ul { margin-left: 1.1rem; }
+    .bubble li + li { margin-top: 0.3rem; }
+    .bubble.tech { font-size: 0.88rem; }
+    .bubble.tech li::marker { color: var(--accent); }
+    .bubble .mono { font-family: var(--font-mono); font-size: 0.85em; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+      gap: 0.5rem;
+      margin-top: 0.55rem;
+    }
+    .stat {
+      padding: 0.55rem 0.7rem;
+      border-radius: 12px;
+      background: var(--tint);
+    }
+    .stat b {
+      display: block;
+      font: 600 1.15rem var(--font-mono);
+      letter-spacing: -0.02em;
+      color: var(--accent);
+    }
+    .stat span { display: block; font-size: 0.78rem; line-height: 1.35; color: var(--ink); }
+
+    .extras {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.7rem;
+    }
+    .techy {
+      padding: 0.4rem 0.8rem;
+      border: 1px dashed var(--accent);
+      border-radius: 999px;
+      background: var(--tint);
+      color: var(--accent);
+      font: 500 0.82rem var(--font-sans);
+      cursor: pointer;
+    }
+    .techy:disabled { opacity: 0.45; cursor: default; }
+
+    .typing .bubble { display: flex; gap: 4px; padding: 0.85rem 1rem; }
+    .typing i {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--soft);
+      animation: dot 1s ease-in-out infinite;
+    }
+    .typing i:nth-child(2) { animation-delay: 0.15s; }
+    .typing i:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes dot {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-4px); opacity: 1; }
+    }
+
+    /* ---------- dock ---------- */
+
+    .dock {
+      padding-block: 0.6rem 0.8rem;
+      border-top: 1px solid var(--line);
+      background: var(--bg);
+    }
+    .chips {
+      display: flex;
+      gap: 0.45rem;
+      overflow-x: auto;
+      padding-bottom: 0.6rem;
+      scrollbar-width: none;
+      -webkit-mask-image: linear-gradient(to right, #000 88%, transparent);
+              mask-image: linear-gradient(to right, #000 88%, transparent);
+    }
+    .chips::-webkit-scrollbar { display: none; }
+    .chip {
+      flex: none;
+      padding: 0.45rem 0.85rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--card);
+      color: var(--ink);
+      font: 500 0.84rem var(--font-sans);
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+    .chip:hover { border-color: var(--ink); }
+    .chip:last-child { margin-right: 2rem; }
+
+    form {
+      display: flex;
+      gap: 0.5rem;
+    }
+    #q {
+      flex: 1;
+      min-width: 0;
+      padding: 0.75rem 1.1rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--card);
+      color: var(--ink);
+      font: 400 16px var(--font-sans);
+    }
+    #q::placeholder { color: #9a978c; }
+    .send {
+      flex: none;
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border: 0;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+    .send:hover { transform: scale(1.05); }
+    .send svg { width: 20px; height: 20px; }
+    .fine {
+      margin-top: 0.5rem;
+      font: 400 0.7rem var(--font-mono);
+      color: var(--soft);
+      text-align: center;
+    }
+
+    @media (max-width: 480px) {
+      .top-links .pill:not(.primary) { display: none; }
+      .intro { padding-block: 0.75rem 0.25rem; }
+      .intro .avatar { width: 60px; height: 60px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .msg { animation: none; }
+      .bot-svg .eyes, .bot-svg .led { animation: none; }
+      .typing i { animation: none; opacity: 0.6; }
+      .pill, .chip, .send { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <header>
+      <span class="avatar" data-bot></span>
+      <div>
+        <h1>D-bot</h1>
+        <span class="status">Devesh's robot · online</span>
+      </div>
+      <nav class="top-links" aria-label="Quick links">
+        <a class="pill" href="index.html">Home</a>
+        <a class="pill primary" href="assets/ResumeDeveshDatwani.pdf" target="_blank" rel="noopener noreferrer">Resume ↗</a>
+      </nav>
+    </header>
+
+    <main class="log" id="log" role="log" aria-live="polite" aria-label="Conversation with D-bot">
+      <div class="intro">
+        <span class="avatar" data-bot></span>
+        <h2>Hi, I'm D-bot.</h2>
+        <p>I know Devesh's work inside out. Ask me anything about him and I'll keep it jargon-free.</p>
+        <span class="note">psst… try "biggest wins"</span>
+      </div>
+    </main>
+
+    <div class="dock">
+      <div class="chips" id="chips" aria-label="Suggested questions"></div>
+      <form id="ask" autocomplete="off">
+        <label class="sr" for="q">Ask a question about Devesh</label>
+        <input id="q" name="q" type="text" placeholder="Ask anything about Devesh…" enterkeyhint="send" maxlength="200">
+        <button class="send" type="submit" aria-label="Send">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </form>
+      <p class="fine">Pre-written answers from Devesh's resume. No AI, no guessing.</p>
+    </div>
+  </div>
+
+  <script>
+  (() => {
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const app = document.getElementById("app");
+    const log = document.getElementById("log");
+    const chipsEl = document.getElementById("chips");
+    const form = document.getElementById("ask");
+    const input = document.getElementById("q");
+
+    const BOT_SVG = `<svg class="bot-svg" viewBox="0 0 40 40" aria-hidden="true">
+      <line class="stalk" x1="20" y1="4" x2="20" y2="9.5" stroke-width="2" stroke-linecap="round"/>
+      <circle class="led" cx="20" cy="3.6" r="2.6"/>
+      <rect class="head" x="3" y="17" width="3.5" height="8" rx="1.75"/>
+      <rect class="head" x="33.5" y="17" width="3.5" height="8" rx="1.75"/>
+      <rect class="head" x="6" y="9" width="28" height="25" rx="8"/>
+      <rect class="screen" x="9.5" y="13" width="21" height="15" rx="5"/>
+      <g class="eyes">
+        <rect class="eye" x="14" y="16.5" width="3.6" height="5.4" rx="1.8"/>
+        <rect class="eye" x="22.4" y="16.5" width="3.6" height="5.4" rx="1.8"/>
+      </g>
+      <path class="mouth" d="M17 24.4 q3 2 6 0" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+    </svg>`;
+    document.querySelectorAll("[data-bot]").forEach(el => el.innerHTML = BOT_SVG);
+
+    const EMAIL = "datwanidevesh@gmail.com";
+    const MAIL = `mailto:${EMAIL}?subject=${encodeURIComponent("Hi Devesh, saw your site")}`;
+    const LINKS = {
+      resume: { label: "Resume ↗", href: "assets/ResumeDeveshDatwani.pdf", ext: true },
+      extended: { label: "Full work history →", href: "extended.html" },
+      aerial: { label: "See the planes →", href: "aerial-vehicles.html" },
+      blog: { label: "Read the blog →", href: "blog.html" },
+      email: { label: "Email Devesh ✉", href: MAIL, primary: true },
+      linkedin: { label: "LinkedIn ↗", href: "https://www.linkedin.com/in/deveshdatwani/", ext: true },
+      github: { label: "GitHub ↗", href: "https://github.com/deveshdatwani", ext: true },
+    };
+
+    // Tools listed on the resume/site, so "does he know X?" only ever says yes to real ones.
+    const TOOLS = {
+      "python": "Python", "c++": "C++", "pytorch": "PyTorch", "opencv": "OpenCV", "numpy": "NumPy", "pandas": "Pandas",
+      "django": "Django", "fastapi": "FastAPI", "sql": "SQL", "mysql": "MySQL", "postgres": "Postgres", "onnx": "ONNX",
+      "tensorrt": "TensorRT", "zmq": "ZMQ", "redis": "Redis", "qdrant": "Qdrant", "kubernetes": "Kubernetes", "k8s": "Kubernetes",
+      "eks": "Kubernetes (EKS)", "docker": "Docker", "aws": "AWS", "linux": "Linux", "ffmpeg": "ffmpeg", "ros": "ROS",
+      "gazebo": "Gazebo", "yolo": "YOLO", "tensorflow": "TensorFlow", "unity": "Unity", "lidar": "LiDAR", "radar": "radar",
+      "kalman": "Kalman filters", "slam": "SLAM", "github actions": "GitHub Actions", "ci cd": "CI/CD", "cuda": "CUDA",
+    };
+
+    const INTENTS = [
+      {
+        id: "private", boost: 2,
+        keys: ["salary", "pay", "paid", "compensation", "comp", "money", "rate", "visa", "sponsor*", "h1b", "h 1b", "work authori*",
+          "authorization", "citizen*", "green card", "opt", "relocat*", "move", "remote", "hybrid", "onsite", "on site", "in office",
+          "available", "availability", "start date", "can he start", "when can", "notice", "open to", "looking for a job",
+          "job search", "looking for work", "age", "old"],
+        answer: q => `<p>That's one for Devesh directly. I only know what's on his resume, and I'm not going to guess about ${topicOf(q)}.</p>`,
+        more: ["email"], next: ["contact", "location", "wins"],
+      },
+      {
+        id: "tools", boost: 1,
+        keys: Object.keys(TOOLS),
+        answer: q => {
+          const found = [...new Set(Object.keys(TOOLS).filter(k => has(q, k)).map(k => TOOLS[k]))];
+          return `<p>Yep, <strong>${listOf(found)}</strong> ${found.length > 1 ? "are" : "is"} on his resume. Want the whole toolbox?</p>`;
+        },
+        techFrom: "skills", more: ["resume"], next: ["skills", "wins", "now"],
+      },
+      {
+        id: "toolmiss",
+        keys: ["does he know", "does he use", "does he have", "experience with", "experience in", "worked with", "familiar with", "know how to"],
+        answer: `<p>I can't find that one on his resume, so I won't claim it. Want to see what is on there?</p>`,
+        techFrom: "skills", more: ["email"], next: ["skills", "wins"],
+      },
+      {
+        id: "why",
+        keys: ["why hire", "why should", "why him", "why devesh", "stand out", "good fit", "fit for", "pitch", "sell me", "convince"],
+        answer: `<p>The short version:</p>
+          <ul>
+            <li>He's shipped AI that runs <strong>live, at scale</strong>: 52 million frames a day, 120+ cameras.</li>
+            <li>He moves the numbers, like taking tracking precision from <strong>45% to 96%</strong>.</li>
+            <li>He covers the whole chain: sensors, AI models, cloud and the dashboards people use.</li>
+            <li>He's been hands-on with hardware since <strong>2011</strong>.</li>
+          </ul>
+          <p>Plus an Emmy-winning project on his record. 🏆</p>`,
+        more: ["resume", "email"], next: ["wins", "now", "contact"],
+      },
+      {
+        id: "who",
+        keys: ["who is", "who's", "~tell me about", "~about him", "~about devesh", "introduce", "summary", "tldr", "tl dr", "elevator", "overview", "in a nutshell"],
+        answer: `<p>Devesh is a <strong>robotics engineer</strong> who gives machines eyesight. He builds the AI that lets cameras and sensors spot, follow and recognize things in the real world, then keeps it running live, at scale.</p>
+          <p>Right now he does that for aircraft at <strong>FyveBy</strong> in Charlotte, NC.</p>`,
+        tech: `<p>Robotics engineer focused on perception systems: deep learning, computer vision, multi-sensor fusion (camera · LiDAR · radar), and the cloud and edge infrastructure to ship it.</p>`,
+        more: ["resume"], next: ["now", "wins", "skills"],
+      },
+      {
+        id: "now",
+        keys: ["what does he do", "what does devesh do", "does he do", "now", "current*", "right now", "today", "job", "work", "working",
+          "role", "title", "position", "fyveby", "fyve by", "hangar*", "aircraft tracking", "day job", "employer"],
+        answer: `<p>He's a <strong>Senior Computer Vision Engineer at FyveBy</strong>. He builds the system that watches aircraft hangars through cameras and lidar. It spots each plane, follows it as it moves, and reads its tail number automatically.</p>
+          <p>It's live in <strong>10 hangars</strong>, processing <strong>52 million frames a day</strong>.</p>`,
+        tech: `<ul>
+            <li>Dual PTZ camera pipeline: object detection → OC-SORT 2D tracking → zone-crossing state machines → OCR</li>
+            <li>Tail-number reads with SVTR + Real-ESRGAN super-resolution, consensus-voted against live ADS-B rosters (85% → 94%)</li>
+            <li>Camera-to-LiDAR registration (PnP, Rodrigues) as the base for a Kalman-filter 3D tracker</li>
+            <li>Data flywheel: hard-sample mining, auto-labeling, retraining (mAP 84% → 96%)</li>
+            <li>Operator tools: WebSocket viewer, in-browser calibration, latency telemetry, recall dashboards</li>
+          </ul>`,
+        more: ["resume"], next: ["past", "wins", "skills"],
+      },
+      {
+        id: "past",
+        keys: ["bolt6", "bolt 6", "before", "previous*", "past", "last job", "prior", "golf", "emmy", "award*", "work experience", "career", "history", "used to"],
+        answer: `<p>From 2023 to 2026 he was at <strong>Bolt6</strong> as a Development &amp; Operations Engineer, running a live tracking system for a premier golf organization, built on <strong>120+ 4K cameras</strong>.</p>
+          <p>He led the work to combine radar with cameras, taking tracking precision from <strong>45% to 96%</strong>. He was also the product development &amp; operations lead on a Drone AR project that won an <strong>Emmy</strong> (George Wensel Technical Award) in 2025. 🏆</p>`,
+        tech: `<ul>
+            <li>Hybrid infra: EKS clusters plus on-site networks ingesting RTSP H.265 streams into AWS VPCs for real-time inference</li>
+            <li>Radar + optical fusion: mAP 45% → 96% with sub-second latency and centimeter-level accuracy</li>
+            <li>Multi-camera tracking: transformer ReID embeddings, vector-DB matching, ByteTrack-style association (92% ID accuracy)</li>
+            <li>YOLO fine-tuning, class-imbalance fixes, GitHub Actions CI/CD for model versioning</li>
+          </ul>`,
+        more: ["extended"], next: ["earlier", "wins", "edu"],
+      },
+      {
+        id: "earlier",
+        keys: ["research", "lab", "labs", "nasa", "fire", "intern*", "earlier", "student", "grad school", "academic", "air india", "nurturelabs"],
+        answer: `<p>At WPI he built a <strong>fire-safety robot</strong> with the Worcester Fire Department: robot vacuums that map a home and spot what's changed. He was also on WPI's 15-person team at the <strong>NASA Big Idea Challenge 2022</strong>, and did robot-control research with AR/VR at the Human Inspired Robotics Lab.</p>
+          <p>Before that: a software internship at Nurturelabs (2021) and jet-engine overhaul at Air India Engineering Services (2017).</p>`,
+        tech: `<ul>
+            <li>Indoor SLAM with an LDS-01 lidar, ICP registration and particle filters</li>
+            <li>Change detection on lidar maps with PCA + K-Means; simulated in ROS and Gazebo</li>
+            <li>NASA challenge: sensor stack for a wheeled robot and a C++ complementary filter for attitude estimation</li>
+            <li>HiRo Lab: augmented reality, task affordance, shared control in Unity</li>
+          </ul>`,
+        more: ["extended"], next: ["edu", "projects", "hobby"],
+      },
+      {
+        id: "gpa", boost: 1,
+        keys: ["gpa", "grades", "cgpa"],
+        answer: `<p>3.5 GPA for his MS in Robotics Engineering at WPI.</p>`,
+        more: ["resume"], next: ["edu", "skills"],
+      },
+      {
+        id: "edu",
+        keys: ["education", "degree*", "school", "study", "studied", "university", "college", "masters", "master's", "master", "ms",
+          "wpi", "worcester", "graduat*", "bachelor*", "undergrad*", "qualification*", "thesis"],
+        answer: `<ul>
+            <li><strong>MS, Robotics Engineering</strong>: Worcester Polytechnic Institute (WPI), 2021–2023</li>
+            <li><strong>BE, Mechanical Engineering</strong>: University of Mumbai, 2014–2018</li>
+          </ul>
+          <p>His undergrad thesis? Using plasma to pull air through pipes, with experiments run at IIT Bombay's propulsion lab.</p>`,
+        tech: `<ul>
+            <li>WPI: computer vision, machine learning, robot perception, autonomous mobile robots (3.5 GPA)</li>
+            <li>Mumbai: machine design, theory of machines, heat transfer, fluid dynamics, C/C++</li>
+            <li>Thesis: dielectric barrier / corona discharge plasma actuators for flow induction</li>
+          </ul>`,
+        more: ["extended"], next: ["earlier", "skills", "hobby"],
+      },
+      {
+        id: "skills",
+        keys: ["skill*", "good at", "great at", "strength*", "expert*", "expertise", "tech stack", "stack", "tools", "toolbox", "language*",
+          "know", "knows", "what does he know", "speciali*", "capabilit*", "strong at", "what can he"],
+        answer: `<p>In plain words, he's great at:</p>
+          <ul>
+            <li>👁️ <strong>Giving machines eyesight</strong>: AI that spots, tracks and reads things on camera</li>
+            <li>🧩 <strong>Making sensors agree</strong>: blending cameras, lidar and radar into one picture</li>
+            <li>🚀 <strong>Shipping it live</strong>: keeping AI running around the clock in the cloud, at scale</li>
+            <li>✈️ <strong>Building things that fly</strong>: planes and drones since 2011</li>
+          </ul>`,
+        tech: `<ul>
+            <li><strong>Perception:</strong> PyTorch, OpenCV, YOLO, OC-SORT, ByteTrack, ReID, SVTR, ONNX, TensorRT</li>
+            <li><strong>Fusion &amp; robotics:</strong> LiDAR–camera calibration (PnP), Kalman filters, SLAM, ROS, Gazebo, C++</li>
+            <li><strong>Infra:</strong> Kubernetes (EKS), Docker, AWS, Linux, ffmpeg, GitHub Actions CI/CD</li>
+            <li><strong>Backend &amp; data:</strong> Python, FastAPI, Django, SQL/MySQL, Redis, Qdrant, ZMQ</li>
+          </ul>`,
+        more: ["resume"], next: ["wins", "now", "projects"],
+      },
+      {
+        id: "wins",
+        keys: ["win*", "achiev*", "impact", "result*", "number*", "metric*", "proud*", "accomplish*", "best work", "highlight*", "biggest", "stats", "brag"],
+        answer: `<p>The receipts:</p>
+          <div class="stats">
+            <div class="stat"><b>52M</b><span>frames analyzed a day, across 10 hangars</span></div>
+            <div class="stat"><b>45→96%</b><span>golf tracking precision after adding radar</span></div>
+            <div class="stat"><b>84→96%</b><span>aircraft detection accuracy (mAP)</span></div>
+            <div class="stat"><b>85→94%</b><span>tail numbers read correctly</span></div>
+            <div class="stat"><b>92%</b><span>same object matched across cameras</span></div>
+            <div class="stat"><b>120+</b><span>4K cameras in the golf system he ran</span></div>
+          </div>
+          <p>And he was product development &amp; operations lead on an <strong>Emmy-winning</strong> Drone AR project (2025). 🏆</p>`,
+        more: ["resume"], next: ["now", "past", "why"],
+      },
+      {
+        id: "hobby",
+        keys: ["drone*", "plane*", "rc", "fly", "flying", "flies", "hobby", "hobbies", "fun", "free time", "outside work", "aviation", "quadcopter*", "aircraft", "fpv"],
+        answer: `<p>Since <strong>2011</strong> he's been building RC planes and quadcopters from scratch: foam, tape, brushless motors, even a few nitromethane engines.</p>
+          <p>That hobby is how he got into robotics in the first place. ✈️</p>`,
+        more: ["aerial"], next: ["edu", "projects", "interests"],
+      },
+      {
+        id: "location",
+        keys: ["where", "based", "location", "located", "live", "lives", "city", "charlotte", "timezone", "time zone", "north carolina", "nc"],
+        answer: `<p>He's based in <strong>Charlotte, North Carolina</strong> (US Eastern Time).</p>
+          <p>Relocation or remote setups? That's one for Devesh directly.</p>`,
+        more: ["email"], next: ["contact", "now"],
+      },
+      {
+        id: "contact",
+        keys: ["contact", "reach", "email", "e mail", "mail", "phone", "call", "linkedin", "github", "connect", "talk to", "hire", "hiring",
+          "interview", "message", "get in touch", "dm", "schedule"],
+        answer: `<p>Fastest way: email <a href="${MAIL}">${EMAIL}</a>. He's also on LinkedIn and GitHub.</p>`,
+        more: ["email", "linkedin", "github", "resume"], next: ["why", "wins"],
+      },
+      {
+        id: "projects",
+        keys: ["side project", "side quest", "project*", "closetx", "closet x", "portfolio", "built", "personal"],
+        answer: `<p>Favorite side quest: <strong>ClosetX</strong>, an AI stylist that looks at your wardrobe and helps you pick clothes that actually go with it.</p>
+          <p>He's also built a fire-safety robot, plenty of drones and planes, and vision projects like image segmentation, traffic-sign detection and 3D reconstruction from photos.</p>`,
+        tech: `<ul>
+            <li>ClosetX: vision-transformer recommender served as microservices on AWS</li>
+            <li>UNet with attention (PyTorch, CUDA), YOLO traffic-sign detection</li>
+            <li>Structure from Motion (PnP, RANSAC, epipolar geometry), occupancy-grid SLAM (log odds)</li>
+            <li>Deep homography image stitching, cascaded-CNN pose estimation</li>
+          </ul>`,
+        more: ["extended"], next: ["hobby", "interests", "skills"],
+      },
+      {
+        id: "interests",
+        keys: ["interest*", "blog", "write", "writes", "writing", "passion*", "into", "care about", "reads", "thinks about"],
+        answer: `<p>Physical AI, math, deep learning, aviation, space science, nature, tech products and existentialism. He writes about some of it on his blog.</p>`,
+        more: ["blog"], next: ["hobby", "projects"],
+      },
+      {
+        id: "greet",
+        keys: ["hi", "hello", "hey", "yo", "sup", "hiya", "howdy", "good morning", "good afternoon", "good evening"],
+        answer: `<p>Hey! 👋 Ask me anything about Devesh's work, or tap a question below.</p>`,
+        next: ["who", "wins", "skills", "contact"],
+      },
+      {
+        id: "thanks",
+        keys: ["thanks", "thank", "thx", "ty", "cool", "great", "awesome", "nice", "perfect", "bye", "goodbye"],
+        answer: `<p>Anytime! If he sounds like a fit, email is the fastest way to reach him.</p>`,
+        more: ["email"], next: ["why", "wins"],
+      },
+      {
+        id: "bot",
+        keys: ["who are you", "are you", "you a bot", "chatgpt", "gpt", "claude", "llm", "real person", "human", "robot", "d bot", "dbot"],
+        answer: `<p>I'm a scripted robot, not a real AI. Every answer is pre-written from Devesh's resume and site, so I won't make things up. Anything I don't know goes straight to him.</p>`,
+        next: ["who", "wins"],
+      },
+    ];
+
+    const byId = Object.fromEntries(INTENTS.map(i => [i.id, i]));
+    const CHIP_TEXT = {
+      who: "Who is Devesh?", now: "What does he do now?", past: "What did he do before?", earlier: "Any research experience?",
+      edu: "Education?", skills: "What's he good at?", wins: "Biggest wins?", hobby: "The drone thing?", location: "Where is he based?",
+      contact: "How do I reach him?", projects: "Side projects?", why: "Why hire him?", interests: "What's he into?",
+      private: "Is he open to relocation?",
+    };
+    const STARTERS = ["who", "wins", "skills", "now", "past", "edu", "hobby", "location", "private", "contact"];
+
+    const TOPICS = [
+      [/salar|pay|paid|comp|money|rate/, "pay"],
+      [/visa|sponsor|h ?1b|authori|citizen|green card|\bopt\b/, "work authorization"],
+      [/relocat|move|remote|hybrid|on ?site|office/, "where he'd work"],
+      [/avail|start|notice|when can/, "his availability"],
+      [/open to|looking|job search/, "his job search"],
+      [/\bage\b|\bold\b/, "personal stuff"],
+    ];
+
+    const norm = s => " " + s.toLowerCase().replace(/[’‘]/g, "'").replace(/[^a-z0-9+#'\s]/g, " ").replace(/\s+/g, " ").trim() + " ";
+    const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const has = (q, key) => key.endsWith("*")
+      ? new RegExp(`\\s${esc(key.slice(0, -1))}`).test(q)
+      : q.includes(` ${key} `);
+    const listOf = items => items.length < 2 ? items.join("") : `${items.slice(0, -1).join(", ")} and ${items.at(-1)}`;
+    const topicOf = q => (TOPICS.find(([re]) => re.test(q)) || [, "that"])[1];
+
+    function match(text) {
+      const q = norm(text);
+      let best = null, bestScore = 0;
+      for (const intent of INTENTS) {
+        let score = 0;
+        for (const raw of intent.keys) {
+          const weak = raw.startsWith("~");
+          const key = weak ? raw.slice(1) : raw;
+          if (has(q, key)) score += weak ? 1 : key.includes(" ") ? 3 : 2;
+        }
+        if (score > 0) score += intent.boost || 0;
+        if (score > bestScore) { best = intent; bestScore = score; }
+      }
+      return { intent: best, q };
+    }
+
+    // ---------- rendering ----------
+
+    const asked = new Set();
+    let lastIntent = null;
+    let queue = Promise.resolve();
+
+    function scrollToEnd() {
+      log.scrollTo({ top: log.scrollHeight, behavior: reduced ? "auto" : "smooth" });
+    }
+
+    function addMsg(who, build) {
+      const row = document.createElement("div");
+      row.className = `msg ${who}`;
+      if (who === "bot") row.innerHTML = `<span class="avatar">${BOT_SVG}</span>`;
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      build(bubble);
+      row.append(bubble);
+      log.append(row);
+      scrollToEnd();
+      return row;
+    }
+
+    function userSays(text) {
+      addMsg("me", bubble => bubble.textContent = text);
+    }
+
+    function linkPill(key) {
+      const link = LINKS[key];
+      const a = document.createElement("a");
+      a.className = `pill${link.primary ? " primary" : ""}`;
+      a.href = link.href;
+      a.textContent = link.label;
+      if (link.ext) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
+      return a;
+    }
+
+    function techOf(intent) {
+      return intent.tech || (intent.techFrom && byId[intent.techFrom].tech) || null;
+    }
+
+    function botSays(intent, q, techy = false) {
+      const html = techy ? techOf(intent) : typeof intent.answer === "function" ? intent.answer(q) : intent.answer;
+      return typing(html).then(() => {
+        addMsg("bot", bubble => {
+          if (techy) bubble.classList.add("tech");
+          bubble.innerHTML = html;
+          const extras = document.createElement("div");
+          extras.className = "extras";
+          if (!techy && techOf(intent)) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "techy";
+            button.textContent = "🤓 Techy version";
+            button.addEventListener("click", () => {
+              button.disabled = true;
+              ask("Techy version, please", { intent, techy: true });
+            });
+            extras.append(button);
+          }
+          (intent.more || []).forEach(key => extras.append(linkPill(key)));
+          if (extras.childElementCount) bubble.append(extras);
+        });
+        lastIntent = intent;
+        asked.add(intent.id);
+        setChips(intent.next);
+      });
+    }
+
+    function fallback() {
+      const html = `<p>Hmm, that one's not in my notes. 🤖 Try one of the questions below, or ask Devesh directly.</p>`;
+      return typing(html).then(() => {
+        addMsg("bot", bubble => {
+          bubble.innerHTML = html;
+          const extras = document.createElement("div");
+          extras.className = "extras";
+          extras.append(linkPill("email"));
+          bubble.append(extras);
+        });
+        setChips(STARTERS);
+      });
+    }
+
+    function typing(html) {
+      const row = document.createElement("div");
+      row.className = "msg bot typing";
+      row.setAttribute("aria-hidden", "true");
+      row.innerHTML = `<span class="avatar">${BOT_SVG}</span><div class="bubble"><i></i><i></i><i></i></div>`;
+      log.append(row);
+      scrollToEnd();
+      const words = (html || "").replace(/<[^>]+>/g, " ").split(/\s+/).length;
+      const wait = reduced ? 200 : Math.min(420 + words * 12, 1300);
+      return new Promise(resolve => setTimeout(() => { row.remove(); resolve(); }, wait));
+    }
+
+    function setChips(ids = STARTERS) {
+      const fresh = ids.filter(id => !asked.has(id));
+      const rest = STARTERS.filter(id => !asked.has(id) && !fresh.includes(id));
+      const pick = [...fresh, ...rest].slice(0, 5);
+      chipsEl.replaceChildren(...(pick.length ? pick : ["contact", "why"]).map(id => {
+        const chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = "chip";
+        chip.textContent = CHIP_TEXT[id];
+        chip.addEventListener("click", () => ask(CHIP_TEXT[id], { intent: byId[id] }));
+        return chip;
+      }));
+      chipsEl.scrollLeft = 0;
+    }
+
+    const TECHY_ASK = /\b(techy|technical|tech version|nerd|nerdy|jargon|more detail|in detail|details|deeper|go deeper|elaborate)\b/;
+
+    function ask(text, forced = {}) {
+      userSays(text);
+      queue = queue.then(() => {
+        if (forced.intent) return botSays(forced.intent, norm(text), !!forced.techy);
+        const q = norm(text);
+        if (TECHY_ASK.test(q)) return botSays(lastIntent && techOf(lastIntent) ? lastIntent : byId.skills, q, true);
+        const { intent } = match(text);
+        return intent ? botSays(intent, q) : fallback();
+      });
+    }
+
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = "";
+      ask(text);
+    });
+
+    // Keep the input glued above the on-screen keyboard.
+    const vv = window.visualViewport;
+    if (vv) {
+      const fit = () => {
+        app.style.height = `${vv.height}px`;
+        window.scrollTo(0, 0);
+        scrollToEnd();
+      };
+      vv.addEventListener("resize", fit);
+      fit();
+    }
+
+    setChips();
+  })();
+  </script>
+</body>
+</html>
