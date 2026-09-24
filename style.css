@@ -25,6 +25,7 @@
 }
 
 html {
+  zoom: 0.8;
   background-color: var(--bg-canvas);
 }
 
