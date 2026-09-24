@@ -13,7 +13,6 @@
   <figure class="hero cover" id="hero">
     <svg id="hero-svg" viewBox="0 62 600 214" role="img"
       aria-label="Hand-drawn scenes scroll past: a quadcopter launching beside a fixed-wing trainer, a borescope view inside a turbofan, a plasma actuator pulling air through a pipe, lidar mapping with change detection and path planning, a VR-teleoperated robot arm grasping a mug, a tracked golf ball, a model being trained, deployed and corrected for data drift, lidar-camera 3D tracking of an aircraft entering a hangar, images being curated and labelled then used to train a neural network, and racks of GPUs training a model, then deploying it to edge devices."></svg>
-    <p class="hero-keys" id="hero-keys"></p>
   </figure>
 
   <div class="container">
@@ -52,7 +51,7 @@
     </div>
 
     <div class="section">
-      <h2>Right now</h2>
+      <h2>Currently</h2>
       <div class="entry">
         <div class="desc">
           <strong><a href="https://www.fyveby.com/">FyveBy</a></strong><br>
@@ -63,7 +62,7 @@
     </div>
 
     <div class="section">
-      <h2>Last education</h2>
+      <h2>Education</h2>
       <div class="entry">
         <div class="desc">
           <strong><a href="https://wpi.com">Worcester Polytechnic Institute</a></strong><br>
@@ -90,7 +89,6 @@
   (() => {
     const NS = "http://www.w3.org/2000/svg";
     const svg = document.getElementById("hero-svg");
-    const keysEl = document.getElementById("hero-keys");
 
     const INK = "#1e1e1e", SOFT = "#6b6960", FAR = "#8d8a80", FAINT = "#c4c1b6", ACCENT = "#2a7ae2", PAPER = "#faf9f5", TINT = "#e9e7df";
     const rc = rough.svg(svg, {
@@ -754,34 +752,6 @@
     }
     const MAX_WIDTH = Math.max(...SCENES.map(scene => scene.width));
 
-    let shownKeys = -1, keysTimer;
-
-    function setKeys(index) {
-      if (index === shownKeys) return;
-      const first = shownKeys < 0;
-      shownKeys = index;
-      const fill = () => {
-        keysEl.replaceChildren();
-        SCENES[index].keys.forEach((key, k) => {
-          if (k) {
-            const sep = document.createElement("span");
-            sep.className = "sep";
-            sep.textContent = " · ";
-            keysEl.append(sep);
-          }
-          const span = document.createElement("span");
-          span.className = "key";
-          span.textContent = key;
-          keysEl.append(span);
-        });
-        keysEl.style.opacity = 1;
-      };
-      clearTimeout(keysTimer);
-      if (first) return fill();
-      keysEl.style.opacity = 0;
-      keysTimer = setTimeout(fill, 180);
-    }
-
     function build() {
       svg.replaceChildren();
       G = svg;
@@ -795,10 +765,8 @@
     }
 
     function render(cam, t) {
-      let current = SCENES[0];
       for (const scene of SCENES) {
         const offset = mod(scene.start - cam + MAX_WIDTH, WORLD) - MAX_WIDTH;
-        if (offset <= W / 2 && offset + scene.width > W / 2) current = scene;
         const visible = offset < W && offset > -scene.width;
         scene.layer.setAttribute("display", visible ? "inline" : "none");
         if (!visible) continue;
@@ -806,7 +774,6 @@
         scene.dynamic.replaceChildren();
         withLayer(scene.dynamic, () => scene.draw(TRIGGER_X - offset, t));
       }
-      setKeys(SCENES.indexOf(current));
     }
 
     const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
