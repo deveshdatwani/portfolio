@@ -15,7 +15,7 @@
   --font-mono: "IBM Plex Mono", monospace;
   --font-hand: "Virgil", "Segoe Print", "Comic Sans MS", cursive;
 
-  --max-width: 680px;
+  --max-width: 900px;
 }
 
 *, *::before, *::after {
